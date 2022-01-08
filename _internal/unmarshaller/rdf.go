@@ -47,22 +47,23 @@ type CCLicense struct {
 }
 
 type Ebook struct {
-	XMLName     xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
-	About       string   `xml:"about,attr"`
-	Description string   `xml:"http://purl.org/dc/terms/ description"`
-	Type        Type
-	Issued      Issued
-	Language    Language
-	Publisher   string `xml:"http://purl.org/dc/terms/ publisher"`
-	License     License
-	Rights      string      `xml:"http://purl.org/dc/terms/ rights"`
-	Title       string      `xml:"http://purl.org/dc/terms/ title"`
-	Alternative []string    `xml:"http://purl.org/dc/terms/ alternative"`
-	Creators    []Creator   `xml:"http://purl.org/dc/terms/ creator"`
-	Subjects    []Subject   `xml:"http://purl.org/dc/terms/ subject"`
-	HasFormats  []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
-	Bookshelves []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
-	Downloads   Downloads
+	XMLName       xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
+	About         string   `xml:"about,attr"`
+	Description   string   `xml:"http://purl.org/dc/terms/ description"`
+	Type          Type
+	Issued        Issued
+	Language      Language
+	Publisher     string `xml:"http://purl.org/dc/terms/ publisher"`
+	PublishedYear int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
+	License       License
+	Rights        string      `xml:"http://purl.org/dc/terms/ rights"`
+	Title         string      `xml:"http://purl.org/dc/terms/ title"`
+	Alternative   []string    `xml:"http://purl.org/dc/terms/ alternative"`
+	Creators      []Creator   `xml:"http://purl.org/dc/terms/ creator"`
+	Subjects      []Subject   `xml:"http://purl.org/dc/terms/ subject"`
+	HasFormats    []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
+	Bookshelves   []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
+	Downloads     Downloads
 }
 
 type Agent struct {

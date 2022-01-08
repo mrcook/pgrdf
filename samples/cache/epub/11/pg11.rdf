@@ -233,6 +233,7 @@
         <rdf:value>PZ</rdf:value>
       </rdf:Description>
     </dcterms:subject>
+    <pgterms:marc906>1865</pgterms:marc906>
   </pgterms:ebook>
   <cc:Work rdf:about="">
     <cc:license rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/"/>

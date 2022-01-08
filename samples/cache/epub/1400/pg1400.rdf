@@ -316,6 +316,7 @@
         <dcterms:isFormatOf rdf:resource="ebooks/1400"/>
       </pgterms:file>
     </dcterms:hasFormat>
+    <pgterms:marc906>1861</pgterms:marc906>
   </pgterms:ebook>
   <cc:Work rdf:about="">
     <rdfs:comment>Archives containing the RDF files for *all* our books can be downloaded at

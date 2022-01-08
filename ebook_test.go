@@ -37,6 +37,9 @@ func TestEbook(t *testing.T) {
 	if e.Publisher != "Project Gutenberg" {
 		t.Errorf("unexpected ebook publisher, got '%s'", e.Publisher)
 	}
+	if e.PublishedYear != 1861 {
+		t.Errorf("unexpected ebook published date, got '%d'", e.PublishedYear)
+	}
 	if e.Copyright != "Public domain in the USA." {
 		t.Errorf("unexpected ebook copyright, got '%s'", e.Copyright)
 	}
