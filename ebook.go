@@ -116,86 +116,122 @@ type AuthorLink struct {
 }
 
 // Maps the unmarshalled RDF to the exported Ebook type.
-func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
+func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 	ebook := &Ebook{
-		ID:                extractAgentID(r.Ebook.About),
-		BookType:          r.Ebook.Type.Description.Value.Data,
-		ReleaseDate:       r.Ebook.Issued.Value,
-		Language:          constructLanguageTag(r.Ebook),
-		Publisher:         r.Ebook.Publisher,
-		PublishedYear:     r.Ebook.PublishedYear,
-		Copyright:         r.Ebook.Rights,
-		Titles:            titles(r.Ebook.Title),
-		OtherTitles:       r.Ebook.Alternative,
-		Creators:          nil,
-		Subjects:          nil,
-		Files:             nil,
-		Bookshelves:       nil,
-		BookCoverFilename: extractBookCoverFilename(r.Ebook.BookCover),
-		Downloads:         r.Ebook.Downloads.Value,
-		Note:              r.Ebook.Description,
-
-		Comment:     r.Work.Comment,
-		CCLicense:   r.Work.License.Resource,
-		AuthorLinks: nil,
+		ID:                agentID(rdf.Ebook.About),
+		BookType:          rdf.Ebook.Type.Description.Value.Data,
+		ReleaseDate:       rdf.Ebook.Issued.Value,
+		Language:          languageTag(rdf.Ebook),
+		Publisher:         rdf.Ebook.Publisher,
+		PublishedYear:     rdf.Ebook.PublishedYear,
+		Copyright:         rdf.Ebook.Rights,
+		Titles:            titles(rdf.Ebook.Title),
+		OtherTitles:       rdf.Ebook.Alternative,
+		BookCoverFilename: bookCoverFilename(rdf.Ebook.BookCover),
+		Downloads:         rdf.Ebook.Downloads.Value,
+		Note:              rdf.Ebook.Description,
+		Comment:           rdf.Work.Comment,
+		CCLicense:         rdf.Work.License.Resource,
 	}
 
-	for _, l := range r.Descriptions {
-		wiki := AuthorLink{
-			Description: l.Description,
-			URL:         l.About,
-		}
-		ebook.AuthorLinks = append(ebook.AuthorLinks, wiki)
+	for _, l := range rdf.Descriptions {
+		ebook.addAuthorLink(l.Description, l.About)
 	}
-
-	for _, c := range r.Ebook.Creators {
+	for _, c := range rdf.Ebook.Creators {
 		ebook.addCreator(&c.Agent, RoleAut)
 	}
-	for _, c := range r.Ebook.Editors {
-		ebook.addCreator(&c.Agent, RoleEdt)
+	for _, e := range rdf.Ebook.Editors {
+		ebook.addCreator(&e.Agent, RoleEdt)
 	}
-	for _, c := range r.Ebook.Illustrators {
-		ebook.addCreator(&c.Agent, RoleIll)
+	for _, i := range rdf.Ebook.Illustrators {
+		ebook.addCreator(&i.Agent, RoleIll)
 	}
-	for _, c := range r.Ebook.Translators {
-		ebook.addCreator(&c.Agent, RoleTrl)
+	for _, t := range rdf.Ebook.Translators {
+		ebook.addCreator(&t.Agent, RoleTrl)
 	}
-
-	for _, s := range r.Ebook.Subjects {
-		sub := Subject{
-			Heading: s.Description.Value.Data,
-			Schema:  s.Description.MemberOf.Resource,
-		}
-		ebook.Subjects = append(ebook.Subjects, sub)
+	for _, s := range rdf.Ebook.Subjects {
+		ebook.addSubject(s.Description.Value.Data, s.Description.MemberOf.Resource)
 	}
-
-	for _, s := range r.Ebook.HasFormats {
-		file := File{
-			URL:       s.File.About,
-			Extent:    s.File.Extent.Value,
-			Modified:  s.File.Modified.Value,
-			Encodings: nil,
-		}
-		for _, f := range s.File.Formats {
-			file.Encodings = append(file.Encodings, f.Description.Value.Data)
-		}
-
-		ebook.Files = append(ebook.Files, file)
+	for _, f := range rdf.Ebook.HasFormats {
+		ebook.addBookFile(&f)
 	}
-
-	for _, s := range r.Ebook.Bookshelves {
-		shelf := Bookshelf{
-			Resource: s.Description.MemberOf.Resource,
-			Name:     s.Description.Value.Data,
-		}
-		ebook.Bookshelves = append(ebook.Bookshelves, shelf)
+	for _, s := range rdf.Ebook.Bookshelves {
+		ebook.addBookshelf(s.Description.Value.Data, s.Description.MemberOf.Resource)
 	}
 
 	return ebook
 }
 
+// addCreator appends an Agent to the creators list with the given role.
+func (e *Ebook) addCreator(agent *unmarshaller.Agent, role MarcRelatorCode) {
+	creator := Creator{
+		ID:      agentID(agent.About),
+		Name:    agent.Name,
+		Aliases: agent.Aliases,
+		Born:    agent.Birthdate.Value,
+		Died:    agent.Deathdate.Value,
+		Role:    role,
+		WebPage: agent.Webpage.Resource,
+	}
+	e.Creators = append(e.Creators, creator)
+}
+
+func (e *Ebook) addAuthorLink(description, url string) {
+	wiki := AuthorLink{
+		Description: description,
+		URL:         url,
+	}
+	e.AuthorLinks = append(e.AuthorLinks, wiki)
+}
+
+func (e *Ebook) addSubject(heading, schema string) {
+	sub := Subject{
+		Heading: heading,
+		Schema:  schema,
+	}
+	e.Subjects = append(e.Subjects, sub)
+}
+
+func (e *Ebook) addBookFile(format *unmarshaller.HasFormat) {
+	file := File{
+		URL:       format.File.About,
+		Extent:    format.File.Extent.Value,
+		Modified:  format.File.Modified.Value,
+		Encodings: nil,
+	}
+	for _, f := range format.File.Formats {
+		file.Encodings = append(file.Encodings, f.Description.Value.Data)
+	}
+	e.Files = append(e.Files, file)
+}
+
+func (e *Ebook) addBookshelf(name, resource string) {
+	shelf := Bookshelf{
+		Resource: resource,
+		Name:     name,
+	}
+	e.Bookshelves = append(e.Bookshelves, shelf)
+}
+
+// Used for extracting the ebook ID and creator ID.
+func agentID(about string) int {
+	parts := strings.Split(about, "/")
+	idString := parts[len(parts)-1]
+	id, _ := strconv.Atoi(idString)
+	return id
+}
+
+// Extract the book cover filename from the file path.
+// marc901 tags contain a book cover filename from the HTML version of the ebook.
+func bookCoverFilename(cover string) string {
+	parts := strings.Split(cover, "-h")
+	cover = parts[len(parts)-1]
+	cover = strings.TrimPrefix(cover, "/")
+	return cover
+}
+
 // Constructs a valid language localisation tag: e.g. `en`, `en-GB`, etc.
-func constructLanguageTag(ebook unmarshaller.Ebook) string {
+func languageTag(ebook unmarshaller.Ebook) string {
 	var codes []string
 
 	if len(ebook.Language.Description.Value.Data) > 0 {
@@ -207,39 +243,8 @@ func constructLanguageTag(ebook unmarshaller.Ebook) string {
 	return strings.Join(codes, "-")
 }
 
-// Used for extracting the ebook ID and creator ID.
-func extractAgentID(about string) int {
-	parts := strings.Split(about, "/")
-	idString := parts[len(parts)-1]
-	id, _ := strconv.Atoi(idString)
-	return id
-}
-
-// Extract the book cover filename from the file path.
-// marc901 tags contain a book cover filename from the HTML version of the ebook.
-func extractBookCoverFilename(cover string) string {
-	parts := strings.Split(cover, "-h")
-	cover = parts[len(parts)-1]
-	cover = strings.TrimPrefix(cover, "/")
-	return cover
-}
-
 func titles(title string) []string {
 	return strings.Split(title, "\n")
-}
-
-// addCreator appends an Agent to the creators list with the given role.
-func (e *Ebook) addCreator(agent *unmarshaller.Agent, role MarcRelatorCode) {
-	creator := Creator{
-		ID:      extractAgentID(agent.About),
-		Name:    agent.Name,
-		Aliases: agent.Aliases,
-		Born:    agent.Birthdate.Value,
-		Died:    agent.Deathdate.Value,
-		Role:    role,
-		WebPage: agent.Webpage.Resource,
-	}
-	e.Creators = append(e.Creators, creator)
 }
 
 // Maps Ebook to the marshaller RDF.
