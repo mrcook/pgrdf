@@ -2,10 +2,12 @@
 
 ## HEAD
 
+
+## v1.3.0 (2022-03-05)
+
 * Extract MARC Relators data for compilers (`marcrel:com`)
 * Extract MARC Relators data for contributors (`marcrel:ctb`)
 * Extract book Series from `pgterms:marc440`
-
 
 
 ## v1.2.0 (2022-03-05)
