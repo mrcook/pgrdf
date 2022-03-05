@@ -3,6 +3,7 @@
 ## HEAD
 
 * Extract MARC Relators data for compilers (`marcrel:com`)
+* Extract MARC Relators data for contributors (`marcrel:ctb`)
 
 
 

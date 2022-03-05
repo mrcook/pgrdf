@@ -114,36 +114,42 @@ func TestEbookAuthor(t *testing.T) {
 	})
 }
 
-func TestEbookMarcRelatorCreators(t *testing.T) {
+func TestEbookCreators(t *testing.T) {
 	rdf := getTestRDF(t)
 
-	cases := map[pgrdf.MarcRelatorCode]struct {
-		Id   int
-		Name string
+	cases := []struct {
+		id   int
+		role pgrdf.MarcRelatorCode
+		name string
 	}{
-		pgrdf.RoleEdt: {Id: 8397, Name: "Snell, F. J. (Frederick John)"},
-		pgrdf.RoleCom: {Id: 54317, Name: "Paz, M."},
-		pgrdf.RoleIll: {Id: 9473, Name: "Leech, John"},
-		pgrdf.RoleTrl: {Id: 1736, Name: "Wyllie, David"},
+		{id: 37, role: pgrdf.RoleAut, name: "Dickens, Charles"},
+		{id: 6198, role: pgrdf.RoleCtb, name: "Robert, Clémence"},
+		{id: 8397, role: pgrdf.RoleEdt, name: "Snell, F. J. (Frederick John)"},
+		{id: 54317, role: pgrdf.RoleCom, name: "Paz, M."},
+		{id: 9473, role: pgrdf.RoleIll, name: "Leech, John"},
+		{id: 1736, role: pgrdf.RoleTrl, name: "Wyllie, David"},
 	}
 
-	for role, data := range cases {
-		t.Run(fmt.Sprintf("validate %s role is present", role), func(t *testing.T) {
+	for _, data := range cases {
+		t.Run(fmt.Sprintf("validate ID %d is present", data.id), func(t *testing.T) {
 			var creator *pgrdf.Creator
 			for i, _ := range rdf.Creators {
-				if rdf.Creators[i].Role == role {
+				if rdf.Creators[i].ID == data.id {
 					creator = &rdf.Creators[i]
 					break
 				}
 			}
 			if creator == nil {
-				t.Errorf("expected to find a creator with role '%s', none found", role)
+				t.Errorf("expected to find creator ID '%d', none found", data.id)
 			} else {
-				if creator.ID != data.Id {
-					t.Errorf("expected creator ID %d, got %d", data.Id, creator.ID)
+				if creator.ID != data.id {
+					t.Errorf("expected creator ID %d, got %d", data.id, creator.ID)
 				}
-				if creator.Name != data.Name {
-					t.Errorf("unexpected creator name '%s', got '%s'", data.Name, creator.Name)
+				if creator.Role != data.role {
+					t.Errorf("expected creator role '%s', got '%s'", data.role, creator.Role)
+				}
+				if creator.Name != data.name {
+					t.Errorf("unexpected creator name '%s', got '%s'", data.name, creator.Name)
 				}
 			}
 		})

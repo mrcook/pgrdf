@@ -18,6 +18,7 @@ type MarcRelatorCode string
 const (
 	RoleAut MarcRelatorCode = "aut"
 	RoleCom MarcRelatorCode = "com"
+	RoleCtb MarcRelatorCode = "ctb"
 	RoleEdt MarcRelatorCode = "edt"
 	RoleIll MarcRelatorCode = "ill"
 	RoleTrl MarcRelatorCode = "trl"
@@ -141,6 +142,12 @@ func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 	for _, c := range rdf.Ebook.Creators {
 		ebook.addCreator(&c.Agent, RoleAut)
 	}
+	for _, t := range rdf.Ebook.Compilers {
+		ebook.addCreator(&t.Agent, RoleCom)
+	}
+	for _, t := range rdf.Ebook.Contributors {
+		ebook.addCreator(&t.Agent, RoleCtb)
+	}
 	for _, e := range rdf.Ebook.Editors {
 		ebook.addCreator(&e.Agent, RoleEdt)
 	}
@@ -149,9 +156,6 @@ func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 	}
 	for _, t := range rdf.Ebook.Translators {
 		ebook.addCreator(&t.Agent, RoleTrl)
-	}
-	for _, t := range rdf.Ebook.Compilers {
-		ebook.addCreator(&t.Agent, RoleCom)
 	}
 	for _, s := range rdf.Ebook.Subjects {
 		ebook.addSubject(s.Description.Value.Data, s.Description.MemberOf.Resource)

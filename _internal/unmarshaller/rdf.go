@@ -62,10 +62,11 @@ type Ebook struct {
 	Title           string        `xml:"http://purl.org/dc/terms/ title"`
 	Alternative     []string      `xml:"http://purl.org/dc/terms/ alternative"`
 	Creators        []Creator     `xml:"http://purl.org/dc/terms/ creator"`
+	Compilers       []Compiler    `xml:"http://id.loc.gov/vocabulary/relators/ com"`
+	Contributors    []Contributor `xml:"http://id.loc.gov/vocabulary/relators/ ctb"`
 	Editors         []Editor      `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
 	Illustrators    []Illustrator `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
 	Translators     []Translator  `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
-	Compilers       []Compiler    `xml:"http://id.loc.gov/vocabulary/relators/ com"`
 	Subjects        []Subject     `xml:"http://purl.org/dc/terms/ subject"`
 	HasFormats      []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
 	Bookshelves     []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
@@ -93,6 +94,16 @@ type Creator struct {
 	Agent   Agent
 }
 
+type Compiler struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ com"`
+	Agent   Agent
+}
+
+type Contributor struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ ctb"`
+	Agent   Agent
+}
+
 type Editor struct {
 	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
 	Agent   Agent
@@ -105,11 +116,6 @@ type Illustrator struct {
 
 type Translator struct {
 	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
-	Agent   Agent
-}
-
-type Compiler struct {
-	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ com"`
 	Agent   Agent
 }
 

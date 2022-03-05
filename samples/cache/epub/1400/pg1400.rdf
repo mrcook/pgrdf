@@ -56,6 +56,11 @@
         <pgterms:deathdate rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1870</pgterms:deathdate>
       </pgterms:agent>
     </dcterms:creator>
+    <marcrel:ctb>
+      <pgterms:agent rdf:about="2009/agents/6198">
+        <pgterms:name>Robert, Clémence</pgterms:name>
+      </pgterms:agent>
+    </marcrel:ctb>
     <marcrel:edt>
       <pgterms:agent rdf:about="2009/agents/8397">
         <pgterms:name>Snell, F. J. (Frederick John)</pgterms:name>

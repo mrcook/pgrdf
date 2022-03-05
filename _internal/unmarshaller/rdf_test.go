@@ -138,6 +138,12 @@ func TestEbook(t *testing.T) {
 	if len(e.Creators) != 1 {
 		t.Errorf("expected 1 dcterms:creator, got %d", len(e.Creators))
 	}
+	if len(e.Compilers) != 1 {
+		t.Errorf("expected 1 marcrel:com, got %d", len(e.Compilers))
+	}
+	if len(e.Contributors) != 1 {
+		t.Errorf("expected 1 marcrel:ctb, got %d", len(e.Contributors))
+	}
 	if len(e.Editors) != 1 {
 		t.Errorf("expected 1 marcrel:edt, got %d", len(e.Editors))
 	}
@@ -146,9 +152,6 @@ func TestEbook(t *testing.T) {
 	}
 	if len(e.Translators) != 1 {
 		t.Errorf("expected 1 marcrel:trl, got %d", len(e.Translators))
-	}
-	if len(e.Compilers) != 1 {
-		t.Errorf("expected 1 marcrel:com, got %d", len(e.Compilers))
 	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
@@ -198,6 +201,38 @@ func TestCreators(t *testing.T) {
 	}
 }
 
+func TestCompilers(t *testing.T) {
+	r := openRDF(t)
+
+	if len(r.Ebook.Compilers) != 1 {
+		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Compilers))
+	}
+	a := r.Ebook.Compilers[0].Agent
+
+	if a.About != "2009/agents/54317" {
+		t.Errorf("unexpected compiler dcterms:creator/agent.about, got '%s'", a.About)
+	}
+	if a.Name != "Paz, M." {
+		t.Errorf("unexpected compiler dcterms:creator/agent/name, got '%s'", a.Name)
+	}
+}
+
+func TestContributors(t *testing.T) {
+	r := openRDF(t)
+
+	if len(r.Ebook.Contributors) != 1 {
+		t.Fatalf("expected 1 marcrel:ctb, got %d", len(r.Ebook.Contributors))
+	}
+	a := r.Ebook.Contributors[0].Agent
+
+	if a.About != "2009/agents/6198" {
+		t.Errorf("unexpected contributor dcterms:creator/agent.about, got '%s'", a.About)
+	}
+	if a.Name != "Robert, Clémence" {
+		t.Errorf("unexpected contributor dcterms:creator/agent/name, got '%s'", a.Name)
+	}
+}
+
 func TestEditors(t *testing.T) {
 	r := openRDF(t)
 
@@ -243,22 +278,6 @@ func TestTranslators(t *testing.T) {
 	}
 	if a.Name != "Wyllie, David" {
 		t.Errorf("unexpected translator dcterms:creator/agent/name, got '%s'", a.Name)
-	}
-}
-
-func TestCompilers(t *testing.T) {
-	r := openRDF(t)
-
-	if len(r.Ebook.Compilers) != 1 {
-		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Compilers))
-	}
-	a := r.Ebook.Compilers[0].Agent
-
-	if a.About != "2009/agents/54317" {
-		t.Errorf("unexpected compiler dcterms:creator/agent.about, got '%s'", a.About)
-	}
-	if a.Name != "Paz, M." {
-		t.Errorf("unexpected compiler dcterms:creator/agent/name, got '%s'", a.Name)
 	}
 }
 
