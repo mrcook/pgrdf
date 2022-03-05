@@ -58,14 +58,16 @@ type Ebook struct {
 	Publisher       string `xml:"http://purl.org/dc/terms/ publisher"`
 	PublishedYear   int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
 	License         License
-	Rights          string      `xml:"http://purl.org/dc/terms/ rights"`
-	Title           string      `xml:"http://purl.org/dc/terms/ title"`
-	Alternative     []string    `xml:"http://purl.org/dc/terms/ alternative"`
-	Creators        []Creator   `xml:"http://purl.org/dc/terms/ creator"`
-	Editors         []Editor    `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
-	Subjects        []Subject   `xml:"http://purl.org/dc/terms/ subject"`
-	HasFormats      []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
-	Bookshelves     []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
+	Rights          string        `xml:"http://purl.org/dc/terms/ rights"`
+	Title           string        `xml:"http://purl.org/dc/terms/ title"`
+	Alternative     []string      `xml:"http://purl.org/dc/terms/ alternative"`
+	Creators        []Creator     `xml:"http://purl.org/dc/terms/ creator"`
+	Editors         []Editor      `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
+	Illustrators    []Illustrator `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
+	Translators     []Translator  `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
+	Subjects        []Subject     `xml:"http://purl.org/dc/terms/ subject"`
+	HasFormats      []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
+	Bookshelves     []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
 	Downloads       Downloads
 }
 
@@ -91,6 +93,16 @@ type Creator struct {
 
 type Editor struct {
 	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
+	Agent   Agent
+}
+
+type Illustrator struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
+	Agent   Agent
+}
+
+type Translator struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
 	Agent   Agent
 }
 

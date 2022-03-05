@@ -68,8 +68,8 @@ func TestEbook(t *testing.T) {
 	if len(e.Titles) != 1 {
 		t.Errorf("expected 1 ebook title, got %d\n", len(e.Titles))
 	}
-	if len(e.Creators) != 2 {
-		t.Errorf("expected 1 ebook author, got %d\n", len(e.Creators))
+	if len(e.Creators) != 4 {
+		t.Errorf("expected 4 ebook creators, got %d\n", len(e.Creators))
 	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 ebook subjects, got %d\n", len(e.Subjects))
@@ -93,8 +93,8 @@ func TestEbookCreators(t *testing.T) {
 		t.Fatalf("error processing sample file: %s", err)
 	}
 
-	if len(e.Creators) != 2 {
-		t.Fatalf("expected 2 ebook creators, got %d\n", len(e.Creators))
+	if len(e.Creators) != 4 {
+		t.Fatalf("expected 4 ebook creators, got %d\n", len(e.Creators))
 	}
 
 	t.Run("first creator should be the author", func(t *testing.T) {
@@ -112,7 +112,7 @@ func TestEbookCreators(t *testing.T) {
 		if a.Died != 1870 {
 			t.Errorf("unexpected author deathdate, got %d", a.Died)
 		}
-		if a.Role != "aut" {
+		if a.Role != pgrdf.RoleAut {
 			t.Errorf("unexpected creator role, got '%s'", a.Role)
 		}
 		if len(a.Aliases) != 2 {
@@ -129,30 +129,41 @@ func TestEbookCreators(t *testing.T) {
 		a := e.Creators[1]
 
 		if a.ID != 8397 {
-			t.Errorf("unexpected creator ID, got %d", a.ID)
+			t.Errorf("unexpected editor ID, got %d", a.ID)
 		}
 		if a.Name != "Snell, F. J. (Frederick John)" {
 			t.Errorf("unexpected editor name, got '%s'", a.Name)
 		}
-		if a.Born != 1862 {
-			t.Errorf("unexpected editor birthdate, got %d", a.Born)
-		}
-		if a.Died != 1931 {
-			t.Errorf("unexpected editor deathdate, got %d", a.Died)
-		}
-		if a.Role != "edt" {
+		if a.Role != pgrdf.RoleEdt {
 			t.Errorf("unexpected editor role, got '%s'", a.Role)
 		}
+	})
 
-		if len(a.Aliases) != 2 {
-			t.Errorf("expected 2 ebook editor aliases, got %d\n", len(a.Aliases))
-		} else {
-			if a.Aliases[0] != "Caractacus" {
-				t.Errorf("unexpected alias name, got '%s'", a.Aliases[0])
-			}
-			if a.Aliases[1] != "Snell, Frederick John" {
-				t.Errorf("unexpected alias name, got '%s'", a.Aliases[1])
-			}
+	t.Run("third creator should be the illustrator", func(t *testing.T) {
+		a := e.Creators[2]
+
+		if a.ID != 9473 {
+			t.Errorf("unexpected editor ID, got %d", a.ID)
+		}
+		if a.Name != "Leech, John" {
+			t.Errorf("unexpected illustrator name, got '%s'", a.Name)
+		}
+		if a.Role != pgrdf.RoleIll {
+			t.Errorf("unexpected illustrator role, got '%s'", a.Role)
+		}
+	})
+
+	t.Run("fourth creator should be the translator", func(t *testing.T) {
+		a := e.Creators[3]
+
+		if a.ID != 1736 {
+			t.Errorf("unexpected editor ID, got %d", a.ID)
+		}
+		if a.Name != "Wyllie, David" {
+			t.Errorf("unexpected translator name, got '%s'", a.Name)
+		}
+		if a.Role != pgrdf.RoleTrl {
+			t.Errorf("unexpected translator role, got '%s'", a.Role)
 		}
 	})
 }

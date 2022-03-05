@@ -146,6 +146,12 @@ func TestEbook(t *testing.T) {
 	if len(e.Editors) != 1 {
 		t.Errorf("expected 1 marcrel:edt, got %d", len(e.Editors))
 	}
+	if len(e.Illustrators) != 1 {
+		t.Errorf("expected 1 marcrel:ill, got %d", len(e.Illustrators))
+	}
+	if len(e.Translators) != 1 {
+		t.Errorf("expected 1 marcrel:trl, got %d", len(e.Translators))
+	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
 	}
@@ -209,34 +215,48 @@ func TestEditors(t *testing.T) {
 	a := r.Ebook.Editors[0].Agent
 
 	if a.About != "2009/agents/8397" {
-		t.Errorf("unexpected dcterms:creator/agent.about, got '%s'", a.About)
+		t.Errorf("unexpected editor dcterms:creator/agent.about, got '%s'", a.About)
 	}
 	if a.Name != "Snell, F. J. (Frederick John)" {
-		t.Errorf("unexpected dcterms:creator/agent/name, got '%s'", a.Name)
+		t.Errorf("unexpected editor dcterms:creator/agent/name, got '%s'", a.Name)
 	}
-	if len(a.Aliases) != 2 {
-		t.Fatalf("expected 2 dcterms:creator/agent/alias, got %d", len(a.Aliases))
+}
+
+func TestIllustrators(t *testing.T) {
+	r, err := openRDF()
+	if err != nil {
+		t.Fatalf("unable to read sample file: %s", err)
 	}
-	if a.Aliases[0] != "Caractacus" {
-		t.Errorf("unexpected dcterms:creator/agent/, got '%s'", a.Aliases[1])
+
+	if len(r.Ebook.Illustrators) != 1 {
+		t.Fatalf("expected 1 marcrel:ill, got %d", len(r.Ebook.Illustrators))
 	}
-	if a.Aliases[1] != "Snell, Frederick John" {
-		t.Errorf("unexpected dcterms:creator/agent/, got '%s'", a.Aliases[1])
+	a := r.Ebook.Illustrators[0].Agent
+
+	if a.About != "2009/agents/9473" {
+		t.Errorf("unexpected illustrator dcterms:creator/agent.about, got '%s'", a.About)
 	}
-	if a.Birthdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
-		t.Errorf("unexpected dcterms:creator/agent/birthdate.datatype, got '%s'", a.Birthdate.DataType)
+	if a.Name != "Leech, John" {
+		t.Errorf("unexpected illustrator dcterms:creator/agent/name, got '%s'", a.Name)
 	}
-	if a.Birthdate.Value != 1862 {
-		t.Errorf("unexpected dcterms:creator/agent/birthdate, got %d", a.Birthdate.Value)
+}
+
+func TestTranslators(t *testing.T) {
+	r, err := openRDF()
+	if err != nil {
+		t.Fatalf("unable to read sample file: %s", err)
 	}
-	if a.Deathdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
-		t.Errorf("unexpected dcterms:creator/agent/deathdate.datatype, got '%s'", a.Deathdate.DataType)
+
+	if len(r.Ebook.Translators) != 1 {
+		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Translators))
 	}
-	if a.Deathdate.Value != 1931 {
-		t.Errorf("unexpected dcterms:creator/agent/deathdate, got %d", a.Deathdate.Value)
+	a := r.Ebook.Translators[0].Agent
+
+	if a.About != "2009/agents/1736" {
+		t.Errorf("unexpected translator dcterms:creator/agent.about, got '%s'", a.About)
 	}
-	if a.Webpage.Resource != "" {
-		t.Errorf("expected empty webpage, got '%s'", a.Webpage.Resource)
+	if a.Name != "Wyllie, David" {
+		t.Errorf("unexpected translator dcterms:creator/agent/name, got '%s'", a.Name)
 	}
 }
 

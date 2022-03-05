@@ -57,13 +57,19 @@
     </dcterms:creator>
     <marcrel:edt>
       <pgterms:agent rdf:about="2009/agents/8397">
-        <pgterms:birthdate rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1862</pgterms:birthdate>
-        <pgterms:deathdate rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1931</pgterms:deathdate>
-        <pgterms:alias>Caractacus</pgterms:alias>
-        <pgterms:alias>Snell, Frederick John</pgterms:alias>
         <pgterms:name>Snell, F. J. (Frederick John)</pgterms:name>
       </pgterms:agent>
     </marcrel:edt>
+    <marcrel:ill>
+      <pgterms:agent rdf:about="2009/agents/9473">
+        <pgterms:name>Leech, John</pgterms:name>
+      </pgterms:agent>
+    </marcrel:ill>
+    <marcrel:trl>
+      <pgterms:agent rdf:about="2009/agents/1736">
+        <pgterms:name>Wyllie, David</pgterms:name>
+      </pgterms:agent>
+    </marcrel:trl>
     <dcterms:subject>
       <rdf:Description rdf:nodeID="Nfa1f8c9301eb4bad8c264d69b76512fb">
         <dcam:memberOf rdf:resource="http://purl.org/dc/terms/LCSH"/>

@@ -14,6 +14,7 @@ type RDF struct {
 	NsRdf     string   `xml:"xmlns:rdf,attr,omitempty"`
 	NsRdfs    string   `xml:"xmlns:rdfs,attr,omitempty"`
 	NsCC      string   `xml:"xmlns:cc,attr,omitempty"`
+	NsMarcRel string   `xml:"xmlns:marcrel,attr,omitempty"`
 	NsDCam    string   `xml:"xmlns:dcam,attr,omitempty"`
 
 	Work         Work          `xml:"cc:Work,omitempty"`
@@ -32,21 +33,25 @@ type CCLicense struct {
 }
 
 type Ebook struct {
-	About       string      `xml:"rdf:about,attr,omitempty"`
-	Description string      `xml:"dcterms:description,omitempty"`
-	Type        Type        `xml:"dcterms:type,omitempty"`
-	Issued      *Issued     `xml:"dcterms:issued,omitempty"`
-	Language    Language    `xml:"dcterms:language,omitempty"`
-	Publisher   string      `xml:"dcterms:publisher,omitempty"`
-	License     License     `xml:"dcterms:license,omitempty"`
-	Rights      string      `xml:"dcterms:rights,omitempty"`
-	Title       string      `xml:"dcterms:title,omitempty"`
-	Alternative []string    `xml:"dcterms:alternative,omitempty"`
-	Creators    []Creator   `xml:"dcterms:creator,omitempty"`
-	Subjects    []Subject   `xml:"dcterms:subject,omitempty"`
-	HasFormats  []HasFormat `xml:"dcterms:hasFormat,omitempty"`
-	Bookshelves []Bookshelf `xml:"pgterms:bookshelf,omitempty"`
-	Downloads   *Downloads  `xml:"pgterms:downloads,omitempty"`
+	About         string        `xml:"rdf:about,attr,omitempty"`
+	Description   string        `xml:"dcterms:description,omitempty"`
+	Type          Type          `xml:"dcterms:type,omitempty"`
+	Issued        *Issued       `xml:"dcterms:issued,omitempty"`
+	Language      Language      `xml:"dcterms:language,omitempty"`
+	Publisher     string        `xml:"dcterms:publisher,omitempty"`
+	PublishedYear int           `xml:"pgterms:marc906,omitempty"`
+	License       License       `xml:"dcterms:license,omitempty"`
+	Rights        string        `xml:"dcterms:rights,omitempty"`
+	Title         string        `xml:"dcterms:title,omitempty"`
+	Alternative   []string      `xml:"dcterms:alternative,omitempty"`
+	Creators      []Creator     `xml:"dcterms:creator,omitempty"`
+	Editors       []Editor      `xml:"marcrel:edt,omitempty"`
+	Illustrators  []Illustrator `xml:"marcrel:ill,omitempty"`
+	Translators   []Translator  `xml:"marcrel:trl,omitempty"`
+	Subjects      []Subject     `xml:"dcterms:subject,omitempty"`
+	HasFormats    []HasFormat   `xml:"dcterms:hasFormat,omitempty"`
+	Bookshelves   []Bookshelf   `xml:"pgterms:bookshelf,omitempty"`
+	Downloads     *Downloads    `xml:"pgterms:downloads,omitempty"`
 }
 
 type Agent struct {
@@ -63,6 +68,18 @@ type Bookshelf struct {
 }
 
 type Creator struct {
+	Agent Agent `xml:"pgterms:agent"`
+}
+
+type Editor struct {
+	Agent Agent `xml:"pgterms:agent"`
+}
+
+type Illustrator struct {
+	Agent Agent `xml:"pgterms:agent"`
+}
+
+type Translator struct {
 	Agent Agent `xml:"pgterms:agent"`
 }
 

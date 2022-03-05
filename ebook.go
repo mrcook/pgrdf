@@ -12,6 +12,16 @@ import (
 	"github.com/mrcook/pgrdf/_internal/unmarshaller"
 )
 
+// MarcRelatorCode representing a creator role: `aut`, `edt`, etc.
+type MarcRelatorCode string
+
+const (
+	RoleAut MarcRelatorCode = "aut"
+	RoleEdt MarcRelatorCode = "edt"
+	RoleIll MarcRelatorCode = "ill"
+	RoleTrl MarcRelatorCode = "trl"
+)
+
 // Ebook reads an RDF from the input stream and maps it onto this object, which
 // hides the complexities of the source RDF for easier interaction. This type
 // can also be un/marshalled to JSON.
@@ -39,7 +49,7 @@ type Ebook struct {
 	generatedNodeIDs []string
 }
 
-// NewEbook returns a new ebook that reads from r.
+// NewEbook returns a new Ebook that reads from the provided io.Reader.
 func NewEbook(r io.Reader) (*Ebook, error) {
 	rdf, err := unmarshaller.New(r)
 	if err != nil {
@@ -50,8 +60,9 @@ func NewEbook(r io.Reader) (*Ebook, error) {
 	return ebook, nil
 }
 
-func (e Ebook) ToRDF(w io.Writer) error {
-	rdf := mapToMarshaller(&e)
+// ToRDF writes RDF XML data to the provided io.Writer.
+func (e *Ebook) ToRDF(w io.Writer) error {
+	rdf := e.mapToMarshaller()
 
 	data, err := xml.Marshal(rdf)
 	if err != nil {
@@ -73,13 +84,13 @@ type Bookshelf struct {
 
 // Creator is a person involved in the creation of the work, such as the author, illustrator, etc.
 type Creator struct {
-	ID      int      `json:"id"`                  // Unique Project Gutenberg ID.
-	Name    string   `json:"name"`                // Name of the creator.
-	Aliases []string `json:"aliases,omitempty"`   // Any aliases for the creator.
-	Born    int      `json:"born_year,omitempty"` // Date of Birth.
-	Died    int      `json:"died_year,omitempty"` // Date of Death.
-	Role    string   `json:"role,omitempty"`      // A marcrelator code for their role. e.g. `aut`, `edt`, `ill`, etc.
-	WebPage string   `json:"webpage,omitempty"`   // URL for this creator (usually Wikipedia).
+	ID      int             `json:"id"`                  // Unique Project Gutenberg ID.
+	Name    string          `json:"name"`                // Name of the creator.
+	Aliases []string        `json:"aliases,omitempty"`   // Any aliases for the creator.
+	Born    int             `json:"born_year,omitempty"` // Date of Birth.
+	Died    int             `json:"died_year,omitempty"` // Date of Death.
+	Role    MarcRelatorCode `json:"role,omitempty"`      // Code indicating the role. e.g. `aut`, `edt`, `ill`, etc.
+	WebPage string          `json:"webpage,omitempty"`   // URL for this creator (usually Wikipedia).
 }
 
 // File is a resource for the ebook, such as .txt, .tei, .zip, etc.
@@ -106,7 +117,7 @@ type AuthorLink struct {
 // Maps the unmarshalled RDF to the exported Ebook type.
 func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 	ebook := &Ebook{
-		ID:            extractID(r.Ebook.About),
+		ID:            extractAgentID(r.Ebook.About),
 		BookType:      r.Ebook.Type.Description.Value.Data,
 		ReleaseDate:   r.Ebook.Issued.Value,
 		Language:      constructLanguageTag(r.Ebook),
@@ -136,29 +147,16 @@ func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 	}
 
 	for _, c := range r.Ebook.Creators {
-		aut := Creator{
-			ID:      extractID(c.Agent.About),
-			Name:    c.Agent.Name,
-			Aliases: c.Agent.Aliases,
-			Born:    c.Agent.Birthdate.Value,
-			Died:    c.Agent.Deathdate.Value,
-			Role:    "aut",
-			WebPage: c.Agent.Webpage.Resource,
-		}
-		ebook.Creators = append(ebook.Creators, aut)
+		ebook.addCreator(&c.Agent, RoleAut)
 	}
-
 	for _, c := range r.Ebook.Editors {
-		edt := Creator{
-			ID:      extractID(c.Agent.About),
-			Name:    c.Agent.Name,
-			Aliases: c.Agent.Aliases,
-			Born:    c.Agent.Birthdate.Value,
-			Died:    c.Agent.Deathdate.Value,
-			Role:    "edt",
-			WebPage: c.Agent.Webpage.Resource,
-		}
-		ebook.Creators = append(ebook.Creators, edt)
+		ebook.addCreator(&c.Agent, RoleEdt)
+	}
+	for _, c := range r.Ebook.Illustrators {
+		ebook.addCreator(&c.Agent, RoleIll)
+	}
+	for _, c := range r.Ebook.Translators {
+		ebook.addCreator(&c.Agent, RoleTrl)
 	}
 
 	for _, s := range r.Ebook.Subjects {
@@ -208,7 +206,7 @@ func constructLanguageTag(ebook unmarshaller.Ebook) string {
 }
 
 // Used for extracting the ebook ID and creator ID.
-func extractID(about string) int {
+func extractAgentID(about string) int {
 	parts := strings.Split(about, "/")
 	idString := parts[len(parts)-1]
 	id, _ := strconv.Atoi(idString)
@@ -219,8 +217,22 @@ func titles(title string) []string {
 	return strings.Split(title, "\n")
 }
 
+// addCreator appends an Agent to the creators list with the given role.
+func (e *Ebook) addCreator(agent *unmarshaller.Agent, role MarcRelatorCode) {
+	creator := Creator{
+		ID:      extractAgentID(agent.About),
+		Name:    agent.Name,
+		Aliases: agent.Aliases,
+		Born:    agent.Birthdate.Value,
+		Died:    agent.Deathdate.Value,
+		Role:    role,
+		WebPage: agent.Webpage.Resource,
+	}
+	e.Creators = append(e.Creators, creator)
+}
+
 // Maps Ebook to the marshaller RDF.
-func mapToMarshaller(e *Ebook) *marshaller.RDF {
+func (e *Ebook) mapToMarshaller() *marshaller.RDF {
 	rdf := &marshaller.RDF{
 		NsBase:    "http://www.gutenberg.org/",
 		NsDcTerms: "http://purl.org/dc/terms/",
@@ -347,7 +359,7 @@ func mapToMarshaller(e *Ebook) *marshaller.RDF {
 	return rdf
 }
 
-func (e Ebook) nodeIdGenerator() string {
+func (e *Ebook) nodeIdGenerator() string {
 	const letters = "abcdef0123456789"
 
 	var id string
