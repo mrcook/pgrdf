@@ -26,24 +26,25 @@ const (
 // hides the complexities of the source RDF for easier interaction. This type
 // can also be un/marshalled to JSON.
 type Ebook struct {
-	ID            int          `json:"id"`           // PG eText ID.
-	BookType      string       `json:"type"`         // Text, Sound, etc.
-	ReleaseDate   string       `json:"released"`     // PG release date.
-	Language      string       `json:"language"`     // Language of this work.
-	Publisher     string       `json:"publisher"`    // Publisher of this work; usually Project Gutenberg.
-	Copyright     string       `json:"copyright"`    // Rights for this work (e.g. PD).
-	PublishedYear int          `json:"published"`    // Year this work was published in
-	Titles        []string     `json:"titles"`       // Full title for this work (main, sub, etc.).
-	OtherTitles   []string     `json:"other_titles"` // Alternative titles for this work.
-	Creators      []Creator    `json:"creators"`     // List of creators for this work (author, illustration, etc.).
-	Subjects      []Subject    `json:"subjects"`     // List of subjects for this work.
-	Files         []File       `json:"files"`        // List of files for this work (txt, zip, images, etc.).
-	Bookshelves   []Bookshelf  `json:"bookshelves"`  // List of bookshelves this work is available in.
-	Downloads     int          `json:"downloads"`    // Download count (previous 30 days).
-	Note          string       `json:"note"`         // Additional notes about this eText.
-	Comment       string       `json:"comment"`      // Usually just info on where to find the RDF files.
-	CCLicense     string       `json:"cc_license"`   // Creative Commons license URL.
-	AuthorLinks   []AuthorLink `json:"author_links"` // List of author links (typically Wikipedia links).
+	ID                int          `json:"id"`           // PG eText ID.
+	BookType          string       `json:"type"`         // Text, Sound, etc.
+	ReleaseDate       string       `json:"released"`     // PG release date.
+	Language          string       `json:"language"`     // Language of this work.
+	Publisher         string       `json:"publisher"`    // Publisher of this work; usually Project Gutenberg.
+	Copyright         string       `json:"copyright"`    // Rights for this work (e.g. PD).
+	PublishedYear     int          `json:"published"`    // Year this work was published in.
+	Titles            []string     `json:"titles"`       // Full title for this work (main, sub, etc.).
+	OtherTitles       []string     `json:"other_titles"` // Alternative titles for this work.
+	Creators          []Creator    `json:"creators"`     // List of creators for this work (author, illustration, etc.).
+	Subjects          []Subject    `json:"subjects"`     // List of subjects for this work.
+	Files             []File       `json:"files"`        // List of files for this work (txt, zip, images, etc.).
+	Bookshelves       []Bookshelf  `json:"bookshelves"`  // List of bookshelves this work is available in.
+	BookCoverFilename string       `json:"book_cover"`   // Book cover filename (found in the HTML ebook directory).
+	Downloads         int          `json:"downloads"`    // Download count (previous 30 days).
+	Note              string       `json:"note"`         // Additional notes about this eText.
+	Comment           string       `json:"comment"`      // Usually just info on where to find the RDF files.
+	CCLicense         string       `json:"cc_license"`   // Creative Commons license URL.
+	AuthorLinks       []AuthorLink `json:"author_links"` // List of author links (typically Wikipedia links).
 
 	// internal slice to prevent duplicate node IDs
 	generatedNodeIDs []string
@@ -117,21 +118,22 @@ type AuthorLink struct {
 // Maps the unmarshalled RDF to the exported Ebook type.
 func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 	ebook := &Ebook{
-		ID:            extractAgentID(r.Ebook.About),
-		BookType:      r.Ebook.Type.Description.Value.Data,
-		ReleaseDate:   r.Ebook.Issued.Value,
-		Language:      constructLanguageTag(r.Ebook),
-		Publisher:     r.Ebook.Publisher,
-		PublishedYear: r.Ebook.PublishedYear,
-		Copyright:     r.Ebook.Rights,
-		Titles:        titles(r.Ebook.Title),
-		OtherTitles:   r.Ebook.Alternative,
-		Creators:      nil,
-		Subjects:      nil,
-		Files:         nil,
-		Bookshelves:   nil,
-		Downloads:     r.Ebook.Downloads.Value,
-		Note:          r.Ebook.Description,
+		ID:                extractAgentID(r.Ebook.About),
+		BookType:          r.Ebook.Type.Description.Value.Data,
+		ReleaseDate:       r.Ebook.Issued.Value,
+		Language:          constructLanguageTag(r.Ebook),
+		Publisher:         r.Ebook.Publisher,
+		PublishedYear:     r.Ebook.PublishedYear,
+		Copyright:         r.Ebook.Rights,
+		Titles:            titles(r.Ebook.Title),
+		OtherTitles:       r.Ebook.Alternative,
+		Creators:          nil,
+		Subjects:          nil,
+		Files:             nil,
+		Bookshelves:       nil,
+		BookCoverFilename: extractBookCoverFilename(r.Ebook.BookCover),
+		Downloads:         r.Ebook.Downloads.Value,
+		Note:              r.Ebook.Description,
 
 		Comment:     r.Work.Comment,
 		CCLicense:   r.Work.License.Resource,
@@ -211,6 +213,15 @@ func extractAgentID(about string) int {
 	idString := parts[len(parts)-1]
 	id, _ := strconv.Atoi(idString)
 	return id
+}
+
+// Extract the book cover filename from the file path.
+// marc901 tags contain a book cover filename from the HTML version of the ebook.
+func extractBookCoverFilename(cover string) string {
+	parts := strings.Split(cover, "-h")
+	cover = parts[len(parts)-1]
+	cover = strings.TrimPrefix(cover, "/")
+	return cover
 }
 
 func titles(title string) []string {

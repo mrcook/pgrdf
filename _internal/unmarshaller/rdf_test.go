@@ -34,6 +34,9 @@ func TestNamespaces(t *testing.T) {
 	if r.NsDcTerms != "http://purl.org/dc/terms/" {
 		t.Errorf("unexpected xmlns:dcterms, got '%s'", r.NsDcTerms)
 	}
+	if r.NsMarcRel != "http://id.loc.gov/vocabulary/relators/" {
+		t.Errorf("unexpected xmlns:marcrel, got '%s'", r.NsMarcRel)
+	}
 }
 
 func TestWorkNode(t *testing.T) {
@@ -131,6 +134,9 @@ func TestEbook(t *testing.T) {
 		t.Errorf("expected 1 dcterms:title, got %d", len(e.Alternative))
 	} else if e.Alternative[0] != "Alternative title for the rdf_test.go" {
 		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternative[0])
+	}
+	if e.BookCover != "file:///public/vhost/g/gutenberg/html/files/1400/1400-h/images/cover.jpg" {
+		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCover)
 	}
 	if e.Downloads.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
 		t.Errorf("unexpected pgterms:downloads rdf:datatype, got '%s'", e.Downloads.DataType)

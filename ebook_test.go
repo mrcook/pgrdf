@@ -43,6 +43,9 @@ func TestEbook(t *testing.T) {
 	if e.Copyright != "Public domain in the USA." {
 		t.Errorf("unexpected ebook copyright, got '%s'", e.Copyright)
 	}
+	if e.BookCoverFilename != "images/cover.jpg" {
+		t.Errorf("unexpected book cover filename, got '%s'", e.BookCoverFilename)
+	}
 	if e.Downloads != 16579 {
 		t.Errorf("unexpected ebook downloads, got %d", e.Downloads)
 	}

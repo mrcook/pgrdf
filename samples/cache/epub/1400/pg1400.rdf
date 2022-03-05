@@ -20,6 +20,7 @@
     </dcterms:subject>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
     <pgterms:downloads rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">16579</pgterms:downloads>
+    <pgterms:marc901>file:///public/vhost/g/gutenberg/html/files/1400/1400-h/images/cover.jpg</pgterms:marc901>
     <dcterms:hasFormat>
       <pgterms:file rdf:about="https://www.gutenberg.org/files/1400/1400-h.zip">
         <dcterms:extent rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">31020490</dcterms:extent>
