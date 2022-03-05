@@ -2,6 +2,7 @@ package pgrdf_test
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"testing"
 
@@ -9,57 +10,49 @@ import (
 )
 
 func TestEbook(t *testing.T) {
-	file, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
+	rdf := getTestRDF(t)
+
+	if rdf.ID != 1400 {
+		t.Errorf("unexpected ebook ID, got %d", rdf.ID)
+	}
+	if rdf.Note != "Message for the rdf_test.go" {
+		t.Errorf("unexpected ebook description, got '%s'", rdf.Note)
+	}
+	if rdf.BookType != "Text" {
+		t.Errorf("unexpected ebook book type, got '%s'", rdf.BookType)
+	}
+	if rdf.ReleaseDate != "1998-07-01" {
+		t.Errorf("unexpected ebook book type, got '%s'", rdf.ReleaseDate)
+	}
+	if rdf.Language != "en-GB" {
+		t.Errorf("unexpected ebook language, got '%s'", rdf.Language)
+	}
+	if rdf.Publisher != "Project Gutenberg" {
+		t.Errorf("unexpected ebook publisher, got '%s'", rdf.Publisher)
+	}
+	if rdf.PublishedYear != 1861 {
+		t.Errorf("unexpected ebook published date, got '%d'", rdf.PublishedYear)
+	}
+	if rdf.Copyright != "Public domain in the USA." {
+		t.Errorf("unexpected ebook copyright, got '%s'", rdf.Copyright)
+	}
+	if rdf.BookCoverFilename != "images/cover.jpg" {
+		t.Errorf("unexpected book cover filename, got '%s'", rdf.BookCoverFilename)
+	}
+	if rdf.Downloads != 16579 {
+		t.Errorf("unexpected ebook downloads, got %d", rdf.Downloads)
+	}
+	if rdf.Comment != "Archives containing the RDF files for *all* our books can be downloaded at\n            https://www.gutenberg.org/wiki/Gutenberg:Feeds#The_Complete_Project_Gutenberg_Catalog" {
+		t.Errorf("unexpected work comment, got '%s'", rdf.Comment)
+	}
+	if rdf.CCLicense != "https://creativecommons.org/publicdomain/zero/1.0/" {
+		t.Errorf("unexpected license, got '%s'", rdf.CCLicense)
 	}
 
-	e, err := pgrdf.NewEbook(file)
-	if err != nil {
-		t.Fatalf("error processing sample file: %s", err)
+	if len(rdf.AuthorLinks) != 1 {
+		t.Fatalf("expected 1 wikipedia authors, got %d\n", len(rdf.AuthorLinks))
 	}
-
-	if e.ID != 1400 {
-		t.Errorf("unexpected ebook ID, got %d", e.ID)
-	}
-	if e.Note != "Message for the rdf_test.go" {
-		t.Errorf("unexpected ebook description, got '%s'", e.Note)
-	}
-	if e.BookType != "Text" {
-		t.Errorf("unexpected ebook book type, got '%s'", e.BookType)
-	}
-	if e.ReleaseDate != "1998-07-01" {
-		t.Errorf("unexpected ebook book type, got '%s'", e.ReleaseDate)
-	}
-	if e.Language != "en-GB" {
-		t.Errorf("unexpected ebook language, got '%s'", e.Language)
-	}
-	if e.Publisher != "Project Gutenberg" {
-		t.Errorf("unexpected ebook publisher, got '%s'", e.Publisher)
-	}
-	if e.PublishedYear != 1861 {
-		t.Errorf("unexpected ebook published date, got '%d'", e.PublishedYear)
-	}
-	if e.Copyright != "Public domain in the USA." {
-		t.Errorf("unexpected ebook copyright, got '%s'", e.Copyright)
-	}
-	if e.BookCoverFilename != "images/cover.jpg" {
-		t.Errorf("unexpected book cover filename, got '%s'", e.BookCoverFilename)
-	}
-	if e.Downloads != 16579 {
-		t.Errorf("unexpected ebook downloads, got %d", e.Downloads)
-	}
-	if e.Comment != "Archives containing the RDF files for *all* our books can be downloaded at\n            https://www.gutenberg.org/wiki/Gutenberg:Feeds#The_Complete_Project_Gutenberg_Catalog" {
-		t.Errorf("unexpected work comment, got '%s'", e.Comment)
-	}
-	if e.CCLicense != "https://creativecommons.org/publicdomain/zero/1.0/" {
-		t.Errorf("unexpected license, got '%s'", e.CCLicense)
-	}
-
-	if len(e.AuthorLinks) != 1 {
-		t.Fatalf("expected 1 wikipedia authors, got %d\n", len(e.AuthorLinks))
-	}
-	wiki := e.AuthorLinks[0]
+	wiki := rdf.AuthorLinks[0]
 
 	if wiki.Description != "en.wikipedia" {
 		t.Errorf("unexpected Wikipedia language, got '%s'", wiki.Description)
@@ -68,40 +61,32 @@ func TestEbook(t *testing.T) {
 		t.Errorf("unexpected author URL, got '%s'", wiki.URL)
 	}
 
-	if len(e.Titles) != 1 {
-		t.Errorf("expected 1 ebook title, got %d\n", len(e.Titles))
+	if len(rdf.Titles) != 1 {
+		t.Errorf("expected 1 ebook title, got %d\n", len(rdf.Titles))
 	}
-	if len(e.Creators) != 4 {
-		t.Errorf("expected 4 ebook creators, got %d\n", len(e.Creators))
+	if len(rdf.Creators) == 0 {
+		t.Error("expected one or more ebook creators, got none")
 	}
-	if len(e.Subjects) != 9 {
-		t.Errorf("expected 9 ebook subjects, got %d\n", len(e.Subjects))
+	if len(rdf.Subjects) != 9 {
+		t.Errorf("expected 9 ebook subjects, got %d\n", len(rdf.Subjects))
 	}
-	if len(e.Files) != 15 {
-		t.Errorf("expected 15 ebook book formats, got %d\n", len(e.Files))
+	if len(rdf.Files) != 15 {
+		t.Errorf("expected 15 ebook book formats, got %d\n", len(rdf.Files))
 	}
-	if len(e.Bookshelves) != 1 {
-		t.Errorf("expected 1 ebook bookshelves, got %d\n", len(e.Bookshelves))
+	if len(rdf.Bookshelves) != 1 {
+		t.Errorf("expected 1 ebook bookshelves, got %d\n", len(rdf.Bookshelves))
 	}
 }
 
-func TestEbookCreators(t *testing.T) {
-	file, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
+func TestEbookAuthor(t *testing.T) {
+	rdf := getTestRDF(t)
+
+	if len(rdf.Creators) == 0 {
+		t.Fatal("expected at least one ebook creator, got none")
 	}
 
-	e, err := pgrdf.NewEbook(file)
-	if err != nil {
-		t.Fatalf("error processing sample file: %s", err)
-	}
-
-	if len(e.Creators) != 4 {
-		t.Fatalf("expected 4 ebook creators, got %d\n", len(e.Creators))
-	}
-
-	t.Run("first creator should be the author", func(t *testing.T) {
-		a := e.Creators[0]
+	t.Run("validates author data", func(t *testing.T) {
+		a := rdf.Creators[0]
 
 		if a.ID != 37 {
 			t.Errorf("unexpected author ID, got %d", a.ID)
@@ -127,65 +112,51 @@ func TestEbookCreators(t *testing.T) {
 			t.Errorf("unexpected author webpage, got '%s'", a.WebPage)
 		}
 	})
+}
 
-	t.Run("second creator should be the editor", func(t *testing.T) {
-		a := e.Creators[1]
+func TestEbookMarcRelatorCreators(t *testing.T) {
+	rdf := getTestRDF(t)
 
-		if a.ID != 8397 {
-			t.Errorf("unexpected editor ID, got %d", a.ID)
-		}
-		if a.Name != "Snell, F. J. (Frederick John)" {
-			t.Errorf("unexpected editor name, got '%s'", a.Name)
-		}
-		if a.Role != pgrdf.RoleEdt {
-			t.Errorf("unexpected editor role, got '%s'", a.Role)
-		}
-	})
+	cases := map[pgrdf.MarcRelatorCode]struct {
+		Id   int
+		Name string
+	}{
+		pgrdf.RoleEdt: {Id: 8397, Name: "Snell, F. J. (Frederick John)"},
+		pgrdf.RoleCom: {Id: 54317, Name: "Paz, M."},
+		pgrdf.RoleIll: {Id: 9473, Name: "Leech, John"},
+		pgrdf.RoleTrl: {Id: 1736, Name: "Wyllie, David"},
+	}
 
-	t.Run("third creator should be the illustrator", func(t *testing.T) {
-		a := e.Creators[2]
-
-		if a.ID != 9473 {
-			t.Errorf("unexpected editor ID, got %d", a.ID)
-		}
-		if a.Name != "Leech, John" {
-			t.Errorf("unexpected illustrator name, got '%s'", a.Name)
-		}
-		if a.Role != pgrdf.RoleIll {
-			t.Errorf("unexpected illustrator role, got '%s'", a.Role)
-		}
-	})
-
-	t.Run("fourth creator should be the translator", func(t *testing.T) {
-		a := e.Creators[3]
-
-		if a.ID != 1736 {
-			t.Errorf("unexpected editor ID, got %d", a.ID)
-		}
-		if a.Name != "Wyllie, David" {
-			t.Errorf("unexpected translator name, got '%s'", a.Name)
-		}
-		if a.Role != pgrdf.RoleTrl {
-			t.Errorf("unexpected translator role, got '%s'", a.Role)
-		}
-	})
+	for role, data := range cases {
+		t.Run(fmt.Sprintf("validate %s role is present", role), func(t *testing.T) {
+			var creator *pgrdf.Creator
+			for i, _ := range rdf.Creators {
+				if rdf.Creators[i].Role == role {
+					creator = &rdf.Creators[i]
+					break
+				}
+			}
+			if creator == nil {
+				t.Errorf("expected to find a creator with role '%s', none found", role)
+			} else {
+				if creator.ID != data.Id {
+					t.Errorf("expected creator ID %d, got %d", data.Id, creator.ID)
+				}
+				if creator.Name != data.Name {
+					t.Errorf("unexpected creator name '%s', got '%s'", data.Name, creator.Name)
+				}
+			}
+		})
+	}
 }
 
 func TestEbookSubjects(t *testing.T) {
-	file, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	rdf := getTestRDF(t)
 
-	e, err := pgrdf.NewEbook(file)
-	if err != nil {
-		t.Fatalf("error processing sample file: %s", err)
+	if len(rdf.Subjects) != 9 {
+		t.Fatalf("expected 9 ebook subjects, got %d\n", len(rdf.Subjects))
 	}
-
-	if len(e.Subjects) != 9 {
-		t.Fatalf("expected 9 ebook subjects, got %d\n", len(e.Subjects))
-	}
-	s := e.Subjects[7]
+	s := rdf.Subjects[7]
 
 	if s.Heading != "Revenge -- Fiction" {
 		t.Errorf("unexpected subject heading, got '%s'", s.Heading)
@@ -196,20 +167,12 @@ func TestEbookSubjects(t *testing.T) {
 }
 
 func TestEbookFiles(t *testing.T) {
-	file, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	rdf := getTestRDF(t)
 
-	e, err := pgrdf.NewEbook(file)
-	if err != nil {
-		t.Fatalf("error processing sample file: %s", err)
+	if len(rdf.Files) != 15 {
+		t.Fatalf("expected 15 ebook files, got %d\n", len(rdf.Files))
 	}
-
-	if len(e.Files) != 15 {
-		t.Fatalf("expected 15 ebook files, got %d\n", len(e.Files))
-	}
-	f := e.Files[4]
+	f := rdf.Files[4]
 
 	if f.Extent != 393579 {
 		t.Errorf("unexpected file extent, got %d", f.Extent)
@@ -228,20 +191,12 @@ func TestEbookFiles(t *testing.T) {
 }
 
 func TestEbookBookshelves(t *testing.T) {
-	file, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	rdf := getTestRDF(t)
 
-	e, err := pgrdf.NewEbook(file)
-	if err != nil {
-		t.Fatalf("error processing sample file: %s", err)
+	if len(rdf.Bookshelves) != 1 {
+		t.Fatalf("expected 1 ebook bookshelves, got %d\n", len(rdf.Bookshelves))
 	}
-
-	if len(e.Bookshelves) != 1 {
-		t.Fatalf("expected 1 ebook bookshelves, got %d\n", len(e.Bookshelves))
-	}
-	s := e.Bookshelves[0]
+	s := rdf.Bookshelves[0]
 
 	if s.Resource != "2009/pgterms/Bookshelf" {
 		t.Errorf("unexpected bookshelf name, got '%s'", s.Resource)
@@ -305,10 +260,18 @@ func TestToRDF(t *testing.T) {
 	}
 }
 
-func openRDF() (*os.File, error) {
+func getTestRDF(t *testing.T) *pgrdf.Ebook {
+	t.Helper()
+
 	file, err := os.Open("samples/cache/epub/1400/pg1400.rdf")
 	if err != nil {
-		return nil, err
+		t.Fatalf("error opening test RDF file: %s", err)
 	}
-	return file, nil
+
+	rdf, err := pgrdf.NewEbook(file)
+	if err != nil {
+		t.Fatalf("error processing test RDF file: %s", err)
+	}
+
+	return rdf
 }

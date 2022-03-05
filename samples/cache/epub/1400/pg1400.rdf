@@ -71,6 +71,11 @@
         <pgterms:name>Wyllie, David</pgterms:name>
       </pgterms:agent>
     </marcrel:trl>
+    <marcrel:com>
+      <pgterms:agent rdf:about="2009/agents/54317">
+        <pgterms:name>Paz, M.</pgterms:name>
+      </pgterms:agent>
+    </marcrel:com>
     <dcterms:subject>
       <rdf:Description rdf:nodeID="Nfa1f8c9301eb4bad8c264d69b76512fb">
         <dcam:memberOf rdf:resource="http://purl.org/dc/terms/LCSH"/>

@@ -2,6 +2,9 @@
 
 ## HEAD
 
+* Extract MARC Relators data for compilers (`marcrel:com`)
+
+
 
 ## v1.2.0 (2022-03-05)
 

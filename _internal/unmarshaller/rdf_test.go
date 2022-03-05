@@ -8,10 +8,7 @@ import (
 )
 
 func TestNamespaces(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if r.NsBase != "http://www.gutenberg.org/" {
 		t.Errorf("unexpected xml:base, got '%s'", r.NsBase)
@@ -40,10 +37,7 @@ func TestNamespaces(t *testing.T) {
 }
 
 func TestWorkNode(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if r.Work.About != "" {
 		t.Errorf("unexpected rdf:about, got '%s'", r.Work.About)
@@ -57,10 +51,7 @@ func TestWorkNode(t *testing.T) {
 }
 
 func TestDescriptionNodes(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Descriptions) != 1 {
 		t.Fatalf("expected 1 description, got %d", len(r.Descriptions))
@@ -76,10 +67,8 @@ func TestDescriptionNodes(t *testing.T) {
 }
 
 func TestEbook(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
+
 	e := r.Ebook
 
 	if e.About != "ebooks/1400" {
@@ -158,6 +147,9 @@ func TestEbook(t *testing.T) {
 	if len(e.Translators) != 1 {
 		t.Errorf("expected 1 marcrel:trl, got %d", len(e.Translators))
 	}
+	if len(e.Compilers) != 1 {
+		t.Errorf("expected 1 marcrel:com, got %d", len(e.Compilers))
+	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
 	}
@@ -170,10 +162,7 @@ func TestEbook(t *testing.T) {
 }
 
 func TestCreators(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.Creators) != 1 {
 		t.Fatalf("expected 1 dcterms:creator, got %d", len(r.Ebook.Creators))
@@ -210,10 +199,7 @@ func TestCreators(t *testing.T) {
 }
 
 func TestEditors(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.Editors) != 1 {
 		t.Fatalf("expected 1 marcrel:edt, got %d", len(r.Ebook.Creators))
@@ -229,10 +215,7 @@ func TestEditors(t *testing.T) {
 }
 
 func TestIllustrators(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.Illustrators) != 1 {
 		t.Fatalf("expected 1 marcrel:ill, got %d", len(r.Ebook.Illustrators))
@@ -248,10 +231,7 @@ func TestIllustrators(t *testing.T) {
 }
 
 func TestTranslators(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.Translators) != 1 {
 		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Translators))
@@ -266,11 +246,24 @@ func TestTranslators(t *testing.T) {
 	}
 }
 
-func TestSubjects(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
+func TestCompilers(t *testing.T) {
+	r := openRDF(t)
+
+	if len(r.Ebook.Compilers) != 1 {
+		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Compilers))
 	}
+	a := r.Ebook.Compilers[0].Agent
+
+	if a.About != "2009/agents/54317" {
+		t.Errorf("unexpected compiler dcterms:creator/agent.about, got '%s'", a.About)
+	}
+	if a.Name != "Paz, M." {
+		t.Errorf("unexpected compiler dcterms:creator/agent/name, got '%s'", a.Name)
+	}
+}
+
+func TestSubjects(t *testing.T) {
+	r := openRDF(t)
 
 	if len(r.Ebook.Subjects) != 9 {
 		t.Fatalf("expected 9 dcterms:subject, got %d", len(r.Ebook.Subjects))
@@ -289,10 +282,7 @@ func TestSubjects(t *testing.T) {
 }
 
 func TestHasFormats(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.HasFormats) != 15 {
 		t.Fatalf("expected 15 dcterms:hasFormat, got %d", len(r.Ebook.HasFormats))
@@ -338,10 +328,7 @@ func TestHasFormats(t *testing.T) {
 }
 
 func TestBookshelves(t *testing.T) {
-	r, err := openRDF()
-	if err != nil {
-		t.Fatalf("unable to read sample file: %s", err)
-	}
+	r := openRDF(t)
 
 	if len(r.Ebook.Bookshelves) != 1 {
 		t.Fatalf("expected 1 pgterms:bookshelf, got %d", len(r.Ebook.Bookshelves))
@@ -359,13 +346,18 @@ func TestBookshelves(t *testing.T) {
 	}
 }
 
-func openRDF() (*unmarshaller.RDF, error) {
-	r := &unmarshaller.RDF{}
+func openRDF(t *testing.T) *unmarshaller.RDF {
+	t.Helper()
 
-	file, err := os.Open("../../samples/cache/epub/1400/pg1400.rdf")
+	file, err := os.Open("samples/cache/epub/1400/pg1400.rdf")
 	if err != nil {
-		return r, err
+		t.Fatalf("error opening test RDF file: %s", err)
 	}
 
-	return unmarshaller.New(file)
+	rdf, err := unmarshaller.New(file)
+	if err != nil {
+		t.Fatalf("unable to read test RDF file: %s", err)
+	}
+
+	return rdf
 }

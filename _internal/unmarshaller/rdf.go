@@ -65,6 +65,7 @@ type Ebook struct {
 	Editors         []Editor      `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
 	Illustrators    []Illustrator `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
 	Translators     []Translator  `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
+	Compilers       []Compiler    `xml:"http://id.loc.gov/vocabulary/relators/ com"`
 	Subjects        []Subject     `xml:"http://purl.org/dc/terms/ subject"`
 	HasFormats      []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
 	Bookshelves     []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
@@ -104,6 +105,11 @@ type Illustrator struct {
 
 type Translator struct {
 	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
+	Agent   Agent
+}
+
+type Compiler struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ com"`
 	Agent   Agent
 }
 
