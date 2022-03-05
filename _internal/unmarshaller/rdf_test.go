@@ -109,8 +109,14 @@ func TestEbook(t *testing.T) {
 	if e.Language.Description.Value.Data != "en" {
 		t.Errorf("unexpected dcterms:language//rdf:value, got '%s'", e.Language.Description.Value.Data)
 	}
+	if e.LanguageSubCode != "GB" {
+		t.Errorf("unexpected marc907 (language sub-code), got '%s'", e.LanguageSubCode)
+	}
 	if e.Publisher != "Project Gutenberg" {
 		t.Errorf("unexpected dcterms:publisher, got '%s'", e.Publisher)
+	}
+	if e.PublishedYear != 1861 {
+		t.Errorf("unexpected marc906 (published year), got '%d'", e.PublishedYear)
 	}
 	if e.License.Resource != "license" {
 		t.Errorf("unexpected dcterms:license, got '%s'", e.License.Resource)
@@ -137,6 +143,9 @@ func TestEbook(t *testing.T) {
 	if len(e.Creators) != 1 {
 		t.Errorf("expected 1 dcterms:creator, got %d", len(e.Creators))
 	}
+	if len(e.Editors) != 1 {
+		t.Errorf("expected 1 marcrel:edt, got %d", len(e.Editors))
+	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
 	}
@@ -155,7 +164,7 @@ func TestCreators(t *testing.T) {
 	}
 
 	if len(r.Ebook.Creators) != 1 {
-		t.Errorf("expected 1 dcterms:creator, got %d", len(r.Ebook.Creators))
+		t.Fatalf("expected 1 dcterms:creator, got %d", len(r.Ebook.Creators))
 	}
 	a := r.Ebook.Creators[0].Agent
 
@@ -188,6 +197,49 @@ func TestCreators(t *testing.T) {
 	}
 }
 
+func TestEditors(t *testing.T) {
+	r, err := openRDF()
+	if err != nil {
+		t.Fatalf("unable to read sample file: %s", err)
+	}
+
+	if len(r.Ebook.Editors) != 1 {
+		t.Fatalf("expected 1 marcrel:edt, got %d", len(r.Ebook.Creators))
+	}
+	a := r.Ebook.Editors[0].Agent
+
+	if a.About != "2009/agents/8397" {
+		t.Errorf("unexpected dcterms:creator/agent.about, got '%s'", a.About)
+	}
+	if a.Name != "Snell, F. J. (Frederick John)" {
+		t.Errorf("unexpected dcterms:creator/agent/name, got '%s'", a.Name)
+	}
+	if len(a.Aliases) != 2 {
+		t.Fatalf("expected 2 dcterms:creator/agent/alias, got %d", len(a.Aliases))
+	}
+	if a.Aliases[0] != "Caractacus" {
+		t.Errorf("unexpected dcterms:creator/agent/, got '%s'", a.Aliases[1])
+	}
+	if a.Aliases[1] != "Snell, Frederick John" {
+		t.Errorf("unexpected dcterms:creator/agent/, got '%s'", a.Aliases[1])
+	}
+	if a.Birthdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
+		t.Errorf("unexpected dcterms:creator/agent/birthdate.datatype, got '%s'", a.Birthdate.DataType)
+	}
+	if a.Birthdate.Value != 1862 {
+		t.Errorf("unexpected dcterms:creator/agent/birthdate, got %d", a.Birthdate.Value)
+	}
+	if a.Deathdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
+		t.Errorf("unexpected dcterms:creator/agent/deathdate.datatype, got '%s'", a.Deathdate.DataType)
+	}
+	if a.Deathdate.Value != 1931 {
+		t.Errorf("unexpected dcterms:creator/agent/deathdate, got %d", a.Deathdate.Value)
+	}
+	if a.Webpage.Resource != "" {
+		t.Errorf("expected empty webpage, got '%s'", a.Webpage.Resource)
+	}
+}
+
 func TestSubjects(t *testing.T) {
 	r, err := openRDF()
 	if err != nil {
@@ -195,7 +247,7 @@ func TestSubjects(t *testing.T) {
 	}
 
 	if len(r.Ebook.Subjects) != 9 {
-		t.Errorf("expected 9 dcterms:subject, got %d", len(r.Ebook.Subjects))
+		t.Fatalf("expected 9 dcterms:subject, got %d", len(r.Ebook.Subjects))
 	}
 	d := r.Ebook.Subjects[5].Description
 

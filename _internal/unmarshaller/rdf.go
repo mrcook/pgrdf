@@ -27,6 +27,7 @@ type RDF struct {
 	NsRdf     string   `xml:"xmlns rdf,attr"`
 	NsRdfs    string   `xml:"xmlns rdfs,attr"`
 	NsCC      string   `xml:"xmlns cc,attr"`
+	NsMarcRel string   `xml:"xmlns marcrel,attr"`
 	NsDcam    string   `xml:"xmlns dcam,attr"`
 
 	Work         Work
@@ -47,23 +48,25 @@ type CCLicense struct {
 }
 
 type Ebook struct {
-	XMLName       xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
-	About         string   `xml:"about,attr"`
-	Description   string   `xml:"http://purl.org/dc/terms/ description"`
-	Type          Type
-	Issued        Issued
-	Language      Language
-	Publisher     string `xml:"http://purl.org/dc/terms/ publisher"`
-	PublishedYear int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
-	License       License
-	Rights        string      `xml:"http://purl.org/dc/terms/ rights"`
-	Title         string      `xml:"http://purl.org/dc/terms/ title"`
-	Alternative   []string    `xml:"http://purl.org/dc/terms/ alternative"`
-	Creators      []Creator   `xml:"http://purl.org/dc/terms/ creator"`
-	Subjects      []Subject   `xml:"http://purl.org/dc/terms/ subject"`
-	HasFormats    []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
-	Bookshelves   []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
-	Downloads     Downloads
+	XMLName         xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
+	About           string   `xml:"about,attr"`
+	Description     string   `xml:"http://purl.org/dc/terms/ description"`
+	Type            Type
+	Issued          Issued
+	Language        Language
+	LanguageSubCode string `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	Publisher       string `xml:"http://purl.org/dc/terms/ publisher"`
+	PublishedYear   int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
+	License         License
+	Rights          string      `xml:"http://purl.org/dc/terms/ rights"`
+	Title           string      `xml:"http://purl.org/dc/terms/ title"`
+	Alternative     []string    `xml:"http://purl.org/dc/terms/ alternative"`
+	Creators        []Creator   `xml:"http://purl.org/dc/terms/ creator"`
+	Editors         []Editor    `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
+	Subjects        []Subject   `xml:"http://purl.org/dc/terms/ subject"`
+	HasFormats      []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
+	Bookshelves     []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
+	Downloads       Downloads
 }
 
 type Agent struct {
@@ -83,6 +86,11 @@ type Bookshelf struct {
 
 type Creator struct {
 	XMLName xml.Name `xml:"http://purl.org/dc/terms/ creator"`
+	Agent   Agent
+}
+
+type Editor struct {
+	XMLName xml.Name `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
 	Agent   Agent
 }
 

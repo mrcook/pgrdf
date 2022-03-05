@@ -78,6 +78,7 @@ type Creator struct {
 	Aliases []string `json:"aliases,omitempty"`   // Any aliases for the creator.
 	Born    int      `json:"born_year,omitempty"` // Date of Birth.
 	Died    int      `json:"died_year,omitempty"` // Date of Death.
+	Role    string   `json:"role,omitempty"`      // A marcrelator code for their role. e.g. `aut`, `edt`, `ill`, etc.
 	WebPage string   `json:"webpage,omitempty"`   // URL for this creator (usually Wikipedia).
 }
 
@@ -108,7 +109,7 @@ func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 		ID:            extractID(r.Ebook.About),
 		BookType:      r.Ebook.Type.Description.Value.Data,
 		ReleaseDate:   r.Ebook.Issued.Value,
-		Language:      r.Ebook.Language.Description.Value.Data,
+		Language:      constructLanguageTag(r.Ebook),
 		Publisher:     r.Ebook.Publisher,
 		PublishedYear: r.Ebook.PublishedYear,
 		Copyright:     r.Ebook.Rights,
@@ -141,9 +142,23 @@ func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 			Aliases: c.Agent.Aliases,
 			Born:    c.Agent.Birthdate.Value,
 			Died:    c.Agent.Deathdate.Value,
+			Role:    "aut",
 			WebPage: c.Agent.Webpage.Resource,
 		}
 		ebook.Creators = append(ebook.Creators, aut)
+	}
+
+	for _, c := range r.Ebook.Editors {
+		edt := Creator{
+			ID:      extractID(c.Agent.About),
+			Name:    c.Agent.Name,
+			Aliases: c.Agent.Aliases,
+			Born:    c.Agent.Birthdate.Value,
+			Died:    c.Agent.Deathdate.Value,
+			Role:    "edt",
+			WebPage: c.Agent.Webpage.Resource,
+		}
+		ebook.Creators = append(ebook.Creators, edt)
 	}
 
 	for _, s := range r.Ebook.Subjects {
@@ -177,6 +192,19 @@ func mapUnmarshalled(r *unmarshaller.RDF) *Ebook {
 	}
 
 	return ebook
+}
+
+// Constructs a valid language localisation tag: e.g. `en`, `en-GB`, etc.
+func constructLanguageTag(ebook unmarshaller.Ebook) string {
+	var codes []string
+
+	if len(ebook.Language.Description.Value.Data) > 0 {
+		codes = append(codes, ebook.Language.Description.Value.Data)
+	}
+	if len(ebook.LanguageSubCode) > 0 {
+		codes = append(codes, ebook.LanguageSubCode)
+	}
+	return strings.Join(codes, "-")
 }
 
 // Used for extracting the ebook ID and creator ID.

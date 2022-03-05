@@ -31,7 +31,7 @@ func TestEbook(t *testing.T) {
 	if e.ReleaseDate != "1998-07-01" {
 		t.Errorf("unexpected ebook book type, got '%s'", e.ReleaseDate)
 	}
-	if e.Language != "en" {
+	if e.Language != "en-GB" {
 		t.Errorf("unexpected ebook language, got '%s'", e.Language)
 	}
 	if e.Publisher != "Project Gutenberg" {
@@ -68,7 +68,7 @@ func TestEbook(t *testing.T) {
 	if len(e.Titles) != 1 {
 		t.Errorf("expected 1 ebook title, got %d\n", len(e.Titles))
 	}
-	if len(e.Creators) != 1 {
+	if len(e.Creators) != 2 {
 		t.Errorf("expected 1 ebook author, got %d\n", len(e.Creators))
 	}
 	if len(e.Subjects) != 9 {
@@ -93,31 +93,68 @@ func TestEbookCreators(t *testing.T) {
 		t.Fatalf("error processing sample file: %s", err)
 	}
 
-	if len(e.Creators) != 1 {
-		t.Fatalf("expected 1 ebook author, got %d\n", len(e.Creators))
+	if len(e.Creators) != 2 {
+		t.Fatalf("expected 2 ebook creators, got %d\n", len(e.Creators))
 	}
-	a := e.Creators[0]
 
-	if a.ID != 37 {
-		t.Errorf("unexpected author ID, got %d", a.ID)
-	}
-	if a.Name != "Dickens, Charles" {
-		t.Errorf("unexpected author name, got '%s'", a.Name)
-	}
-	if len(a.Aliases) != 2 {
-		t.Errorf("expected 2 ebook author aliases, got %d\n", len(a.Aliases))
-	} else if a.Aliases[1] != "Boz" {
-		t.Errorf("unexpected author name, got '%s'", a.Aliases[1])
-	}
-	if a.Born != 1812 {
-		t.Errorf("unexpected author birthdate, got %d", a.Born)
-	}
-	if a.Died != 1870 {
-		t.Errorf("unexpected author deathdate, got %d", a.Died)
-	}
-	if a.WebPage != "https://en.wikipedia.org/wiki/Charles_Dickens" {
-		t.Errorf("unexpected author webpage, got '%s'", a.WebPage)
-	}
+	t.Run("first creator should be the author", func(t *testing.T) {
+		a := e.Creators[0]
+
+		if a.ID != 37 {
+			t.Errorf("unexpected author ID, got %d", a.ID)
+		}
+		if a.Name != "Dickens, Charles" {
+			t.Errorf("unexpected author name, got '%s'", a.Name)
+		}
+		if a.Born != 1812 {
+			t.Errorf("unexpected author birthdate, got %d", a.Born)
+		}
+		if a.Died != 1870 {
+			t.Errorf("unexpected author deathdate, got %d", a.Died)
+		}
+		if a.Role != "aut" {
+			t.Errorf("unexpected creator role, got '%s'", a.Role)
+		}
+		if len(a.Aliases) != 2 {
+			t.Errorf("expected 2 ebook author aliases, got %d\n", len(a.Aliases))
+		} else if a.Aliases[1] != "Boz" {
+			t.Errorf("unexpected author name, got '%s'", a.Aliases[1])
+		}
+		if a.WebPage != "https://en.wikipedia.org/wiki/Charles_Dickens" {
+			t.Errorf("unexpected author webpage, got '%s'", a.WebPage)
+		}
+	})
+
+	t.Run("second creator should be the editor", func(t *testing.T) {
+		a := e.Creators[1]
+
+		if a.ID != 8397 {
+			t.Errorf("unexpected creator ID, got %d", a.ID)
+		}
+		if a.Name != "Snell, F. J. (Frederick John)" {
+			t.Errorf("unexpected editor name, got '%s'", a.Name)
+		}
+		if a.Born != 1862 {
+			t.Errorf("unexpected editor birthdate, got %d", a.Born)
+		}
+		if a.Died != 1931 {
+			t.Errorf("unexpected editor deathdate, got %d", a.Died)
+		}
+		if a.Role != "edt" {
+			t.Errorf("unexpected editor role, got '%s'", a.Role)
+		}
+
+		if len(a.Aliases) != 2 {
+			t.Errorf("expected 2 ebook editor aliases, got %d\n", len(a.Aliases))
+		} else {
+			if a.Aliases[0] != "Caractacus" {
+				t.Errorf("unexpected alias name, got '%s'", a.Aliases[0])
+			}
+			if a.Aliases[1] != "Snell, Frederick John" {
+				t.Errorf("unexpected alias name, got '%s'", a.Aliases[1])
+			}
+		}
+	})
 }
 
 func TestEbookSubjects(t *testing.T) {
