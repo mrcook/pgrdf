@@ -70,6 +70,7 @@ type Ebook struct {
 	Subjects        []Subject     `xml:"http://purl.org/dc/terms/ subject"`
 	HasFormats      []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
 	Bookshelves     []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
+	Series          string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
 	BookCover       string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
 	Downloads       Downloads
 }

@@ -81,6 +81,7 @@
         <pgterms:name>Paz, M.</pgterms:name>
       </pgterms:agent>
     </marcrel:com>
+    <pgterms:marc440>Dickens Best Of</pgterms:marc440>
     <dcterms:subject>
       <rdf:Description rdf:nodeID="Nfa1f8c9301eb4bad8c264d69b76512fb">
         <dcam:memberOf rdf:resource="http://purl.org/dc/terms/LCSH"/>

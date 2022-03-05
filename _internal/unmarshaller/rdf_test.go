@@ -124,6 +124,9 @@ func TestEbook(t *testing.T) {
 	} else if e.Alternative[0] != "Alternative title for the rdf_test.go" {
 		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternative[0])
 	}
+	if e.Series != "Dickens Best Of" {
+		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series)
+	}
 	if e.BookCover != "file:///public/vhost/g/gutenberg/html/files/1400/1400-h/images/cover.jpg" {
 		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCover)
 	}

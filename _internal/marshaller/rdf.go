@@ -51,6 +51,7 @@ type Ebook struct {
 	Subjects      []Subject     `xml:"dcterms:subject,omitempty"`
 	HasFormats    []HasFormat   `xml:"dcterms:hasFormat,omitempty"`
 	Bookshelves   []Bookshelf   `xml:"pgterms:bookshelf,omitempty"`
+	Series        string        `xml:"pgterms:marc440,omitempty"`
 	Downloads     *Downloads    `xml:"pgterms:downloads,omitempty"`
 }
 

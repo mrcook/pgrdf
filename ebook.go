@@ -41,6 +41,7 @@ type Ebook struct {
 	Subjects          []Subject    `json:"subjects"`     // List of subjects for this work.
 	Files             []File       `json:"files"`        // List of files for this work (txt, zip, images, etc.).
 	Bookshelves       []Bookshelf  `json:"bookshelves"`  // List of bookshelves this work is available in.
+	Series            string       `json:"series"`       // The series of work this belongs to.
 	BookCoverFilename string       `json:"book_cover"`   // Book cover filename (found in the HTML ebook directory).
 	Downloads         int          `json:"downloads"`    // Download count (previous 30 days).
 	Note              string       `json:"note"`         // Additional notes about this eText.
@@ -131,6 +132,7 @@ func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 		OtherTitles:       rdf.Ebook.Alternative,
 		BookCoverFilename: bookCoverFilename(rdf.Ebook.BookCover),
 		Downloads:         rdf.Ebook.Downloads.Value,
+		Series:            rdf.Ebook.Series,
 		Note:              rdf.Ebook.Description,
 		Comment:           rdf.Work.Comment,
 		CCLicense:         rdf.Work.License.Resource,
@@ -258,6 +260,7 @@ func titles(title string) []string {
 // Maps Ebook to the marshaller RDF.
 func (e *Ebook) mapToMarshaller() *marshaller.RDF {
 	rdf := &marshaller.RDF{
+		// TODO: only add them if they're needed.
 		NsBase:    "http://www.gutenberg.org/",
 		NsDcTerms: "http://purl.org/dc/terms/",
 		NsPgTerms: "http://www.gutenberg.org/2009/pgterms/",
@@ -265,6 +268,7 @@ func (e *Ebook) mapToMarshaller() *marshaller.RDF {
 		NsRdfs:    "http://www.w3.org/2000/01/rdf-schema#",
 		NsCC:      "http://web.resource.org/cc/",
 		NsDCam:    "http://purl.org/dc/dcam/",
+		NsMarcRel: "http://id.loc.gov/vocabulary/relators/",
 
 		Work: marshaller.Work{
 			Comment: e.Comment,
