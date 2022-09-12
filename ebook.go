@@ -30,7 +30,7 @@ const (
 type Ebook struct {
 	ID                int          `json:"id"`           // PG eText ID.
 	BookType          string       `json:"type"`         // Text, Sound, etc.
-	ReleaseDate       string       `json:"released"`     // PG release date.
+	ReleaseDate       string       `json:"released"`     // PG release date in ISO 8601 format (2006-01-02)
 	Language          string       `json:"language"`     // Language of this work.
 	Publisher         string       `json:"publisher"`    // Publisher of this work; usually Project Gutenberg.
 	Copyright         string       `json:"copyright"`    // Rights for this work (e.g. PD).
@@ -100,7 +100,7 @@ type Creator struct {
 // File is a resource for the ebook, such as .txt, .tei, .zip, etc.
 type File struct {
 	URL       string   `json:"url"`      // URL of the file at gutenberg.org.
-	Extent    int      `json:"extent"`   // Gutenberg extent number.
+	Extent    int      `json:"extent"`   // Extent is the size of the file in bytes.
 	Modified  string   `json:"modified"` // Modified date for this resource.
 	Encodings []string `json:"encoding"` // Encoding(s) for this resource.
 }
