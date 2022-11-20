@@ -12,10 +12,10 @@ import (
 func TestEbook(t *testing.T) {
 	rdf := getTestRDF(t)
 
-	if rdf.ID != 1400 {
+	if rdf.ID != 999991234 {
 		t.Errorf("unexpected ebook ID, got %d", rdf.ID)
 	}
-	if rdf.Note != "Message for the rdf_test.go" {
+	if rdf.Note != "A description for this RDF" {
 		t.Errorf("unexpected ebook description, got '%s'", rdf.Note)
 	}
 	if rdf.BookType != "Text" {
@@ -45,7 +45,7 @@ func TestEbook(t *testing.T) {
 	if rdf.Downloads != 16579 {
 		t.Errorf("unexpected ebook downloads, got %d", rdf.Downloads)
 	}
-	if rdf.Comment != "Archives containing the RDF files for *all* our books can be downloaded at\n            https://www.gutenberg.org/wiki/Gutenberg:Feeds#The_Complete_Project_Gutenberg_Catalog" {
+	if rdf.Comment != "Archives containing the RDF files for *all* our books can be downloaded from our website." {
 		t.Errorf("unexpected work comment, got '%s'", rdf.Comment)
 	}
 	if rdf.CCLicense != "https://creativecommons.org/publicdomain/zero/1.0/" {
@@ -189,7 +189,7 @@ func TestEbookFiles(t *testing.T) {
 	if f.Modified != "2015-11-06T09:50:04" {
 		t.Errorf("unexpected file modified timestamp, got '%s'", f.Modified)
 	}
-	if f.URL != "https://www.gutenberg.org/files/1400/1400-8.zip" {
+	if f.URL != "https://www.example.org/files/999991234/999991234-8.zip" {
 		t.Errorf("unexpected file URI, got '%s'", f.URL)
 	}
 	if len(f.Encodings) != 2 {
@@ -272,7 +272,7 @@ func TestToRDF(t *testing.T) {
 func getTestRDF(t *testing.T) *pgrdf.Ebook {
 	t.Helper()
 
-	file, err := os.Open("samples/cache/epub/1400/pg1400.rdf")
+	file, err := os.Open("samples/cache/epub/999991234/pg999991234.rdf")
 	if err != nil {
 		t.Fatalf("error opening test RDF file: %s", err)
 	}

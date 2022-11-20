@@ -73,7 +73,7 @@ func TestEbook(t *testing.T) {
 
 	e := r.Ebook
 
-	if e.About != "ebooks/1400" {
+	if e.About != "ebooks/999991234" {
 		t.Errorf("unexpected rdf:about, got '%s'", e.About)
 	}
 	if e.Description != "Message for the rdf_test.go" {
@@ -129,7 +129,7 @@ func TestEbook(t *testing.T) {
 	if e.Series != "Dickens Best Of" {
 		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series)
 	}
-	if e.BookCover != "file:///public/vhost/g/gutenberg/html/files/1400/1400-h/images/cover.jpg" {
+	if e.BookCover != "file:///public/vhost/g/gutenberg/html/files/999991234/999991234-h/images/cover.jpg" {
 		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCover)
 	}
 	if e.Downloads.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
@@ -328,7 +328,7 @@ func TestHasFormats(t *testing.T) {
 	if f.Modified.Value != "2020-04-27T16:52:30" {
 		t.Errorf("unexpected dcterms:hasFormat/file/modified, got '%s'", f.Modified.Value)
 	}
-	if f.IsFormatOf.Resource != "ebooks/1400" {
+	if f.IsFormatOf.Resource != "ebooks/999991234" {
 		t.Errorf("unexpected dcterms:hasFormat/file, got '%s'", f.IsFormatOf.Resource)
 	}
 
@@ -509,7 +509,7 @@ func TestMarcCodes(t *testing.T) {
 func openRDF(t *testing.T) *unmarshaller.RDF {
 	t.Helper()
 
-	file, err := os.Open("../../samples/cache/epub/1400/pg1400.rdf")
+	file, err := os.Open("../../samples/cache/epub/999991234/pg999991234.rdf")
 	if err != nil {
 		t.Fatalf("error opening test RDF file: %s", err)
 	}
