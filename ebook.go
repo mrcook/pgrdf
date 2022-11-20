@@ -30,11 +30,11 @@ const (
 type Ebook struct {
 	ID                int          `json:"id"`           // PG eText ID.
 	BookType          string       `json:"type"`         // Text, Sound, etc.
-	ReleaseDate       string       `json:"released"`     // PG release date in ISO 8601 format (2006-01-02)
-	Language          string       `json:"language"`     // Language of this work.
+	ReleaseDate       string       `json:"released"`     // PG release date in ISO 8601 format (e.g. 2006-01-02)
+	Language          Language     `json:"language"`     // Language details of this book
 	Publisher         string       `json:"publisher"`    // Publisher of this work; usually Project Gutenberg.
-	Copyright         string       `json:"copyright"`    // Rights for this work (e.g. PD).
 	PublishedYear     int          `json:"published"`    // Year this work was published in.
+	Copyright         string       `json:"copyright"`    // Rights for this work (e.g. PD).
 	Titles            []string     `json:"titles"`       // Full title for this work (main, sub, etc.).
 	OtherTitles       []string     `json:"other_titles"` // Alternative titles for this work.
 	Creators          []Creator    `json:"creators"`     // List of creators for this work (author, illustration, etc.).
@@ -66,9 +66,9 @@ func NewEbook(r io.Reader) (*Ebook, error) {
 
 // ToRDF writes RDF XML data to the provided io.Writer.
 func (e *Ebook) ToRDF(w io.Writer) error {
-	rdf := e.mapToMarshaller()
+	rdf := mapToMarshaller(e)
 
-	data, err := xml.Marshal(rdf)
+	data, err := xml.MarshalIndent(rdf, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -111,6 +111,14 @@ type Subject struct {
 	Schema  string `json:"schema"`  // Vocabulary Encoding Scheme (full URL).
 }
 
+// Language has the language and dialect details that the book is written in,
+// along with any additional notes.
+type Language struct {
+	Code    string `json:"code"`              // ISO-639-1 two-letter language code. Example: `en`.
+	Dialect string `json:"dialect,omitempty"` // ISO 3166-2 subdivision code. Example: `GB`.
+	Notes   string `json:"notes,omitempty"`   // Additional details on the language used in the ebook. Example: `Uses 19th century spelling`.
+}
+
 // AuthorLink is an external resource about the author. Usually this is a link
 // to Wikipedia.
 type AuthorLink struct {
@@ -124,7 +132,6 @@ func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 		ID:                agentID(rdf.Ebook.About),
 		BookType:          rdf.Ebook.Type.Description.Value.Data,
 		ReleaseDate:       rdf.Ebook.Issued.Value,
-		Language:          languageTag(rdf.Ebook),
 		Publisher:         rdf.Ebook.Publisher,
 		PublishedYear:     rdf.Ebook.PublishedYear,
 		Copyright:         rdf.Ebook.Rights,
@@ -136,6 +143,12 @@ func mapUnmarshalled(rdf *unmarshaller.RDF) *Ebook {
 		Note:              rdf.Ebook.Description,
 		Comment:           rdf.Work.Comment,
 		CCLicense:         rdf.Work.License.Resource,
+	}
+
+	ebook.Language = Language{
+		Code:    rdf.Ebook.Language.Description.Value.Data,
+		Dialect: rdf.Ebook.LanguageDialect,
+		Notes:   rdf.Ebook.LanguageNotes,
 	}
 
 	for _, l := range rdf.Descriptions {
@@ -240,25 +253,12 @@ func bookCoverFilename(cover string) string {
 	return cover
 }
 
-// Constructs a valid language localisation tag: e.g. `en`, `en-GB`, etc.
-func languageTag(ebook unmarshaller.Ebook) string {
-	var codes []string
-
-	if len(ebook.Language.Description.Value.Data) > 0 {
-		codes = append(codes, ebook.Language.Description.Value.Data)
-	}
-	if len(ebook.LanguageSubCode) > 0 {
-		codes = append(codes, ebook.LanguageSubCode)
-	}
-	return strings.Join(codes, "-")
-}
-
 func titles(title string) []string {
 	return strings.Split(title, "\n")
 }
 
 // Maps Ebook to the marshaller RDF.
-func (e *Ebook) mapToMarshaller() *marshaller.RDF {
+func mapToMarshaller(e *Ebook) *marshaller.RDF {
 	rdf := &marshaller.RDF{
 		// TODO: only add them if they're needed.
 		NsBase:    "http://www.gutenberg.org/",
@@ -292,18 +292,23 @@ func (e *Ebook) mapToMarshaller() *marshaller.RDF {
 				NodeID: e.nodeIdGenerator(),
 				Value: &marshaller.Value{
 					DataType: "http://purl.org/dc/terms/RFC4646",
-					Data:     e.Language,
+					Data:     e.Language.Code,
 				},
 			}},
-			License:     marshaller.License{Resource: "license"},
-			Publisher:   e.Publisher,
-			Rights:      e.Copyright,
-			Title:       strings.Join(e.Titles, "\n"),
-			Alternative: e.OtherTitles,
-			Creators:    nil,
-			Subjects:    nil,
-			HasFormats:  nil,
-			Bookshelves: nil,
+			LanguageDialect: e.Language.Dialect,
+			LanguageNotes:   e.Language.Notes,
+			License:         marshaller.License{Resource: "license"},
+			Publisher:       e.Publisher,
+			PublishedYear:   e.PublishedYear,
+			Rights:          e.Copyright,
+			Title:           strings.Join(e.Titles, "\n"),
+			Alternative:     e.OtherTitles,
+			Creators:        nil,
+			Subjects:        nil,
+			HasFormats:      nil,
+			Bookshelves:     nil,
+			Series:          e.Series,
+			BookCover:       e.BookCoverFilename,
 			Downloads: &marshaller.Downloads{
 				DataType: "http://www.w3.org/2001/XMLSchema#integer",
 				Value:    e.Downloads,

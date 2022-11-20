@@ -11,7 +11,7 @@
 >
   <pgterms:ebook rdf:about="ebooks/999991234">
     <dcterms:description>A description for this RDF</dcterms:description>
-    <dcterms:alternative>Alternative Title</dcterms:alternative>
+    <dcterms:alternative>Alternate Title</dcterms:alternative>
     <dcterms:subject>
       <rdf:Description rdf:nodeID="N7f1bbe105df54031872c530deda0bd5f">
         <rdf:value>Young men -- Fiction</rdf:value>
@@ -20,7 +20,6 @@
     </dcterms:subject>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
     <pgterms:downloads rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">16579</pgterms:downloads>
-    <pgterms:marc901>file:///files/999991234/999991234-h/images/cover.jpg</pgterms:marc901>
     <dcterms:hasFormat>
       <pgterms:file rdf:about="https://www.example.org/files/999991234/999991234-h.zip">
         <dcterms:extent rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">31020490</dcterms:extent>
@@ -81,7 +80,6 @@
         <pgterms:name>Paz, M.</pgterms:name>
       </pgterms:agent>
     </marcrel:com>
-    <pgterms:marc440>Dickens Best Of</pgterms:marc440>
     <dcterms:subject>
       <rdf:Description rdf:nodeID="Nfa1f8c9301eb4bad8c264d69b76512fb">
         <dcam:memberOf rdf:resource="http://purl.org/dc/terms/LCSH"/>
@@ -120,7 +118,6 @@
         <rdf:value rdf:datatype="http://purl.org/dc/terms/RFC4646">en</rdf:value>
       </rdf:Description>
     </dcterms:language>
-    <pgterms:marc907>GB</pgterms:marc907>
     <dcterms:hasFormat>
       <pgterms:file rdf:about="https://www.example.org/cache/epub/999991234/pg999991234.cover.medium.jpg">
         <dcterms:extent rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">27138</dcterms:extent>
@@ -346,7 +343,23 @@
         <dcterms:isFormatOf rdf:resource="ebooks/999991234"/>
       </pgterms:file>
     </dcterms:hasFormat>
+    <pgterms:marc010>77177891</pgterms:marc010>
+    <pgterms:marc020>0-397-00033-2</pgterms:marc020>
+    <pgterms:marc250>The Charles Dickens Edition</pgterms:marc250>
+    <pgterms:marc260>United Kingdom: J. Johnson, 1794.</pgterms:marc260>
+    <pgterms:marc300>Musical score</pgterms:marc300>
+    <pgterms:marc440>Dickens Best Of</pgterms:marc440>
+    <pgterms:marc508>Updated: 2022-07-14</pgterms:marc508>
+    <pgterms:marc508>Produced by Anon.</pgterms:marc508>
+    <pgterms:marc520>A fun version of A Christmas Carol.</pgterms:marc520>
+    <pgterms:marc546>Uses 19th century spelling.</pgterms:marc546>
+    <pgterms:marc901>file:///files/999991234/999991234-h/images/cover.jpg</pgterms:marc901>
+    <pgterms:marc902>https://example.org/ebook1/title.jpg</pgterms:marc902>
+    <pgterms:marc903>https://example.org/ebook1/back.jpg</pgterms:marc903>
+    <pgterms:marc904>https://example.com/ebooks/1/something</pgterms:marc904>
+    <pgterms:marc905>19991231235959randomthing</pgterms:marc905>
     <pgterms:marc906>1861</pgterms:marc906>
+    <pgterms:marc907>GB</pgterms:marc907>
   </pgterms:ebook>
   <cc:Work rdf:about="">
     <rdfs:comment>Archives containing the RDF files for *all* our books can be downloaded from our website.</rdfs:comment>

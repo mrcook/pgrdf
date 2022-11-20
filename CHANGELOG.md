@@ -2,8 +2,11 @@
 
 ## HEAD
 
-All RDFs from the 202-11-05 `rdf_files.tar.bz2` archive were parsed to generate
-a list of currently used MARC codes, which have now been added to the RDF Ebook.
+* RDF unmarshalling now processes all MARC codes used by PG
+  - that's all codes found in the 202-11-05 `rdf_files.tar.bz2` archive
+* All language related data is now contained in a `Language` struct
+* Updated the sample RDF with more fake data
+  - its number was also changed to a value PG will never use
 
 
 ## v1.3.0 (2022-03-05)

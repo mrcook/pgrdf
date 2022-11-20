@@ -39,8 +39,8 @@ type Ebook struct {
 	Type                Type          `xml:"dcterms:type,omitempty"`
 	Issued              *Issued       `xml:"dcterms:issued,omitempty"`
 	Language            Language      `xml:"dcterms:language,omitempty"`
-	LanguageNote        int           `xml:"pgterms:marc546,omitempty"`
-	LanguageSubCode     int           `xml:"pgterms:marc907,omitempty"`
+	LanguageDialect     string        `xml:"pgterms:marc907,omitempty"`
+	LanguageNotes       string        `xml:"pgterms:marc546,omitempty"`
 	Publisher           string        `xml:"dcterms:publisher,omitempty"`
 	PublishedYear       int           `xml:"pgterms:marc906,omitempty"`
 	License             License       `xml:"dcterms:license,omitempty"`

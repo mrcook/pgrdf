@@ -55,8 +55,8 @@ type Ebook struct {
 	Type                Type
 	Issued              Issued
 	Language            Language
-	LanguageNote        string `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
-	LanguageSubCode     string `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	LanguageDialect     string `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	LanguageNotes       string `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
 	Publisher           string `xml:"http://purl.org/dc/terms/ publisher"`
 	PublishedYear       int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
 	License             License
