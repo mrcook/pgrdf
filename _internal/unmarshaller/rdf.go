@@ -48,31 +48,43 @@ type CCLicense struct {
 }
 
 type Ebook struct {
-	XMLName         xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
-	About           string   `xml:"about,attr"`
-	Description     string   `xml:"http://purl.org/dc/terms/ description"`
-	Type            Type
-	Issued          Issued
-	Language        Language
-	LanguageSubCode string `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
-	Publisher       string `xml:"http://purl.org/dc/terms/ publisher"`
-	PublishedYear   int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
-	License         License
-	Rights          string        `xml:"http://purl.org/dc/terms/ rights"`
-	Title           string        `xml:"http://purl.org/dc/terms/ title"`
-	Alternative     []string      `xml:"http://purl.org/dc/terms/ alternative"`
-	Creators        []Creator     `xml:"http://purl.org/dc/terms/ creator"`
-	Compilers       []Compiler    `xml:"http://id.loc.gov/vocabulary/relators/ com"`
-	Contributors    []Contributor `xml:"http://id.loc.gov/vocabulary/relators/ ctb"`
-	Editors         []Editor      `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
-	Illustrators    []Illustrator `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
-	Translators     []Translator  `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
-	Subjects        []Subject     `xml:"http://purl.org/dc/terms/ subject"`
-	HasFormats      []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
-	Bookshelves     []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
-	Series          string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
-	BookCover       string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
-	Downloads       Downloads
+	XMLName             xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
+	About               string   `xml:"about,attr"`
+	Summary             string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
+	Description         string   `xml:"http://purl.org/dc/terms/ description"`
+	Type                Type
+	Issued              Issued
+	Language            Language
+	LanguageNote        string `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
+	LanguageSubCode     string `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	Publisher           string `xml:"http://purl.org/dc/terms/ publisher"`
+	PublishedYear       int    `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
+	License             License
+	Rights              string        `xml:"http://purl.org/dc/terms/ rights"`
+	PgDpClearance       string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
+	Title               string        `xml:"http://purl.org/dc/terms/ title"`
+	Alternative         []string      `xml:"http://purl.org/dc/terms/ alternative"`
+	Creators            []Creator     `xml:"http://purl.org/dc/terms/ creator"`
+	Compilers           []Compiler    `xml:"http://id.loc.gov/vocabulary/relators/ com"`
+	Contributors        []Contributor `xml:"http://id.loc.gov/vocabulary/relators/ ctb"`
+	Editors             []Editor      `xml:"http://id.loc.gov/vocabulary/relators/ edt"`
+	Illustrators        []Illustrator `xml:"http://id.loc.gov/vocabulary/relators/ ill"`
+	Translators         []Translator  `xml:"http://id.loc.gov/vocabulary/relators/ trl"`
+	Subjects            []Subject     `xml:"http://purl.org/dc/terms/ subject"`
+	HasFormats          []HasFormat   `xml:"http://purl.org/dc/terms/ hasFormat"`
+	Bookshelves         []Bookshelf   `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
+	Series              string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
+	BookCover           string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
+	TitlePageImage      string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
+	BackCover           string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
+	Edition             string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
+	OriginalPublication string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
+	SourceDescription   string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
+	SourceLink          string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
+	Credits             []string      `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
+	LOC                 string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
+	ISBN                string        `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
+	Downloads           Downloads
 }
 
 type Agent struct {

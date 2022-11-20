@@ -1,7 +1,9 @@
 package unmarshaller_test
 
 import (
+	"io"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/mrcook/pgrdf/_internal/unmarshaller"
@@ -368,18 +370,158 @@ func TestBookshelves(t *testing.T) {
 	}
 }
 
+func TestMarcCodes(t *testing.T) {
+	t.Run("marc010 LoC Number", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc010>77177891</pgterms:marc010></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.LOC != "77177891" {
+			t.Fatalf("unexpected LoC '%s'", rdf.Ebook.LOC)
+		}
+	})
+
+	t.Run("marc020 ISBN", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc020>0-397-00033-2</pgterms:marc020></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.ISBN != "0-397-00033-2" {
+			t.Fatalf("unexpected ISBN '%s'", rdf.Ebook.ISBN)
+		}
+	})
+
+	t.Run("marc250 Edition", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc250>The Charles Dickens Edition</pgterms:marc250></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.Edition != "The Charles Dickens Edition" {
+			t.Fatalf("unexpected edition '%s'", rdf.Ebook.Edition)
+		}
+	})
+
+	t.Run("marc260 Original Publication Details", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc260>United Kingdom: J. Johnson, 1794.</pgterms:marc260></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.OriginalPublication != "United Kingdom: J. Johnson, 1794." {
+			t.Fatalf("unexpected original publication details '%s'", rdf.Ebook.OriginalPublication)
+		}
+	})
+
+	t.Run("marc300 Source Description", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc300>Musical score</pgterms:marc300></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.SourceDescription != "Musical score" {
+			t.Fatalf("unexpected summary '%s'", rdf.Ebook.SourceDescription)
+		}
+	})
+
+	t.Run("marc440 Series Title", func(t *testing.T) {
+		example := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc440>Dickens Best Of</pgterms:marc440></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(example))
+		if rdf.Ebook.Series != "Dickens Best Of" {
+			t.Fatalf("unexpected series '%s'", rdf.Ebook.Series)
+		}
+	})
+
+	t.Run("marc508 Credits", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc508>Updated: 2022-07-14</pgterms:marc508><pgterms:marc508>Produced by Anon.</pgterms:marc508></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if len(rdf.Ebook.Credits) != 2 {
+			t.Fatalf("expected 2 credit entries, got %d", len(rdf.Ebook.Credits))
+		}
+		if rdf.Ebook.Credits[0] != "Updated: 2022-07-14" {
+			t.Errorf("nnexpected credit '%s'", rdf.Ebook.Credits[0])
+		}
+		if rdf.Ebook.Credits[1] != "Produced by Anon." {
+			t.Errorf("unexpected credit '%s'", rdf.Ebook.Credits[1])
+		}
+	})
+
+	t.Run("marc520 Summary", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc520>A fun version of Night Before Christmas.</pgterms:marc520></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.Summary != "A fun version of Night Before Christmas." {
+			t.Fatalf("unexpected summary '%s'", rdf.Ebook.Summary)
+		}
+	})
+
+	t.Run("marc546 Language Note", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc546>Uses 19th century spelling</pgterms:marc546></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.LanguageNote != "Uses 19th century spelling" {
+			t.Fatalf("unexpected book cover link '%s'", rdf.Ebook.LanguageNote)
+		}
+	})
+
+	t.Run("marc901 Bookcover link", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc901>file:///images/cover.jpg</pgterms:marc901></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.BookCover != "file:///images/cover.jpg" {
+			t.Fatalf("unexpected book cover link '%s'", rdf.Ebook.BookCover)
+		}
+	})
+
+	t.Run("marc902 Title page image link", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc902>https://example.org/ebook1/title.jpg</pgterms:marc902></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.TitlePageImage != "https://example.org/ebook1/title.jpg" {
+			t.Fatalf("unexpected title page link '%s'", rdf.Ebook.TitlePageImage)
+		}
+	})
+
+	t.Run("marc903 Back cover link", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc903>https://example.org/ebook1/back.jpg</pgterms:marc903></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.BackCover != "https://example.org/ebook1/back.jpg" {
+			t.Fatalf("unexpected back cover link '%s'", rdf.Ebook.BackCover)
+		}
+	})
+
+	t.Run("marc904 Source Link", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc904>https://example.org/ebook1</pgterms:marc904></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.SourceLink != "https://example.org/ebook1" {
+			t.Fatalf("unexpected source link '%s'", rdf.Ebook.SourceLink)
+		}
+	})
+
+	t.Run("marc905 PGDP Copyright Clearance Code", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc905>20051128110452chambers</pgterms:marc905></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.PgDpClearance != "20051128110452chambers" {
+			t.Fatalf("unexpected clearance code value '%s'", rdf.Ebook.PgDpClearance)
+		}
+	})
+
+	t.Run("marc906 Published Year", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc906>1911</pgterms:marc906></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.PublishedYear != 1911 {
+			t.Fatalf("expected series '1911', got '%d'", rdf.Ebook.PublishedYear)
+		}
+	})
+
+	t.Run("marc907 Language Code", func(t *testing.T) {
+		rdfXml := `<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/"><pgterms:ebook><pgterms:marc907>US</pgterms:marc907></pgterms:ebook></rdf:RDF>`
+		rdf := unmarshalRDF(t, strings.NewReader(rdfXml))
+		if rdf.Ebook.LanguageSubCode != "US" {
+			t.Fatalf("expected series 'US', got '%s'", rdf.Ebook.LanguageSubCode)
+		}
+	})
+}
+
 func openRDF(t *testing.T) *unmarshaller.RDF {
 	t.Helper()
 
-	file, err := os.Open("samples/cache/epub/1400/pg1400.rdf")
+	file, err := os.Open("../../samples/cache/epub/1400/pg1400.rdf")
 	if err != nil {
 		t.Fatalf("error opening test RDF file: %s", err)
 	}
+	return unmarshalRDF(t, file)
+}
 
-	rdf, err := unmarshaller.New(file)
+func unmarshalRDF(t *testing.T, reader io.Reader) *unmarshaller.RDF {
+	t.Helper()
+
+	rdf, err := unmarshaller.New(reader)
 	if err != nil {
-		t.Fatalf("unable to read test RDF file: %s", err)
+		t.Fatalf("unable to read RDF document: %s", err)
 	}
-
 	return rdf
 }
