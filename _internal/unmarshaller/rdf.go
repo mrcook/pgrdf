@@ -3,6 +3,8 @@ package unmarshaller
 import (
 	"encoding/xml"
 	"io"
+	"strconv"
+	"strings"
 )
 
 func New(r io.Reader) (*RDF, error) {
@@ -87,6 +89,11 @@ type Ebook struct {
 	Downloads           Downloads
 }
 
+// Id taken from the about attribute.
+func (e *Ebook) Id() int {
+	return extractIdFromAboutAttr(e.About)
+}
+
 type Agent struct {
 	XMLName   xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ agent"`
 	About     string   `xml:"about,attr"`
@@ -95,6 +102,11 @@ type Agent struct {
 	Birthdate Year     `xml:"birthdate"`
 	Deathdate Year     `xml:"deathdate"`
 	Webpage   Webpage
+}
+
+// Id taken from the about attribute.
+func (a *Agent) Id() int {
+	return extractIdFromAboutAttr(a.About)
 }
 
 type Bookshelf struct {
@@ -228,4 +240,12 @@ type Webpage struct {
 type Year struct {
 	DataType string `xml:"datatype,attr"`
 	Value    int    `xml:",chardata"`
+}
+
+// Extracts the ID from the about attribute.
+func extractIdFromAboutAttr(about string) int {
+	parts := strings.Split(about, "/")
+	idString := parts[len(parts)-1]
+	id, _ := strconv.Atoi(idString)
+	return id
 }

@@ -7,7 +7,7 @@ Metadata (RDF XML), mapping them on to a more usable set of types.
 from a Project Gutenberg `tar` archive. See the usage section below for more
 information.
 
-A gutenberg RDF source file might look like [pg1400.rdf](samples/cache/epub/999991234/pg999991234.rdf)
+A gutenberg RDF source file might look like [pg1400.rdf](samples/cache/epub/1400/pg1400.rdf)
 from the sample directory:
 
 ```xml
@@ -74,13 +74,13 @@ import (
 )
 
 func main() {
-	rdfFile, _ := os.Open("./pg999991234.rdf")
-	ebook, _ := pgrdf.NewEbook(rdfFile)
+	rdfFile, _ := os.Open("./pg1400.rdf")
+	ebook, _ := pgrdf.ReadRDF(rdfFile)
 
 	ebook.Titles = append(ebook.Titles, "In Three Volumes")
 
 	w := bytes.NewBuffer([]byte{}) // create io.Writer
-	_ = ebook.ToRDF(w)             // marshall to RDF XML data
+	_ = ebook.WriteRDF(w)             // marshall to RDF XML data
 	fmt.Println(w.String())
 
 	data, _ := json.Marshal(ebook) // marshall to JSON
@@ -122,8 +122,6 @@ extracted from the archive:
     │     │  └─ pg1.rdf
     │     ├─ 2/
     │     ...
-
-
 
 
 ## LICENSE
