@@ -49,6 +49,8 @@ type Ebook struct {
 	Title               string        `xml:"dcterms:title,omitempty"`
 	Alternative         []string      `xml:"dcterms:alternative,omitempty"`
 	Creators            []Creator     `xml:"dcterms:creator,omitempty"`
+	Compilers           []Compiler    `xml:"marcrel:com,omitempty"`
+	Contributors        []Contributor `xml:"marcrel:ctb,omitempty"`
 	Editors             []Editor      `xml:"marcrel:edt,omitempty"`
 	Illustrators        []Illustrator `xml:"marcrel:ill,omitempty"`
 	Translators         []Translator  `xml:"marcrel:trl,omitempty"`
@@ -83,6 +85,14 @@ type Bookshelf struct {
 }
 
 type Creator struct {
+	Agent Agent `xml:"pgterms:agent"`
+}
+
+type Compiler struct {
+	Agent Agent `xml:"pgterms:agent"`
+}
+
+type Contributor struct {
 	Agent Agent `xml:"pgterms:agent"`
 }
 
@@ -200,19 +210,20 @@ func FromUnmarshaller(r *unmarshaller.RDF) *RDF {
 			License: CCLicense{Resource: r.Work.License.Resource},
 		},
 		Ebook: Ebook{
-			About:       r.Ebook.About,
-			Description: r.Ebook.Description,
-			Bookshelves: nil,
-			Title:       r.Ebook.Title,
-			Alternative: r.Ebook.Alternative,
-			Creators:    nil,
-			Subjects:    nil,
-			Publisher:   r.Ebook.Publisher,
-			Issued:      nil,
-			Rights:      r.Ebook.Rights,
-			License:     License{Resource: r.Ebook.License.Resource},
-			Downloads:   nil,
-			HasFormats:  nil,
+			About:         r.Ebook.About,
+			Description:   r.Ebook.Description,
+			Bookshelves:   nil,
+			Title:         r.Ebook.Title,
+			Alternative:   r.Ebook.Alternative,
+			Creators:      nil,
+			Subjects:      nil,
+			Publisher:     r.Ebook.Publisher,
+			PublishedYear: r.Ebook.PublishedYear,
+			Issued:        nil,
+			Rights:        r.Ebook.Rights,
+			License:       License{Resource: r.Ebook.License.Resource},
+			Downloads:     nil,
+			HasFormats:    nil,
 			Type: Type{
 				Description: description(&r.Ebook.Type.Description),
 			},

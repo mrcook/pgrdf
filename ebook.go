@@ -3,6 +3,7 @@ package pgrdf
 import (
 	"encoding/xml"
 	"io"
+	"regexp"
 )
 
 // Ebook reads an RDF from the input stream and maps it onto this object, which
@@ -89,6 +90,13 @@ func (e *Ebook) WriteRDF(w io.Writer) error {
 	if err != nil {
 		return err
 	}
+
+	// The xml package does not currently emit self-closing tags, e.g. `<tag />`.
+	r := regexp.MustCompile(`></[^>]+?>`)
+	data = r.ReplaceAll(data, []byte("/>"))
+
+	// prepend the xml declaration
+	data = append([]byte(xml.Header), data...)
 
 	if _, err := w.Write(data); err != nil {
 		return err
