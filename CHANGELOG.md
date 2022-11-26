@@ -2,16 +2,23 @@
 
 ## HEAD
 
+
+## v1.4.0 (2022-11-26)
+
 IMPORTANT: this release contains breaking changes! 
 
 * `pgrdf.ToRDF()` has been renamed to `WriteRDF()`
 * `pgrdf.NewEbook()` has been renamed to `ReadRDF()`
 * The `Language` field on `Ebook` has changed from a `string` type to `pgrdf.Language`.
 
-Additional features:
+Additional changes:
 
 * RDF unmarshalling now processes all MARC codes used by PG
   - that's all codes found in the 202-11-05 `rdf_files.tar.bz2` archive
+* RDF marshalling now includes:
+  - all missing tags, such as the contributors, and the new marc tags.
+  - the generated XML is now tested against the `pg11.rdf` sample file.
+* WriteRDF function now includes the XML declaration header and fixes the self-closing tags.
 * Updated the sample RDF with more fake data
   - its number was also changed to a value PG will never use
 
