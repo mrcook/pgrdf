@@ -7,8 +7,7 @@ Metadata (RDF XML), mapping them on to a more usable set of types.
 from a Project Gutenberg `tar` archive. See the usage section below for more
 information.
 
-A gutenberg RDF source file might look like [pg1400.rdf](samples/cache/epub/1400/pg1400.rdf)
-from the sample directory:
+Here's an example of the RDF for [Great Expectations](https://gutenberg.org/ebooks/1400.rdf):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -33,10 +32,13 @@ from the sample directory:
         </dcterms:creator>
         <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
         <!-- ... -->
+    </pgterms:ebook>
+</rdf:RDF>
 ```
 
-Using the `pgrdf` library, the metadata can be accessed more easily via the `Ebook`
-object, which can also be un/marshalled to JSON:
+RDFs are unmarshalled on to an `Ebook` object to provide easier access to
+the data. Changes to this data can be marshalled back to an RDF, or
+alternatively, the `Ebook` can be marshalled to JSON:
 
 ```json
 {
@@ -79,8 +81,8 @@ func main() {
 
 	ebook.Titles = append(ebook.Titles, "In Three Volumes")
 
-	w := bytes.NewBuffer([]byte{}) // create io.Writer
-	_ = ebook.WriteRDF(w)             // marshall to RDF XML data
+	w := bytes.NewBuffer([]byte{}) // create an io.Writer
+	_ = ebook.WriteRDF(w)          // marshall to RDF XML data
 	fmt.Println(w.String())
 
 	data, _ := json.Marshal(ebook) // marshall to JSON
@@ -88,27 +90,27 @@ func main() {
 }
 ```
 
-It is possible to read the metadata directly from the official Project Gutenberg
-offline RDF catalog archive: http://www.gutenberg.org/cache/epub/feeds/.
+It is possible to read an RDF directly from the official Project Gutenberg
+offline catalog archive: http://www.gutenberg.org/cache/epub/feeds/.
 
 There are currently two archives available:
 
     rdf-files.tar.bz2
     rdf-files.tar.zip
 
-Reading from a bz2/zip is considerably slower than just the plain `tar` archive,
-so it is recommended to first extract the tarball from the bz2/zip archive.
-Example using Linux:
+Reading from a `bz2` is considerably slower than just the plain `tar` archive,
+so it is recommended to first extract the tarball from the `bz2` archive.
+Example on Linux:
 
     $ bzip2 -dk rdf-files.tar.bz2
 
 If this is not possible/desirable then the `.tar.bz2` must first be wrapped in a
 `bzip2` reader:
 
-    rdf, err := FromTarArchive(bzip2.NewReader(archiveFile), id)
+    rdf, err := archive.FromTarArchive(bzip2.NewReader(archiveFile), id)
 
-When an archive is fully extracted to a local directory, there is a helper
-function for looking up a RDF using the PG eText ID:
+When an archive is fully extracted to a local directory, the `FromDirectory`
+function can be used:
 
     rdf, err := archive.FromDirectory("/rdf_files_dir", 1400)
 
