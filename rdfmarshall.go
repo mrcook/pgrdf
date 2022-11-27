@@ -21,24 +21,16 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 		NsDCam:    "http://purl.org/dc/dcam/",
 		NsMarcRel: "http://id.loc.gov/vocabulary/relators/",
 
-		Work: marshaller.Work{
-			Comment: e.Comment,
-			License: marshaller.CCLicense{Resource: e.CCLicense},
-		},
 		Ebook: marshaller.Ebook{
 			About:       fmt.Sprintf("ebooks/%d", e.ID),
-			Description: e.Note,
-			Type: marshaller.Type{
-				Description: marshaller.Description{
-					NodeID:   nodeid.Generate(),
-					Value:    &marshaller.Value{Data: e.BookType},
-					MemberOf: &marshaller.MemberOf{Resource: "http://purl.org/dc/terms/DCMIType"},
-				},
-			},
+			Title:       strings.Join(e.Titles, "\n"),
+			Alternative: e.OtherTitles,
+			Publisher:   e.Publisher,
 			Issued: &marshaller.Issued{
 				DataType: "http://www.w3.org/2001/XMLSchema#date",
 				Value:    e.ReleaseDate,
 			},
+			Series: e.Series,
 			Language: marshaller.Language{Description: marshaller.Description{
 				NodeID: nodeid.Generate(),
 				Value: &marshaller.Value{
@@ -48,24 +40,32 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 			}},
 			LanguageDialect: e.Language.Dialect,
 			LanguageNotes:   e.Language.Notes,
-			License:         marshaller.License{Resource: "license"},
-			Publisher:       e.Publisher,
 			PublishedYear:   e.PublishedYear,
+			License:         marshaller.License{Resource: "license"},
 			Rights:          e.Copyright,
-			Title:           strings.Join(e.Titles, "\n"),
-			Alternative:     e.OtherTitles,
-			Creators:        nil,
-			Subjects:        nil,
-			HasFormats:      nil,
-			Bookshelves:     nil,
-			Series:          e.Series,
-			BookCover:       e.BookCoverFilename,
+			Type: marshaller.Type{
+				Description: marshaller.Description{
+					NodeID:   nodeid.Generate(),
+					Value:    &marshaller.Value{Data: e.BookType},
+					MemberOf: &marshaller.MemberOf{Resource: "http://purl.org/dc/terms/DCMIType"},
+				},
+			},
+			Description: e.Note,
+			BookCover:   e.BookCoverFilename,
+			Creators:    nil,
+			Subjects:    nil,
+			HasFormats:  nil,
+			Bookshelves: nil,
 			Downloads: &marshaller.Downloads{
 				DataType: "http://www.w3.org/2001/XMLSchema#integer",
 				Value:    e.Downloads,
 			},
 		},
 		Descriptions: nil,
+		Work: marshaller.Work{
+			Comment: e.Comment,
+			License: marshaller.CCLicense{Resource: e.CCLicense},
+		},
 	}
 
 	for _, c := range e.Creators {
@@ -73,11 +73,11 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 			About:   fmt.Sprintf("2009/agents/%d", c.ID),
 			Name:    c.Name,
 			Aliases: c.Aliases,
-			Birthdate: &marshaller.Year{
+			BirthYear: &marshaller.Year{
 				DataType: "http://www.w3.org/2001/XMLSchema#integer",
 				Value:    c.Born,
 			},
-			Deathdate: &marshaller.Year{
+			DeathYear: &marshaller.Year{
 				DataType: "http://www.w3.org/2001/XMLSchema#integer",
 				Value:    c.Died,
 			},

@@ -8,7 +8,7 @@ import (
 )
 
 func TestDirectoryLookup(t *testing.T) {
-	rdf, err := archive.FromDirectory("../samples", 11)
+	rdf, err := archive.FromDirectory("../samples", 999991234)
 	if err != nil {
 		t.Fatalf("unpexcted error reading RDF file: %s", err)
 	}
@@ -16,7 +16,7 @@ func TestDirectoryLookup(t *testing.T) {
 	if len(rdf.Titles) != 1 {
 		t.Fatalf("expected 1 title, got %d", len(rdf.Titles))
 	}
-	if rdf.Titles[0] != "Alice's Adventures in Wonderland" {
+	if rdf.Titles[0] != "Great Expectations" {
 		t.Errorf("unexpected title found, got '%s'", rdf.Titles[0])
 	}
 }

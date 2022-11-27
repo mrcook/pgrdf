@@ -74,32 +74,30 @@ func generateEbook() *pgrdf.Ebook {
 
 var rdfMarshallExpected = `<?xml version="1.0" encoding="UTF-8"?>
 <rdf:RDF xml:base="http://www.gutenberg.org/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:cc="http://web.resource.org/cc/" xmlns:marcrel="http://id.loc.gov/vocabulary/relators/" xmlns:dcam="http://purl.org/dc/dcam/">
-  <cc:Work>
-    <rdfs:comment>Archives containing the RDF files for *all* our books can be downloaded from our website.</rdfs:comment>
-    <cc:license rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/"/>
-  </cc:Work>
   <pgterms:ebook rdf:about="ebooks/11">
-    <dcterms:description>An improved version is available at #28885.</dcterms:description>
-    <dcterms:type>
-      <rdf:Description rdf:nodeID="Nb915b0362e09cb245ffc942c959201f2">
-        <rdf:value>Text</rdf:value>
-        <dcam:memberOf rdf:resource="http://purl.org/dc/terms/DCMIType"/>
-      </rdf:Description>
-    </dcterms:type>
+    <dcterms:title>Alice&#39;s Adventures in Wonderland</dcterms:title>
+    <dcterms:alternative>Alice in Wonderland</dcterms:alternative>
+    <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2008-06-27</dcterms:issued>
+    <pgterms:marc440>Best of Fantasy</pgterms:marc440>
     <dcterms:language>
-      <rdf:Description rdf:nodeID="N59f6317c7c4dbd8e93f3f12b2415d876">
+      <rdf:Description rdf:nodeID="Nb915b0362e09cb245ffc942c959201f2">
         <rdf:value rdf:datatype="http://purl.org/dc/terms/RFC4646">en</rdf:value>
       </rdf:Description>
     </dcterms:language>
     <pgterms:marc907>GB</pgterms:marc907>
     <pgterms:marc546>Uses 19th century spelling.</pgterms:marc546>
-    <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <pgterms:marc906>1909</pgterms:marc906>
     <dcterms:license rdf:resource="license"/>
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
-    <dcterms:title>Alice&#39;s Adventures in Wonderland</dcterms:title>
-    <dcterms:alternative>Alice in Wonderland</dcterms:alternative>
+    <dcterms:type>
+      <rdf:Description rdf:nodeID="N59f6317c7c4dbd8e93f3f12b2415d876">
+        <rdf:value>Text</rdf:value>
+        <dcam:memberOf rdf:resource="http://purl.org/dc/terms/DCMIType"/>
+      </rdf:Description>
+    </dcterms:type>
+    <dcterms:description>An improved version is available at #28885.</dcterms:description>
+    <pgterms:marc901>images/cover.jpg</pgterms:marc901>
     <dcterms:creator>
       <pgterms:agent rdf:about="2009/agents/7">
         <pgterms:name>Carroll, Lewis</pgterms:name>
@@ -134,11 +132,13 @@ var rdfMarshallExpected = `<?xml version="1.0" encoding="UTF-8"?>
         <dcam:memberOf rdf:resource="2009/pgterms/Bookshelf"/>
       </rdf:Description>
     </pgterms:bookshelf>
-    <pgterms:marc440>Best of Fantasy</pgterms:marc440>
-    <pgterms:marc901>images/cover.jpg</pgterms:marc901>
     <pgterms:downloads rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">32144</pgterms:downloads>
   </pgterms:ebook>
   <rdf:Description rdf:about="https://en.wikipedia.org/wiki/Lewis_Carroll">
     <dcterms:description>en.wikipedia</dcterms:description>
   </rdf:Description>
+  <cc:Work>
+    <rdfs:comment>Archives containing the RDF files for *all* our books can be downloaded from our website.</rdfs:comment>
+    <cc:license rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/"/>
+  </cc:Work>
 </rdf:RDF>`

@@ -132,14 +132,37 @@ func TestEbookReadCreators(t *testing.T) {
 
 	cases := []struct {
 		id   int
-		role pgrdf.MarcRelatorCode
+		role pgrdf.MarcRelator
 		name string
 	}{
 		{id: 37, role: pgrdf.RoleAut, name: "Dickens, Charles"},
-		{id: 6198, role: pgrdf.RoleCtb, name: "Robert, Clémence"},
+		{id: 1, role: pgrdf.RoleAdp, name: ""},
+		{id: 2, role: pgrdf.RoleAft, name: ""},
+		{id: 3, role: pgrdf.RoleArr, name: ""},
+		{id: 4, role: pgrdf.RoleAnn, name: ""},
+		{id: 5, role: pgrdf.RoleArt, name: ""},
+		{id: 6, role: pgrdf.RoleAui, name: ""},
+		{id: 7, role: pgrdf.RoleCmm, name: ""},
+		{id: 8, role: pgrdf.RoleCmp, name: ""},
+		{id: 9, role: pgrdf.RoleCnd, name: ""},
+		{id: 10, role: pgrdf.RoleCom, name: ""},
+		{id: 11, role: pgrdf.RoleCtb, name: ""},
+		{id: 12, role: pgrdf.RoleDub, name: ""},
+		{id: 13, role: pgrdf.RoleEdt, name: ""},
 		{id: 8397, role: pgrdf.RoleEdt, name: "Snell, F. J. (Frederick John)"},
-		{id: 54317, role: pgrdf.RoleCom, name: "Paz, M."},
+		{id: 14, role: pgrdf.RoleEgr, name: ""},
+		{id: 15, role: pgrdf.RoleIll, name: ""},
 		{id: 9473, role: pgrdf.RoleIll, name: "Leech, John"},
+		{id: 16, role: pgrdf.RoleLbt, name: ""},
+		{id: 17, role: pgrdf.RoleOth, name: ""},
+		{id: 18, role: pgrdf.RolePbl, name: ""},
+		{id: 19, role: pgrdf.RolePht, name: ""},
+		{id: 53417, role: pgrdf.RolePht, name: "Richardson, John A."},
+		{id: 20, role: pgrdf.RolePrf, name: ""},
+		{id: 21, role: pgrdf.RolePrt, name: ""},
+		{id: 22, role: pgrdf.RoleRes, name: ""},
+		{id: 23, role: pgrdf.RoleTrc, name: ""},
+		{id: 8397, role: pgrdf.RoleTrl, name: ""},
 		{id: 1736, role: pgrdf.RoleTrl, name: "Wyllie, David"},
 	}
 
@@ -147,7 +170,7 @@ func TestEbookReadCreators(t *testing.T) {
 		t.Run(fmt.Sprintf("validate ID %d is present", data.id), func(t *testing.T) {
 			var creator *pgrdf.Creator
 			for i, _ := range ebook.Creators {
-				if ebook.Creators[i].ID == data.id {
+				if ebook.Creators[i].ID == data.id && ebook.Creators[i].Role == data.role {
 					creator = &ebook.Creators[i]
 					break
 				}

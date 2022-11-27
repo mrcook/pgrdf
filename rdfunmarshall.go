@@ -16,17 +16,17 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 
 	ebook := &Ebook{
 		ID:                rdf.Ebook.Id(),
-		BookType:          rdf.Ebook.Type.Description.Value.Data,
-		ReleaseDate:       rdf.Ebook.Issued.Value,
-		Publisher:         rdf.Ebook.Publisher,
-		PublishedYear:     rdf.Ebook.PublishedYear,
-		Copyright:         rdf.Ebook.Rights,
 		Titles:            titles(rdf.Ebook.Title),
 		OtherTitles:       rdf.Ebook.Alternative,
+		Publisher:         rdf.Ebook.Publisher,
+		ReleaseDate:       rdf.Ebook.Issued.Value,
+		Series:            rdf.Ebook.Series,
+		PublishedYear:     rdf.Ebook.PublishedYear,
+		Copyright:         rdf.Ebook.Rights,
+		BookType:          rdf.Ebook.Type.Description.Value.Data,
+		Note:              rdf.Ebook.Description,
 		BookCoverFilename: bookCoverFilename(rdf.Ebook.BookCover),
 		Downloads:         rdf.Ebook.Downloads.Value,
-		Series:            rdf.Ebook.Series,
-		Note:              rdf.Ebook.Description,
 		Comment:           rdf.Work.Comment,
 		CCLicense:         rdf.Work.License.Resource,
 	}
@@ -40,24 +40,83 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 	for _, l := range rdf.Descriptions {
 		ebook.AddAuthorLink(l.Description, l.About)
 	}
+
 	for _, c := range rdf.Ebook.Creators {
-		ebook.AddCreator(*createCreator(&c.Agent, RoleAut))
+		ebook.AddCreator(*createCreator(&c.Agent, RoleAut, c.Agent.Id()))
 	}
-	for _, t := range rdf.Ebook.Compilers {
-		ebook.AddCreator(*createCreator(&t.Agent, RoleCom))
+	for _, c := range rdf.Ebook.RelAdapters {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleAdp, c.AgentId()))
 	}
-	for _, t := range rdf.Ebook.Contributors {
-		ebook.AddCreator(*createCreator(&t.Agent, RoleCtb))
+	for _, c := range rdf.Ebook.RelAfterwords {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleAft, c.AgentId()))
 	}
-	for _, e := range rdf.Ebook.Editors {
-		ebook.AddCreator(*createCreator(&e.Agent, RoleEdt))
+	for _, c := range rdf.Ebook.RelAnnotators {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleAnn, c.AgentId()))
 	}
-	for _, i := range rdf.Ebook.Illustrators {
-		ebook.AddCreator(*createCreator(&i.Agent, RoleIll))
+	for _, c := range rdf.Ebook.RelArrangers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleArr, c.AgentId()))
 	}
-	for _, t := range rdf.Ebook.Translators {
-		ebook.AddCreator(*createCreator(&t.Agent, RoleTrl))
+	for _, c := range rdf.Ebook.RelArtists {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleArt, c.AgentId()))
 	}
+	for _, c := range rdf.Ebook.RelIntroductions {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleAui, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelCommentators {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleCmm, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelComposers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleCmp, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelConductors {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleCnd, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelCompilers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleCom, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelContributors {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleCtb, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelDubious {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleDub, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelEditors {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleEdt, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelEngravers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleEgr, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelIllustrators {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleIll, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelLibrettists {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleLbt, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelOther {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleOth, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelPublishers {
+		ebook.AddCreator(*createCreator(&c.Agent, RolePbl, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelPhotographers {
+		ebook.AddCreator(*createCreator(&c.Agent, RolePht, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelPerformers {
+		ebook.AddCreator(*createCreator(&c.Agent, RolePrf, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelPrinters {
+		ebook.AddCreator(*createCreator(&c.Agent, RolePrt, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelResearchers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleRes, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelTranscribers {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleTrc, c.AgentId()))
+	}
+	for _, c := range rdf.Ebook.RelTranslators {
+		ebook.AddCreator(*createCreator(&c.Agent, RoleTrl, c.AgentId()))
+	}
+
 	for _, s := range rdf.Ebook.Subjects {
 		ebook.AddSubject(s.Description.Value.Data, s.Description.MemberOf.Resource)
 	}
@@ -93,26 +152,26 @@ func bookCoverFilename(cover string) string {
 }
 
 // addCreator appends an Agent to the creators list with the given role.
-func addCreator(e *Ebook, agent *unmarshaller.Agent, role MarcRelatorCode) {
+func addCreator(e *Ebook, agent *unmarshaller.Agent, role MarcRelator) {
 	creator := Creator{
 		ID:      agent.Id(),
 		Name:    agent.Name,
 		Aliases: agent.Aliases,
-		Born:    agent.Birthdate.Value,
-		Died:    agent.Deathdate.Value,
+		Born:    agent.BirthYear.Value,
+		Died:    agent.DeathYear.Value,
 		Role:    role,
 		WebPage: agent.Webpage.Resource,
 	}
 	e.AddCreator(creator)
 }
 
-func createCreator(agent *unmarshaller.Agent, role MarcRelatorCode) *Creator {
+func createCreator(agent *unmarshaller.Agent, role MarcRelator, agentId int) *Creator {
 	return &Creator{
-		ID:      agent.Id(),
+		ID:      agentId,
 		Name:    agent.Name,
 		Aliases: agent.Aliases,
-		Born:    agent.Birthdate.Value,
-		Died:    agent.Deathdate.Value,
+		Born:    agent.BirthYear.Value,
+		Died:    agent.DeathYear.Value,
 		Role:    role,
 		WebPage: agent.Webpage.Resource,
 	}

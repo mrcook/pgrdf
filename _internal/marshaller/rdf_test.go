@@ -12,7 +12,7 @@ import (
 	"github.com/mrcook/pgrdf/_internal/unmarshaller"
 )
 
-// NOTE: there have been various manual changes to the test RDF (pg11.rdf):
+// NOTE: there have been various manual changes to the test RDF (pg999991234.rdf):
 //   - The order of tags in a Gutenberg RDF file is not fixed, but the output
 //     of the XML marshall is, so the source file has been changed to match.
 //   - Various characters are convert to HTML entities by the xml package
@@ -52,7 +52,7 @@ func TestRDF_FromUnmarshaller(t *testing.T) {
 }
 
 func openFile(t *testing.T) *os.File {
-	file, err := os.Open("../../samples/cache/epub/11/pg11.rdf")
+	file, err := os.Open("../../samples/cache/epub/999991234/pg999991234.rdf")
 	if err != nil {
 		t.Fatalf("error opening test RDF file: %s", err)
 	}

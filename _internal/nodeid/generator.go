@@ -1,3 +1,5 @@
+// Package nodeid contains a simple utility method for generating unique IDs,
+// which can then be used when generating a new RDF document.
 package nodeid
 
 import "math/rand"

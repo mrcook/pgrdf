@@ -130,21 +130,6 @@ func TestEbookGeneral(t *testing.T) {
 	if len(e.Creators) != 1 {
 		t.Errorf("expected 1 dcterms:creator, got %d", len(e.Creators))
 	}
-	if len(e.Compilers) != 1 {
-		t.Errorf("expected 1 marcrel:com, got %d", len(e.Compilers))
-	}
-	if len(e.Contributors) != 1 {
-		t.Errorf("expected 1 marcrel:ctb, got %d", len(e.Contributors))
-	}
-	if len(e.Editors) != 1 {
-		t.Errorf("expected 1 marcrel:edt, got %d", len(e.Editors))
-	}
-	if len(e.Illustrators) != 1 {
-		t.Errorf("expected 1 marcrel:ill, got %d", len(e.Illustrators))
-	}
-	if len(e.Translators) != 1 {
-		t.Errorf("expected 1 marcrel:trl, got %d", len(e.Translators))
-	}
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
 	}
@@ -194,100 +179,173 @@ func TestCreators(t *testing.T) {
 	if a.Aliases[1] != "Boz" {
 		t.Errorf("unexpected dcterms:creator/agent/, got '%s'", a.Aliases[1])
 	}
-	if a.Birthdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
-		t.Errorf("unexpected dcterms:creator/agent/birthdate.datatype, got '%s'", a.Birthdate.DataType)
+	if a.BirthYear.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
+		t.Errorf("unexpected dcterms:creator/agent/birthdate.datatype, got '%s'", a.BirthYear.DataType)
 	}
-	if a.Birthdate.Value != 1812 {
-		t.Errorf("unexpected dcterms:creator/agent/birthdate, got %d", a.Birthdate.Value)
+	if a.BirthYear.Value != 1812 {
+		t.Errorf("unexpected dcterms:creator/agent/birthdate, got %d", a.BirthYear.Value)
 	}
-	if a.Deathdate.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
-		t.Errorf("unexpected dcterms:creator/agent/deathdate.datatype, got '%s'", a.Deathdate.DataType)
+	if a.DeathYear.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
+		t.Errorf("unexpected dcterms:creator/agent/deathdate.datatype, got '%s'", a.DeathYear.DataType)
 	}
-	if a.Deathdate.Value != 1870 {
-		t.Errorf("unexpected dcterms:creator/agent/deathdate, got %d", a.Deathdate.Value)
+	if a.DeathYear.Value != 1870 {
+		t.Errorf("unexpected dcterms:creator/agent/deathdate, got %d", a.DeathYear.Value)
 	}
 	if a.Webpage.Resource != "https://en.wikipedia.org/wiki/Charles_Dickens" {
 		t.Errorf("unexpected dcterms:creator/agent/webpage, got '%s'", a.Webpage.Resource)
 	}
 }
 
-func TestCompilers(t *testing.T) {
+func TestMarcRelators(t *testing.T) {
 	r := openRDF(t)
 
-	if len(r.Ebook.Compilers) != 1 {
-		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Compilers))
+	if len(r.Ebook.RelAdapters) != 1 {
+		t.Errorf("expected 1 adp, got %d", len(r.Ebook.RelAdapters))
+	} else if r.Ebook.RelAdapters[0].AgentId() != 1 {
+		t.Errorf("unexpected adp agent ID %d", r.Ebook.RelAdapters[0].AgentId())
 	}
-	a := r.Ebook.Compilers[0].Agent
-
-	if a.About != "2009/agents/54317" {
-		t.Errorf("unexpected compiler dcterms:creator/agent.about, got '%s'", a.About)
+	if len(r.Ebook.RelAfterwords) != 1 {
+		t.Errorf("expected 1 aft, got %d", len(r.Ebook.RelAfterwords))
+	} else if r.Ebook.RelAfterwords[0].AgentId() != 2 {
+		t.Errorf("unexpected aft agent ID %d", r.Ebook.RelAfterwords[0].AgentId())
 	}
-	if a.Name != "Paz, M." {
-		t.Errorf("unexpected compiler dcterms:creator/agent/name, got '%s'", a.Name)
+	if len(r.Ebook.RelArrangers) != 1 {
+		t.Errorf("expected 1 arr, got %d", len(r.Ebook.RelArrangers))
+	} else if r.Ebook.RelArrangers[0].AgentId() != 3 {
+		t.Errorf("unexpected arr agent ID %d", r.Ebook.RelArrangers[0].AgentId())
 	}
-}
-
-func TestContributors(t *testing.T) {
-	r := openRDF(t)
-
-	if len(r.Ebook.Contributors) != 1 {
-		t.Fatalf("expected 1 marcrel:ctb, got %d", len(r.Ebook.Contributors))
+	if len(r.Ebook.RelAnnotators) != 1 {
+		t.Errorf("expected 1 ann, got %d", len(r.Ebook.RelAnnotators))
+	} else if r.Ebook.RelAnnotators[0].AgentId() != 4 {
+		t.Errorf("unexpected ann agent ID %d", r.Ebook.RelAnnotators[0].AgentId())
 	}
-	a := r.Ebook.Contributors[0].Agent
-
-	if a.About != "2009/agents/6198" {
-		t.Errorf("unexpected contributor dcterms:creator/agent.about, got '%s'", a.About)
+	if len(r.Ebook.RelArtists) != 1 {
+		t.Errorf("expected 1 art, got %d", len(r.Ebook.RelArtists))
+	} else if r.Ebook.RelArtists[0].AgentId() != 5 {
+		t.Errorf("unexpected art agent ID %d", r.Ebook.RelArtists[0].AgentId())
 	}
-	if a.Name != "Robert, Clémence" {
-		t.Errorf("unexpected contributor dcterms:creator/agent/name, got '%s'", a.Name)
+	if len(r.Ebook.RelIntroductions) != 1 {
+		t.Errorf("expected 1 aui, got %d", len(r.Ebook.RelIntroductions))
+	} else if r.Ebook.RelIntroductions[0].AgentId() != 6 {
+		t.Errorf("unexpected aui agent ID %d", r.Ebook.RelIntroductions[0].AgentId())
 	}
-}
-
-func TestEditors(t *testing.T) {
-	r := openRDF(t)
-
-	if len(r.Ebook.Editors) != 1 {
-		t.Fatalf("expected 1 marcrel:edt, got %d", len(r.Ebook.Creators))
+	if len(r.Ebook.RelCommentators) != 1 {
+		t.Errorf("expected 1 cmm, got %d", len(r.Ebook.RelCommentators))
+	} else if r.Ebook.RelCommentators[0].AgentId() != 7 {
+		t.Errorf("unexpected cmm agent ID %d", r.Ebook.RelCommentators[0].AgentId())
 	}
-	a := r.Ebook.Editors[0].Agent
-
-	if a.About != "2009/agents/8397" {
-		t.Errorf("unexpected editor dcterms:creator/agent.about, got '%s'", a.About)
+	if len(r.Ebook.RelComposers) != 1 {
+		t.Errorf("expected 1 cmm, got %d", len(r.Ebook.RelComposers))
+	} else if r.Ebook.RelComposers[0].AgentId() != 8 {
+		t.Errorf("unexpected cmm agent ID %d", r.Ebook.RelComposers[0].AgentId())
 	}
-	if a.Name != "Snell, F. J. (Frederick John)" {
-		t.Errorf("unexpected editor dcterms:creator/agent/name, got '%s'", a.Name)
+	if len(r.Ebook.RelConductors) != 1 {
+		t.Errorf("expected 1 cnd, got %d", len(r.Ebook.RelConductors))
+	} else if r.Ebook.RelConductors[0].AgentId() != 9 {
+		t.Errorf("unexpected cnd agent ID %d", r.Ebook.RelConductors[0].AgentId())
 	}
-}
-
-func TestIllustrators(t *testing.T) {
-	r := openRDF(t)
-
-	if len(r.Ebook.Illustrators) != 1 {
-		t.Fatalf("expected 1 marcrel:ill, got %d", len(r.Ebook.Illustrators))
+	if len(r.Ebook.RelCompilers) != 1 {
+		t.Errorf("expected 1 com, got %d", len(r.Ebook.RelCompilers))
+	} else if r.Ebook.RelCompilers[0].AgentId() != 10 {
+		t.Errorf("unexpected com agent ID %d", r.Ebook.RelCompilers[0].AgentId())
 	}
-	a := r.Ebook.Illustrators[0].Agent
-
-	if a.About != "2009/agents/9473" {
-		t.Errorf("unexpected illustrator dcterms:creator/agent.about, got '%s'", a.About)
+	if len(r.Ebook.RelContributors) != 1 {
+		t.Errorf("expected 1 ctb, got %d", len(r.Ebook.RelContributors))
+	} else if r.Ebook.RelContributors[0].AgentId() != 11 {
+		t.Errorf("unexpected ctb agent ID %d", r.Ebook.RelContributors[0].AgentId())
 	}
-	if a.Name != "Leech, John" {
-		t.Errorf("unexpected illustrator dcterms:creator/agent/name, got '%s'", a.Name)
+	if len(r.Ebook.RelDubious) != 1 {
+		t.Errorf("expected 1 dub, got %d", len(r.Ebook.RelDubious))
+	} else if r.Ebook.RelDubious[0].AgentId() != 12 {
+		t.Errorf("unexpected dub agent ID %d", r.Ebook.RelDubious[0].AgentId())
 	}
-}
-
-func TestTranslators(t *testing.T) {
-	r := openRDF(t)
-
-	if len(r.Ebook.Translators) != 1 {
-		t.Fatalf("expected 1 marcrel:trl, got %d", len(r.Ebook.Translators))
+	if len(r.Ebook.RelEditors) != 2 {
+		t.Errorf("expected 1 edt, got %d", len(r.Ebook.RelEditors))
+	} else {
+		if r.Ebook.RelEditors[0].AgentId() != 13 {
+			t.Errorf("unexpected edt agent ID %d", r.Ebook.RelEditors[0].AgentId())
+		}
+		if r.Ebook.RelEditors[1].AgentId() != 8397 {
+			t.Errorf("unexpected edt agent ID %d", r.Ebook.RelEditors[1].AgentId())
+		} else if r.Ebook.RelEditors[1].Agent.Name != "Snell, F. J. (Frederick John)" {
+			t.Errorf("unexpected edt agent name %s", r.Ebook.RelEditors[1].Agent.Name)
+		}
 	}
-	a := r.Ebook.Translators[0].Agent
-
-	if a.About != "2009/agents/1736" {
-		t.Errorf("unexpected translator dcterms:creator/agent.about, got '%s'", a.About)
+	if len(r.Ebook.RelEngravers) != 1 {
+		t.Errorf("expected 1 egr, got %d", len(r.Ebook.RelEngravers))
+	} else if r.Ebook.RelEngravers[0].AgentId() != 14 {
+		t.Errorf("unexpected egr agent ID %d", r.Ebook.RelEngravers[0].AgentId())
 	}
-	if a.Name != "Wyllie, David" {
-		t.Errorf("unexpected translator dcterms:creator/agent/name, got '%s'", a.Name)
+	if len(r.Ebook.RelIllustrators) != 2 {
+		t.Errorf("expected 1 ill, got %d", len(r.Ebook.RelIllustrators))
+	} else {
+		if r.Ebook.RelIllustrators[0].AgentId() != 15 {
+			t.Errorf("unexpected ill agent ID %d", r.Ebook.RelIllustrators[0].AgentId())
+		}
+		if r.Ebook.RelIllustrators[1].AgentId() != 9473 {
+			t.Errorf("unexpected ill agent ID %d", r.Ebook.RelIllustrators[1].AgentId())
+		} else if r.Ebook.RelIllustrators[1].Agent.Name != "Leech, John" {
+			t.Errorf("unexpected ill agent name %s", r.Ebook.RelIllustrators[1].Agent.Name)
+		}
+	}
+	if len(r.Ebook.RelLibrettists) != 1 {
+		t.Errorf("expected 1 lbt, got %d", len(r.Ebook.RelLibrettists))
+	} else if r.Ebook.RelLibrettists[0].AgentId() != 16 {
+		t.Errorf("unexpected lbt agent ID %d", r.Ebook.RelLibrettists[0].AgentId())
+	}
+	if len(r.Ebook.RelOther) != 1 {
+		t.Errorf("expected 1 oth, got %d", len(r.Ebook.RelOther))
+	} else if r.Ebook.RelOther[0].AgentId() != 17 {
+		t.Errorf("unexpected oth agent ID %d", r.Ebook.RelOther[0].AgentId())
+	}
+	if len(r.Ebook.RelPublishers) != 1 {
+		t.Errorf("expected 1 pbl, got %d", len(r.Ebook.RelPublishers))
+	} else if r.Ebook.RelPublishers[0].AgentId() != 18 {
+		t.Errorf("unexpected pbl agent ID %d", r.Ebook.RelPublishers[0].AgentId())
+	}
+	if len(r.Ebook.RelPhotographers) != 2 {
+		t.Errorf("expected 1 pht, got %d", len(r.Ebook.RelPhotographers))
+	} else {
+		if r.Ebook.RelPhotographers[0].AgentId() != 19 {
+			t.Errorf("unexpected pht agent ID %d", r.Ebook.RelPhotographers[0].AgentId())
+		}
+		if r.Ebook.RelPhotographers[1].AgentId() != 53417 {
+			t.Errorf("unexpected pht agent ID %d", r.Ebook.RelPhotographers[1].AgentId())
+		} else if r.Ebook.RelPhotographers[1].Agent.Name != "Richardson, John A." {
+			t.Errorf("unexpected pht agent name %s", r.Ebook.RelPhotographers[1].Agent.Name)
+		}
+	}
+	if len(r.Ebook.RelPerformers) != 1 {
+		t.Errorf("expected 1 prf, got %d", len(r.Ebook.RelPerformers))
+	} else if r.Ebook.RelPerformers[0].AgentId() != 20 {
+		t.Errorf("unexpected prf agent ID %d", r.Ebook.RelPerformers[0].AgentId())
+	}
+	if len(r.Ebook.RelPrinters) != 1 {
+		t.Errorf("expected 1 prt, got %d", len(r.Ebook.RelPrinters))
+	} else if r.Ebook.RelPrinters[0].AgentId() != 21 {
+		t.Errorf("unexpected prt agent ID %d", r.Ebook.RelPrinters[0].AgentId())
+	}
+	if len(r.Ebook.RelResearchers) != 1 {
+		t.Errorf("expected 1 res, got %d", len(r.Ebook.RelResearchers))
+	} else if r.Ebook.RelResearchers[0].AgentId() != 22 {
+		t.Errorf("unexpected res agent ID %d", r.Ebook.RelResearchers[0].AgentId())
+	}
+	if len(r.Ebook.RelTranscribers) != 1 {
+		t.Errorf("expected 1 trc, got %d", len(r.Ebook.RelTranscribers))
+	} else if r.Ebook.RelTranscribers[0].AgentId() != 23 {
+		t.Errorf("unexpected trc agent ID %d", r.Ebook.RelTranscribers[0].AgentId())
+	}
+	if len(r.Ebook.RelTranslators) != 2 {
+		t.Errorf("expected 1 trl, got %d", len(r.Ebook.RelTranslators))
+	} else {
+		if r.Ebook.RelTranslators[0].AgentId() != 8397 {
+			t.Errorf("unexpected trl agent ID %d", r.Ebook.RelTranslators[0].AgentId())
+		}
+		if r.Ebook.RelTranslators[1].AgentId() != 1736 {
+			t.Errorf("unexpected trl agent ID %d", r.Ebook.RelTranslators[1].AgentId())
+		} else if r.Ebook.RelTranslators[1].Agent.Name != "Wyllie, David" {
+			t.Errorf("unexpected trl agent name %s", r.Ebook.RelTranslators[1].Agent.Name)
+		}
 	}
 }
 
