@@ -1,13 +1,38 @@
-# pgrdf - a Project Gutenberg RDF wrapper library
+# pgrdf - a Project Gutenberg RDF library
 
-A small Go language library for interacting with the Project Gutenberg Catalog
-Metadata (RDF XML), mapping them on to a more usable set of types.
+A library written in the Go language for reading and writing Project Gutenberg
+RDF documents using a simpler set of intermediary data types, which can also be
+marshalled to JSON for a more compact representation of the metadata.
 
-`pgrdf` also provides a helper function for reading the RDF metadata directly
-from a Project Gutenberg `tar` archive. See the usage section below for more
-information.
+Helper functions are provided for reading RDF files directly from their `tar`
+archive. See the usage section below for more information.
 
-Here's an example of the RDF for [Great Expectations](https://gutenberg.org/ebooks/1400.rdf):
+The `Ebook` struct is used as an intermediary representation of the metadata,
+which provides a much easier set of data types than needing to handle RDF
+directly, and can also be marshalled to JSON.
+
+The following is a (truncated) JSON example:
+
+```json
+{
+  "id": 1400,
+  "released": "1998-07-01",
+  "titles": ["Great Expectations"],
+  "creators": [{
+    "id": 37,
+    "name": "Dickens, Charles",
+    "aliases": [
+      "Dickens, Charles John Huffam",
+      "Boz"
+    ],
+    "born_year": 1812,
+    "died_year": 1870,
+    "webpage": "https://en.wikipedia.org/wiki/Charles_Dickens"
+  }]
+}
+```
+
+And here's the corresponding RDF snippet for [Great Expectations](https://gutenberg.org/ebooks/1400.rdf):
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -36,28 +61,6 @@ Here's an example of the RDF for [Great Expectations](https://gutenberg.org/eboo
 </rdf:RDF>
 ```
 
-RDFs are unmarshalled on to an `Ebook` object to provide easier access to
-the data. Changes to this data can be marshalled back to an RDF, or
-alternatively, the `Ebook` can be marshalled to JSON:
-
-```json
-{
-  "id": 1400,
-  "released": "1998-07-01",
-  "titles": ["Great Expectations"],
-  "creators": [{
-    "id": 37,
-    "name": "Dickens, Charles",
-    "aliases": [
-      "Dickens, Charles John Huffam",
-      "Boz"
-    ],
-    "born_year": 1812,
-    "died_year": 1870,
-    "webpage": "https://en.wikipedia.org/wiki/Charles_Dickens"
-  }]
-}
-```
 
 ## Usage
 
@@ -76,14 +79,13 @@ import (
 )
 
 func main() {
-	rdfFile, _ := os.Open("./pg1400.rdf")
+	rdfFile, _ := os.Open("/path/to/pg1400.rdf")
 	ebook, _ := pgrdf.ReadRDF(rdfFile)
 
 	ebook.Titles = append(ebook.Titles, "In Three Volumes")
 
 	w := bytes.NewBuffer([]byte{}) // create an io.Writer
-	_ = ebook.WriteRDF(w)          // marshall to RDF XML data
-	fmt.Println(w.String())
+	_ = ebook.WriteRDF(w)          // write the RDF data
 
 	data, _ := json.Marshal(ebook) // marshall to JSON
 	fmt.Println(string(data))

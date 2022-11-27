@@ -3,6 +3,19 @@
 ## HEAD
 
 
+## v1.5.0 (2022-11-27)
+
+* Renamed `MarcRelatorCode` to `MarcRelator`.
+* Added the remaining `marcrel` tags:
+  * `marcrel:pbl`, `marcrel:adp`, `marcrel:pht`, etc.
+  * Matching what are found in the current PG collection.
+  * Which also means supporting empty tags, e.g. `<marcrel:adp rdf:resource="2009/agents/1" />`.
+* The order of the marshalled RDF XML tags has been change to make it a little
+  easier for humans to find information about the work.
+* The RDF marshaller structs now have some useful comments.
+* General cleanup and improvements related to the above topics.
+
+
 ## v1.4.0 (2022-11-26)
 
 IMPORTANT: this release contains breaking changes! 
