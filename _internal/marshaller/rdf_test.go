@@ -42,12 +42,18 @@ func TestRDF_FromUnmarshaller(t *testing.T) {
 	// add the xml declaration
 	dataXML := xml.Header + output
 
-	if len(dataXML) != len(buf.String()) {
-		t.Fatalf("strings of different length: got %d, want %d", len(dataXML), len(buf.String()))
+	// show where the diversion happens
+	sourceBytes := buf.Bytes()
+	sourceBytes = bytes.ReplaceAll(sourceBytes, []byte("Alternate Title&#13;\nWith a newline separation"), []byte("Alternate Title&#xD;&#xA;With a newline separation"))
+	index := -1
+	for i := 0; i < len(dataXML); i++ {
+		if dataXML[i] != sourceBytes[i] {
+			index = i
+			break
+		}
 	}
-	if dataXML != buf.String() {
-		println(dataXML)
-		t.Fatalf("XML data does not match")
+	if index >= 0 {
+		t.Errorf("unexpected marshalled output at position %d\n%s\n", index, dataXML[0:index])
 	}
 }
 

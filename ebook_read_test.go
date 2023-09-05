@@ -63,6 +63,9 @@ func TestReadRDF(t *testing.T) {
 	if len(ebook.Titles) != 1 {
 		t.Errorf("expected 1 ebook title, got %d\n", len(ebook.Titles))
 	}
+	if len(ebook.OtherTitles) != 2 {
+		t.Errorf("expected 2 other titles, got %d\n", len(ebook.OtherTitles))
+	}
 	if len(ebook.Creators) == 0 {
 		t.Error("expected one or more ebook creators, got none")
 	}

@@ -17,7 +17,7 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 	ebook := &Ebook{
 		ID:                rdf.Ebook.Id(),
 		Titles:            titles(rdf.Ebook.Title),
-		OtherTitles:       rdf.Ebook.Alternative,
+		OtherTitles:       otherTitles(rdf.Ebook.Alternative),
 		Publisher:         rdf.Ebook.Publisher,
 		ReleaseDate:       rdf.Ebook.Issued.Value,
 		Series:            rdf.Ebook.Series,
@@ -139,7 +139,25 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 }
 
 func titles(title string) []string {
-	return strings.Split(title, "\n")
+	var newTitles []string
+	title = strings.ReplaceAll(title, "\r", "\n")
+	for _, t := range strings.Split(title, "\n") {
+		t = strings.TrimSpace(t)
+		if len(t) > 0 {
+			newTitles = append(newTitles, t)
+		}
+	}
+	return newTitles
+}
+
+func otherTitles(otherTitles []string) []string {
+	var newTitles []string
+	for _, title := range otherTitles {
+		for _, t := range titles(title) {
+			newTitles = append(newTitles, t)
+		}
+	}
+	return newTitles
 }
 
 // Extract the book cover filename from the file path.

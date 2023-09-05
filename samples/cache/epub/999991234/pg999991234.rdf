@@ -2,7 +2,8 @@
 <rdf:RDF xml:base="http://www.gutenberg.org/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:pgterms="http://www.gutenberg.org/2009/pgterms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:cc="http://web.resource.org/cc/" xmlns:marcrel="http://id.loc.gov/vocabulary/relators/" xmlns:dcam="http://purl.org/dc/dcam/">
   <pgterms:ebook rdf:about="ebooks/999991234">
     <dcterms:title>Great Expectations</dcterms:title>
-    <dcterms:alternative>Alternate Title</dcterms:alternative>
+    <dcterms:alternative>Alternate Title&#13;
+With a newline separation</dcterms:alternative>
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
     <pgterms:marc520>A fun version of A Christmas Carol.</pgterms:marc520>

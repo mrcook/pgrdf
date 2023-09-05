@@ -109,8 +109,8 @@ func TestEbookGeneral(t *testing.T) {
 		t.Errorf("unexpected dcterms:title, got '%s'", e.Title)
 	}
 	if len(e.Alternative) != 1 {
-		t.Errorf("expected 1 dcterms:title, got %d", len(e.Alternative))
-	} else if e.Alternative[0] != "Alternate Title" {
+		t.Errorf("expected 2 dcterms:alternative, got %d", len(e.Alternative))
+	} else if e.Alternative[0] != "Alternate Title\r\nWith a newline separation" {
 		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternative[0])
 	}
 	if e.Series != "Dickens Best Of" {
