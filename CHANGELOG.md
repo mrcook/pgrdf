@@ -3,6 +3,12 @@
 ## HEAD
 
 
+## v1.6.0 (2023-09-05)
+
+* Use a custom type for the `BookType` for all know types in the PG collection.
+* Improve unmarshaller to handle both CR and LF for `dcterms:title`/`dcterms:alternative`.
+
+
 ## v1.5.0 (2022-11-27)
 
 * Renamed `MarcRelatorCode` to `MarcRelator`.
