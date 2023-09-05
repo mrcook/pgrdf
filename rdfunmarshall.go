@@ -23,13 +23,13 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 		Series:            rdf.Ebook.Series,
 		PublishedYear:     rdf.Ebook.PublishedYear,
 		Copyright:         rdf.Ebook.Rights,
-		BookType:          rdf.Ebook.Type.Description.Value.Data,
 		Note:              rdf.Ebook.Description,
 		BookCoverFilename: bookCoverFilename(rdf.Ebook.BookCover),
 		Downloads:         rdf.Ebook.Downloads.Value,
 		Comment:           rdf.Work.Comment,
 		CCLicense:         rdf.Work.License.Resource,
 	}
+	ebook.SetBookType(rdf.Ebook.Type.Description.Value.Data)
 
 	ebook.Language = Language{
 		Code:    rdf.Ebook.Language.Description.Value.Data,

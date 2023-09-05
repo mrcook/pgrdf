@@ -46,7 +46,7 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 			Type: marshaller.Type{
 				Description: marshaller.Description{
 					NodeID:   nodeid.Generate(),
-					Value:    &marshaller.Value{Data: e.BookType},
+					Value:    &marshaller.Value{Data: string(e.BookType)},
 					MemberOf: &marshaller.MemberOf{Resource: "http://purl.org/dc/terms/DCMIType"},
 				},
 			},

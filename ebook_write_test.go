@@ -2,10 +2,13 @@ package pgrdf_test
 
 import (
 	"bytes"
+	"regexp"
 	"testing"
 
 	"github.com/mrcook/pgrdf"
 )
+
+var nodeIdRE = regexp.MustCompile(`nodeID="N[^"]+"`)
 
 func TestEbook_WriteRDF(t *testing.T) {
 	ebook := generateEbook()
@@ -17,15 +20,33 @@ func TestEbook_WriteRDF(t *testing.T) {
 	}
 
 	data := w.String()
-	if data != rdfMarshallExpected {
-		t.Errorf("unexpected marshalled output, expected:\n'%s'\n\ngot:\n'%s'\n", rdfMarshallExpected, data)
+
+	// nodeID are auto-generated so replace them before checking
+	data = nodeIdRE.ReplaceAllString(data, `nodeID="N"`)
+	rdfMarshallExpected = nodeIdRE.ReplaceAllString(rdfMarshallExpected, `nodeID="N"`)
+	if data == rdfMarshallExpected {
+		return
 	}
+
+	if len(data) != len(rdfMarshallExpected) {
+		t.Fatalf("expected the length to be %d, got %d", len(data), len(rdfMarshallExpected))
+	}
+
+	// show where the diversion happens
+	var index int
+	for i := 0; i < len(data); i++ {
+		if data[i] != rdfMarshallExpected[i] {
+			index = i
+			break
+		}
+	}
+	t.Errorf("unexpected marshalled output at position %d\n%s\n", index, data[0:index])
 }
 
 func generateEbook() *pgrdf.Ebook {
 	return &pgrdf.Ebook{
 		ID:          11,
-		BookType:    "Text",
+		BookType:    pgrdf.BookTypeText,
 		ReleaseDate: "2008-06-27",
 		Language: pgrdf.Language{
 			Code:    "en",
@@ -81,7 +102,7 @@ var rdfMarshallExpected = `<?xml version="1.0" encoding="UTF-8"?>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2008-06-27</dcterms:issued>
     <pgterms:marc440>Best of Fantasy</pgterms:marc440>
     <dcterms:language>
-      <rdf:Description rdf:nodeID="Nb915b0362e09cb245ffc942c959201f2">
+      <rdf:Description rdf:nodeID="N4311cfb96de1a76167c27d1af1026fa7">
         <rdf:value rdf:datatype="http://purl.org/dc/terms/RFC4646">en</rdf:value>
       </rdf:Description>
     </dcterms:language>

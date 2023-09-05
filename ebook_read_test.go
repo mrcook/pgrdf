@@ -17,7 +17,7 @@ func TestReadRDF(t *testing.T) {
 	if ebook.Note != "A description for this RDF" {
 		t.Errorf("unexpected ebook description, got '%s'", ebook.Note)
 	}
-	if ebook.BookType != "Text" {
+	if ebook.BookType != pgrdf.BookTypeText {
 		t.Errorf("unexpected ebook book type, got '%s'", ebook.BookType)
 	}
 	if ebook.ReleaseDate != "1998-07-01" {

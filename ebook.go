@@ -14,7 +14,7 @@ type Ebook struct {
 	ID int `json:"id"`
 
 	// The type of ebook: Text, Sound, etc.
-	BookType string `json:"type"`
+	BookType BookType `json:"type"`
 
 	// PG release date in ISO 8601 format. Example: 2006-01-02.
 	ReleaseDate string `json:"released"`
@@ -137,3 +137,37 @@ func (e *Ebook) AddCreator(creator Creator) {
 func (e *Ebook) AddBookFile(file File) {
 	e.Files = append(e.Files, file)
 }
+
+func (e *Ebook) SetBookType(value string) {
+	switch value {
+	case "collection":
+		e.BookType = BookTypeCollection
+	case "Dataset":
+		e.BookType = BookTypeDataset
+	case "Image":
+		e.BookType = BookTypeImage
+	case "MovingImage":
+		e.BookType = BookTypeMovingImage
+	case "Sound":
+		e.BookType = BookTypeSound
+	case "StillImage":
+		e.BookType = BookTypeStillImage
+	case "Text":
+		e.BookType = BookTypeText
+	default:
+		e.BookType = BookTypeUnknown
+	}
+}
+
+type BookType string
+
+const (
+	BookTypeUnknown     BookType = ""
+	BookTypeCollection  BookType = "Collection"
+	BookTypeDataset     BookType = "Dataset"
+	BookTypeImage       BookType = "Image"
+	BookTypeMovingImage BookType = "MovingImage"
+	BookTypeSound       BookType = "Sound"
+	BookTypeStillImage  BookType = "StillImage"
+	BookTypeText        BookType = "Text"
+)
