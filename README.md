@@ -130,7 +130,7 @@ extracted from the archive:
 
 ## LICENSE
 
-Copyright (c) 2018-2022 Michael R. Cook. All rights reserved.
+Copyright (c) 2018-2023 Michael R. Cook. All rights reserved.
 
 This work is licensed under the terms of the MIT license.
 For a copy, see <https://opensource.org/licenses/MIT>.
