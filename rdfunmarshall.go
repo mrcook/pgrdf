@@ -4,7 +4,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mrcook/pgrdf/_internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaller"
 )
 
 // rdfUnmarshall unmarshalls an RDF document to an Ebook.

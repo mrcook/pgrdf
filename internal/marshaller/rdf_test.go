@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/mrcook/pgrdf/_internal/marshaller"
-	"github.com/mrcook/pgrdf/_internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/marshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaller"
 )
 
 // NOTE: there have been various manual changes to the test RDF (pg999991234.rdf):

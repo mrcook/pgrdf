@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mrcook/pgrdf/_internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaller"
 )
 
 func TestNamespaces(t *testing.T) {
@@ -346,6 +346,21 @@ func TestMarcRelators(t *testing.T) {
 		} else if r.Ebook.RelTranslators[1].Agent.Name != "Wyllie, David" {
 			t.Errorf("unexpected trl agent name %s", r.Ebook.RelTranslators[1].Agent.Name)
 		}
+	}
+}
+
+// NOTE: test for when an RDF uses `Various` for marc906 instead of a year number.
+func TestMarcRelators_InvalidMarc906(t *testing.T) {
+	file, err := os.Open("../../samples/marc906-error.rdf")
+	if err != nil {
+		t.Fatalf("error opening test RDF file: %s", err)
+	}
+	r, err := unmarshaller.New(file)
+	if err != nil {
+		t.Fatalf("unexpected RDF read error: %s", err)
+	}
+	if r.Ebook.PublishedYear != 0 {
+		t.Errorf("expected PublishedYear to not have been set, got %d", r.Ebook.PublishedYear)
 	}
 }
 

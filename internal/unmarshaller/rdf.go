@@ -24,6 +24,9 @@ func New(r io.Reader) (*RDF, error) {
 		return nil, err
 	}
 
+	// NOTE: convert the string year to an int
+	rdf.Ebook.PublishedYear, _ = strconv.Atoi(rdf.Ebook.PublishedYearString)
+
 	return rdf, nil
 }
 
@@ -55,7 +58,6 @@ type Ebook struct {
 	Language            Language
 	LanguageDialect     string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
 	LanguageNotes       string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
-	PublishedYear       int      `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
 	OriginalPublication string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
 	Edition             string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
 	Credits             []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
@@ -71,6 +73,11 @@ type Ebook struct {
 	BookCover           string `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
 	TitlePageImage      string `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
 	BackCover           string `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
+
+	// NOTE: at least one RDF uses `Various` for marc906 instead of a year number, so this
+	// must be parsed as a string, and then manually converted once the unmarshal is complete.
+	PublishedYear       int
+	PublishedYearString string `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
 
 	Creators []Creator `xml:"http://purl.org/dc/terms/ creator"`
 

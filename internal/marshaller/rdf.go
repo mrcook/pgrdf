@@ -9,7 +9,7 @@ package marshaller
 import (
 	"encoding/xml"
 
-	"github.com/mrcook/pgrdf/_internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaller"
 )
 
 // RDF <rdf:RDF /> is the main document struct

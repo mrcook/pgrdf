@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mrcook/pgrdf/_internal/marshaller"
-	"github.com/mrcook/pgrdf/_internal/nodeid"
+	"github.com/mrcook/pgrdf/internal/marshaller"
+	"github.com/mrcook/pgrdf/internal/nodeid"
 )
 
 // rdfMarshall marshalls an Ebook to an RDF document.
