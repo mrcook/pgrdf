@@ -53,14 +53,14 @@ type Ebook struct {
 	Alternative         []string `xml:"http://purl.org/dc/terms/ alternative"`
 	Publisher           string   `xml:"http://purl.org/dc/terms/ publisher"`
 	Issued              Issued
-	Summary             string `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
-	Series              string `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
-	Language            Language
-	LanguageDialect     string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
-	LanguageNotes       string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
-	OriginalPublication string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
-	Edition             string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
-	Credits             []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
+	Summary             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
+	Series              string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
+	Languages           []Language `xml:"http://purl.org/dc/terms/ language"`
+	LanguageDialect     string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	LanguageNotes       string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
+	OriginalPublication string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
+	Edition             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
+	Credits             []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
 	License             License
 	Rights              string `xml:"http://purl.org/dc/terms/ rights"`
 	Type                Type

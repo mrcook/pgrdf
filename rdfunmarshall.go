@@ -31,10 +31,17 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 	}
 	ebook.SetBookType(rdf.Ebook.Type.Description.Value.Data)
 
-	ebook.Language = Language{
-		Code:    rdf.Ebook.Language.Description.Value.Data,
-		Dialect: rdf.Ebook.LanguageDialect,
-		Notes:   rdf.Ebook.LanguageNotes,
+	for i, lang := range rdf.Ebook.Languages {
+		l := Language{Code: lang.Description.Value.Data}
+
+		// TODO: do multi-language books also have multiple marc907 & marc546 codes?
+		// apply extra marc data only to first language
+		if i == 0 {
+			l.Dialect = rdf.Ebook.LanguageDialect
+			l.Notes = rdf.Ebook.LanguageNotes
+		}
+
+		ebook.Languages = append(ebook.Languages, l)
 	}
 
 	for _, l := range rdf.Descriptions {

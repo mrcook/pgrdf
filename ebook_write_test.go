@@ -45,14 +45,10 @@ func TestEbook_WriteRDF(t *testing.T) {
 
 func generateEbook() *pgrdf.Ebook {
 	return &pgrdf.Ebook{
-		ID:          11,
-		BookType:    pgrdf.BookTypeText,
-		ReleaseDate: "2008-06-27",
-		Language: pgrdf.Language{
-			Code:    "en",
-			Dialect: "GB",
-			Notes:   "Uses 19th century spelling.",
-		},
+		ID:            11,
+		BookType:      pgrdf.BookTypeText,
+		ReleaseDate:   "2008-06-27",
+		Languages:     []pgrdf.Language{{"en", "GB", "Uses 19th century spelling."}},
 		Publisher:     "Project Gutenberg",
 		PublishedYear: 1909,
 		Copyright:     "Public domain in the USA.",

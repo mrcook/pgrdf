@@ -80,17 +80,31 @@ func TestReadRDF(t *testing.T) {
 	}
 }
 
-func TestEbookReadLanguage(t *testing.T) {
-	ebooks := getEbookFromSampleRdf(t)
+func TestEbookReadLanguages(t *testing.T) {
+	ebook := getEbookFromSampleRdf(t)
 
-	if ebooks.Language.Code != "en" {
-		t.Errorf("unexpected ebook language, got '%s'", ebooks.Language.Code)
+	if len(ebook.Languages) != 2 {
+		t.Fatalf("expected 2 languages, got %d", len(ebook.Languages))
 	}
-	if ebooks.Language.Dialect != "GB" {
-		t.Errorf("unexpected ebook language dielect, got '%s'", ebooks.Language.Dialect)
+
+	if ebook.Languages[0].Code != "en" {
+		t.Errorf("unexpected language #1, got '%s'", ebook.Languages[0].Code)
 	}
-	if ebooks.Language.Notes != "Uses 19th century spelling." {
-		t.Errorf("unexpected ebook language notes, got '%s'", ebooks.Language.Notes)
+	if ebook.Languages[0].Dialect != "GB" {
+		t.Errorf("unexpected language #1 dielect, got '%s'", ebook.Languages[0].Dialect)
+	}
+	if ebook.Languages[0].Notes != "Uses 19th century spelling." {
+		t.Errorf("unexpected language #1 notes, got '%s'", ebook.Languages[0].Notes)
+	}
+
+	if ebook.Languages[1].Code != "de" {
+		t.Errorf("unexpected language #2, got '%s'", ebook.Languages[1].Code)
+	}
+	if ebook.Languages[1].Dialect != "" {
+		t.Errorf("expected language #2 dielect to be blank, got '%s'", ebook.Languages[1].Dialect)
+	}
+	if ebook.Languages[1].Notes != "" {
+		t.Errorf("expected language #2 notes to be blank, got '%s'", ebook.Languages[1].Notes)
 	}
 }
 

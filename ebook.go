@@ -19,8 +19,8 @@ type Ebook struct {
 	// PG release date in ISO 8601 format. Example: 2006-01-02.
 	ReleaseDate string `json:"released"`
 
-	// Language details of this book.
-	Language Language `json:"language"`
+	// Languages details of this book.
+	Languages []Language `json:"languages"`
 
 	// Publisher of this work; usually "Project Gutenberg".
 	Publisher string `json:"publisher"`

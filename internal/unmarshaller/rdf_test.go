@@ -145,17 +145,28 @@ func TestLanguage(t *testing.T) {
 	r := openRDF(t)
 	e := r.Ebook
 
-	if e.Language.Description.NodeID != "N73e956e8e5d049ac943dfe482ddd5802" {
-		t.Errorf("unexpected dcterms:language//rdf:nodeID, got '%s'", e.Language.Description.NodeID)
+	if len(e.Languages) != 2 {
+		t.Fatalf("expected 2 languages, got %d", len(e.Languages))
 	}
-	if e.Language.Description.Value.DataType != "http://purl.org/dc/terms/RFC4646" {
-		t.Errorf("unexpected dcterms:language//rdf:value.datatype, got '%s'", e.Language.Description.Value.DataType)
+
+	if e.Languages[0].Description.NodeID != "N73e956e8e5d049ac943dfe482ddd5802" {
+		t.Errorf("unexpected dcterms:language//rdf:nodeID, got '%s'", e.Languages[0].Description.NodeID)
 	}
-	if e.Language.Description.Value.Data != "en" {
-		t.Errorf("unexpected dcterms:language//rdf:value, got '%s'", e.Language.Description.Value.Data)
+	if e.Languages[0].Description.Value.DataType != "http://purl.org/dc/terms/RFC4646" {
+		t.Errorf("unexpected dcterms:language//rdf:value.datatype, got '%s'", e.Languages[0].Description.Value.DataType)
+	}
+	if e.Languages[0].Description.Value.Data != "en" {
+		t.Errorf("unexpected dcterms:language//rdf:value, got '%s'", e.Languages[0].Description.Value.Data)
 	}
 	if e.LanguageDialect != "GB" {
 		t.Errorf("unexpected marc907 (language sub-code), got '%s'", e.LanguageDialect)
+	}
+
+	if e.Languages[1].Description.NodeID != "N9bd0e8afb25241038817304e8e0ff2a9" {
+		t.Errorf("unexpected dcterms:language//rdf:nodeID, got '%s'", e.Languages[1].Description.NodeID)
+	}
+	if e.Languages[1].Description.Value.Data != "de" {
+		t.Errorf("unexpected dcterms:language//rdf:value, got '%s'", e.Languages[1].Description.Value.Data)
 	}
 }
 

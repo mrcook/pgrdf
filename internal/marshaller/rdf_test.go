@@ -53,7 +53,11 @@ func TestRDF_FromUnmarshaller(t *testing.T) {
 		}
 	}
 	if index >= 0 {
-		t.Errorf("unexpected marshalled output at position %d\n%s\n", index, dataXML[0:index])
+		endIndex := index
+		if len(dataXML) > index {
+			endIndex += 1
+		}
+		t.Errorf("unexpected marshalled output at position %d\n%s\n", index, dataXML[0:endIndex])
 	}
 }
 

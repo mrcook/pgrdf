@@ -30,19 +30,11 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 				DataType: "http://www.w3.org/2001/XMLSchema#date",
 				Value:    e.ReleaseDate,
 			},
-			Series: e.Series,
-			Language: marshaller.Language{Description: marshaller.Description{
-				NodeID: nodeid.Generate(),
-				Value: &marshaller.Value{
-					DataType: "http://purl.org/dc/terms/RFC4646",
-					Data:     e.Language.Code,
-				},
-			}},
-			LanguageDialect: e.Language.Dialect,
-			LanguageNotes:   e.Language.Notes,
-			PublishedYear:   e.PublishedYear,
-			License:         marshaller.License{Resource: "license"},
-			Rights:          e.Copyright,
+			Series:        e.Series,
+			Languages:     nil,
+			PublishedYear: e.PublishedYear,
+			License:       marshaller.License{Resource: "license"},
+			Rights:        e.Copyright,
 			Type: marshaller.Type{
 				Description: marshaller.Description{
 					NodeID:   nodeid.Generate(),
@@ -66,6 +58,24 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 			Comment: e.Comment,
 			License: marshaller.CCLicense{Resource: e.CCLicense},
 		},
+	}
+
+	for i, lang := range e.Languages {
+		l := marshaller.Language{
+			Description: marshaller.Description{
+				NodeID: nodeid.Generate(),
+				Value: &marshaller.Value{
+					DataType: "http://purl.org/dc/terms/RFC4646",
+					Data:     lang.Code,
+				},
+			},
+		}
+		// TODO: check if multiple dialects/notes are used for multi-language book
+		if i == 0 {
+			rdf.Ebook.LanguageDialect = e.Languages[0].Dialect
+			rdf.Ebook.LanguageNotes = e.Languages[0].Notes
+		}
+		rdf.Ebook.Languages = append(rdf.Ebook.Languages, l)
 	}
 
 	for _, c := range e.Creators {

@@ -31,32 +31,32 @@ type RDF struct {
 
 // Ebook <pgterms:ebook /> holds the core metadata for this work.
 type Ebook struct {
-	About               string   `xml:"rdf:about,attr,omitempty"`
-	Title               string   `xml:"dcterms:title,omitempty"`
-	Alternative         []string `xml:"dcterms:alternative,omitempty"`
-	Publisher           string   `xml:"dcterms:publisher,omitempty"`
-	Issued              *Issued  `xml:"dcterms:issued,omitempty"`
-	Summary             string   `xml:"pgterms:marc520,omitempty"`
-	Series              string   `xml:"pgterms:marc440,omitempty"`
-	Language            Language `xml:"dcterms:language,omitempty"`
-	LanguageDialect     string   `xml:"pgterms:marc907,omitempty"`
-	LanguageNotes       string   `xml:"pgterms:marc546,omitempty"`
-	PublishedYear       int      `xml:"pgterms:marc906,omitempty"`
-	OriginalPublication string   `xml:"pgterms:marc260,omitempty"`
-	Edition             string   `xml:"pgterms:marc250,omitempty"`
-	Credits             []string `xml:"pgterms:marc508,omitempty"`
-	License             License  `xml:"dcterms:license,omitempty"`
-	Rights              string   `xml:"dcterms:rights,omitempty"`
-	PgDpClearance       string   `xml:"pgterms:marc905,omitempty"`
-	Type                Type     `xml:"dcterms:type,omitempty"`
-	Description         string   `xml:"dcterms:description,omitempty"`
-	SourceDescription   string   `xml:"pgterms:marc300,omitempty"`
-	SourceLink          string   `xml:"pgterms:marc904,omitempty"`
-	LOC                 string   `xml:"pgterms:marc010,omitempty"`
-	ISBN                string   `xml:"pgterms:marc020,omitempty"`
-	BookCover           string   `xml:"pgterms:marc901,omitempty"`
-	TitlePageImage      string   `xml:"pgterms:marc902,omitempty"`
-	BackCover           string   `xml:"pgterms:marc903,omitempty"`
+	About               string     `xml:"rdf:about,attr,omitempty"`
+	Title               string     `xml:"dcterms:title,omitempty"`
+	Alternative         []string   `xml:"dcterms:alternative,omitempty"`
+	Publisher           string     `xml:"dcterms:publisher,omitempty"`
+	Issued              *Issued    `xml:"dcterms:issued,omitempty"`
+	Summary             string     `xml:"pgterms:marc520,omitempty"`
+	Series              string     `xml:"pgterms:marc440,omitempty"`
+	Languages           []Language `xml:"dcterms:language,omitempty"`
+	LanguageDialect     string     `xml:"pgterms:marc907,omitempty"`
+	LanguageNotes       string     `xml:"pgterms:marc546,omitempty"`
+	PublishedYear       int        `xml:"pgterms:marc906,omitempty"`
+	OriginalPublication string     `xml:"pgterms:marc260,omitempty"`
+	Edition             string     `xml:"pgterms:marc250,omitempty"`
+	Credits             []string   `xml:"pgterms:marc508,omitempty"`
+	License             License    `xml:"dcterms:license,omitempty"`
+	Rights              string     `xml:"dcterms:rights,omitempty"`
+	PgDpClearance       string     `xml:"pgterms:marc905,omitempty"`
+	Type                Type       `xml:"dcterms:type,omitempty"`
+	Description         string     `xml:"dcterms:description,omitempty"`
+	SourceDescription   string     `xml:"pgterms:marc300,omitempty"`
+	SourceLink          string     `xml:"pgterms:marc904,omitempty"`
+	LOC                 string     `xml:"pgterms:marc010,omitempty"`
+	ISBN                string     `xml:"pgterms:marc020,omitempty"`
+	BookCover           string     `xml:"pgterms:marc901,omitempty"`
+	TitlePageImage      string     `xml:"pgterms:marc902,omitempty"`
+	BackCover           string     `xml:"pgterms:marc903,omitempty"`
 
 	Creators []Creator `xml:"dcterms:creator,omitempty"`
 
@@ -255,15 +255,11 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		NsMarcRel: in.NsMarcRel,
 		NsDCam:    in.NsDcam,
 		Ebook: Ebook{
-			About:       in.Ebook.About,
-			Description: in.Ebook.Description,
-			Type: Type{
-				Description: description(&in.Ebook.Type.Description),
-			},
-			Issued: nil,
-			Language: Language{
-				Description: description(&in.Ebook.Language.Description),
-			},
+			About:         in.Ebook.About,
+			Description:   in.Ebook.Description,
+			Type:          Type{Description: description(&in.Ebook.Type.Description)},
+			Issued:        nil,
+			Languages:     nil,
 			Publisher:     in.Ebook.Publisher,
 			PublishedYear: in.Ebook.PublishedYear,
 			License:       License{Resource: in.Ebook.License.Resource},
@@ -332,6 +328,10 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 			DataType: in.Ebook.Issued.DataType,
 			Value:    in.Ebook.Issued.Value,
 		}
+	}
+
+	for _, lang := range in.Ebook.Languages {
+		out.Ebook.Languages = append(out.Ebook.Languages, Language{Description: description(&lang.Description)})
 	}
 
 	if len(in.Ebook.Downloads.DataType) > 0 || in.Ebook.Downloads.Value > 0 {
