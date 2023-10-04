@@ -491,8 +491,18 @@ func TestMarcCodes(t *testing.T) {
 	if rdf.Ebook.Summary != "A fun version of A Christmas Carol." {
 		t.Errorf("unexpected marc520 summary '%s'", rdf.Ebook.Summary)
 	}
-	if rdf.Ebook.LanguageNotes != "Uses 19th century spelling." {
-		t.Errorf("unexpected marc546 language note '%s'", rdf.Ebook.LanguageNotes)
+	if rdf.Ebook.LanguageDialect != "GB" {
+		t.Errorf("unexpected marc907 summary '%s'", rdf.Ebook.LanguageDialect)
+	}
+	if len(rdf.Ebook.LanguagesNotes) != 2 {
+		t.Errorf("expected 1 language note, got %d", len(rdf.Ebook.LanguagesNotes))
+	} else {
+		if rdf.Ebook.LanguagesNotes[0] != "Uses 19th century spelling." {
+			t.Errorf("unexpected marc546 language note #1 '%s'", rdf.Ebook.LanguagesNotes[0])
+		}
+		if rdf.Ebook.LanguagesNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
+			t.Errorf("unexpected marc546 language note #2 '%s'", rdf.Ebook.LanguagesNotes[1])
+		}
 	}
 	if rdf.Ebook.BookCover != "file:///files/999991234/999991234-h/images/cover.jpg" {
 		t.Errorf("unexpected marc901 book cover link '%s'", rdf.Ebook.BookCover)

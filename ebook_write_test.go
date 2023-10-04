@@ -48,7 +48,7 @@ func generateEbook() *pgrdf.Ebook {
 		ID:            11,
 		BookType:      pgrdf.BookTypeText,
 		ReleaseDate:   "2008-06-27",
-		Languages:     []pgrdf.Language{{"en", "GB", "Uses 19th century spelling."}},
+		Languages:     []pgrdf.Language{{"en", "GB", []string{"Uses 19th century spelling."}}},
 		Publisher:     "Project Gutenberg",
 		PublishedYear: 1909,
 		Copyright:     "Public domain in the USA.",

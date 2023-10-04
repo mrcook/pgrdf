@@ -40,7 +40,7 @@ type Ebook struct {
 	Series              string     `xml:"pgterms:marc440,omitempty"`
 	Languages           []Language `xml:"dcterms:language,omitempty"`
 	LanguageDialect     string     `xml:"pgterms:marc907,omitempty"`
-	LanguageNotes       string     `xml:"pgterms:marc546,omitempty"`
+	LanguageNotes       []string   `xml:"pgterms:marc546,omitempty"`
 	PublishedYear       int        `xml:"pgterms:marc906,omitempty"`
 	OriginalPublication string     `xml:"pgterms:marc260,omitempty"`
 	Edition             string     `xml:"pgterms:marc250,omitempty"`
@@ -305,7 +305,7 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 			Series:              in.Ebook.Series,
 			Credits:             in.Ebook.Credits,
 			Summary:             in.Ebook.Summary,
-			LanguageNotes:       in.Ebook.LanguageNotes,
+			LanguageNotes:       in.Ebook.LanguagesNotes,
 			BookCover:           in.Ebook.BookCover,
 			TitlePageImage:      in.Ebook.TitlePageImage,
 			BackCover:           in.Ebook.BackCover,

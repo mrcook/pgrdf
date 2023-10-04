@@ -93,8 +93,15 @@ func TestEbookReadLanguages(t *testing.T) {
 	if ebook.Languages[0].Dialect != "GB" {
 		t.Errorf("unexpected language #1 dielect, got '%s'", ebook.Languages[0].Dialect)
 	}
-	if ebook.Languages[0].Notes != "Uses 19th century spelling." {
-		t.Errorf("unexpected language #1 notes, got '%s'", ebook.Languages[0].Notes)
+	if len(ebook.Languages[0].Notes) != 2 {
+		t.Errorf("expected two language notes, got %d", len(ebook.Languages[0].Notes))
+	} else {
+		if ebook.Languages[0].Notes[0] != "Uses 19th century spelling." {
+			t.Errorf("unexpected language #1 notes #1, got '%s'", ebook.Languages[0].Notes[0])
+		}
+		if ebook.Languages[0].Notes[1] != "This ebook uses a beginning of the 20th century spelling." {
+			t.Errorf("unexpected language #1 notes #2, got '%s'", ebook.Languages[0].Notes[1])
+		}
 	}
 
 	if ebook.Languages[1].Code != "de" {
@@ -103,8 +110,8 @@ func TestEbookReadLanguages(t *testing.T) {
 	if ebook.Languages[1].Dialect != "" {
 		t.Errorf("expected language #2 dielect to be blank, got '%s'", ebook.Languages[1].Dialect)
 	}
-	if ebook.Languages[1].Notes != "" {
-		t.Errorf("expected language #2 notes to be blank, got '%s'", ebook.Languages[1].Notes)
+	if len(ebook.Languages[1].Notes) != 2 {
+		t.Errorf("expected 2 notes for language #2, got %d", len(ebook.Languages[1].Notes))
 	}
 }
 

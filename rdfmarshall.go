@@ -32,6 +32,7 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 			},
 			Series:        e.Series,
 			Languages:     nil,
+			LanguageNotes: nil,
 			PublishedYear: e.PublishedYear,
 			License:       marshaller.License{Resource: "license"},
 			Rights:        e.Copyright,
@@ -61,7 +62,11 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 	}
 
 	for i, lang := range e.Languages {
-		l := marshaller.Language{
+		if i == 0 {
+			rdf.Ebook.LanguageDialect = lang.Dialect // apply only to first language
+		}
+
+		rdf.Ebook.Languages = append(rdf.Ebook.Languages, marshaller.Language{
 			Description: marshaller.Description{
 				NodeID: nodeid.Generate(),
 				Value: &marshaller.Value{
@@ -69,13 +74,8 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 					Data:     lang.Code,
 				},
 			},
-		}
-		// TODO: check if multiple dialects/notes are used for multi-language book
-		if i == 0 {
-			rdf.Ebook.LanguageDialect = e.Languages[0].Dialect
-			rdf.Ebook.LanguageNotes = e.Languages[0].Notes
-		}
-		rdf.Ebook.Languages = append(rdf.Ebook.Languages, l)
+		})
+		rdf.Ebook.LanguageNotes = lang.Notes
 	}
 
 	for _, c := range e.Creators {
