@@ -50,7 +50,7 @@ type Ebook struct {
 	Bookshelves []Bookshelf `json:"bookshelves"`
 
 	// The series this work originally belonged to.
-	Series string `json:"series"`
+	Series []string `json:"series"`
 
 	// Book cover filename (found in the HTML ebook directory).
 	BookCoverFilename string `json:"book_cover"`

@@ -54,7 +54,7 @@ type Ebook struct {
 	Publisher           string   `xml:"http://purl.org/dc/terms/ publisher"`
 	Issued              Issued
 	Summary             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
-	Series              string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
+	Series              []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
 	Languages           []Language `xml:"http://purl.org/dc/terms/ language"`
 	LanguageDialect     string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
 	LanguagesNotes      []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`

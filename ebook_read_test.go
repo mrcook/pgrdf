@@ -32,8 +32,10 @@ func TestReadRDF(t *testing.T) {
 	if ebook.Copyright != "Public domain in the USA." {
 		t.Errorf("unexpected ebook copyright, got '%s'", ebook.Copyright)
 	}
-	if ebook.Series != "Dickens Best Of" {
-		t.Errorf("unexpected series, got '%s'", ebook.Series)
+	if len(ebook.Series) != 2 {
+		t.Errorf("expected 2 series, got %d", len(ebook.Series))
+	} else if ebook.Series[0] != "Dickens Best Of" {
+		t.Errorf("unexpected series, got '%s'", ebook.Series[0])
 	}
 	if ebook.BookCoverFilename != "images/cover.jpg" {
 		t.Errorf("unexpected book cover filename, got '%s'", ebook.BookCoverFilename)

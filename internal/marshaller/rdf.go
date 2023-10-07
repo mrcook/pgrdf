@@ -37,7 +37,7 @@ type Ebook struct {
 	Publisher           string     `xml:"dcterms:publisher,omitempty"`
 	Issued              *Issued    `xml:"dcterms:issued,omitempty"`
 	Summary             string     `xml:"pgterms:marc520,omitempty"`
-	Series              string     `xml:"pgterms:marc440,omitempty"`
+	Series              []string   `xml:"pgterms:marc440,omitempty"`
 	Languages           []Language `xml:"dcterms:language,omitempty"`
 	LanguageDialect     string     `xml:"pgterms:marc907,omitempty"`
 	LanguageNotes       []string   `xml:"pgterms:marc546,omitempty"`

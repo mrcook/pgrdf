@@ -8,6 +8,7 @@ With a newline separation</dcterms:alternative>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
     <pgterms:marc520>A fun version of A Christmas Carol.</pgterms:marc520>
     <pgterms:marc440>Dickens Best Of</pgterms:marc440>
+    <pgterms:marc440>Best of British</pgterms:marc440>
     <dcterms:language>
       <rdf:Description rdf:nodeID="N73e956e8e5d049ac943dfe482ddd5802">
         <rdf:value rdf:datatype="http://purl.org/dc/terms/RFC4646">en</rdf:value>

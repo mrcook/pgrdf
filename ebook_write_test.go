@@ -76,7 +76,7 @@ func generateEbook() *pgrdf.Ebook {
 			Resource: "2009/pgterms/Bookshelf",
 			Name:     "Children's Literature",
 		}},
-		Series:            "Best of Fantasy",
+		Series:            []string{"Best of Fantasy"},
 		BookCoverFilename: "images/cover.jpg",
 		Downloads:         32144,
 		Note:              "An improved version is available at #28885.",

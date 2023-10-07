@@ -113,8 +113,10 @@ func TestEbookGeneral(t *testing.T) {
 	} else if e.Alternative[0] != "Alternate Title\r\nWith a newline separation" {
 		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternative[0])
 	}
-	if e.Series != "Dickens Best Of" {
-		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series)
+	if len(e.Series) != 2 {
+		t.Errorf("expected 2 pgterms:marc440 (series), got %d", len(e.Series))
+	} else if e.Series[0] != "Dickens Best Of" {
+		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series[0])
 	}
 	if e.BookCover != "file:///files/999991234/999991234-h/images/cover.jpg" {
 		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCover)
@@ -476,8 +478,10 @@ func TestMarcCodes(t *testing.T) {
 	if rdf.Ebook.SourceDescription != "Musical score" {
 		t.Errorf("unexpected marc300 source description '%s'", rdf.Ebook.SourceDescription)
 	}
-	if rdf.Ebook.Series != "Dickens Best Of" {
-		t.Errorf("unexpected marc440 series '%s'", rdf.Ebook.Series)
+	if len(rdf.Ebook.Series) != 2 {
+		t.Errorf("expected 2 marc440 series, got %d", len(rdf.Ebook.Series))
+	} else if rdf.Ebook.Series[0] != "Dickens Best Of" {
+		t.Errorf("unexpected marc440 series, got '%s'", rdf.Ebook.Series[0])
 	}
 	if len(rdf.Ebook.Credits) != 2 {
 		t.Errorf("expected 2 marc508 credit entries, got %d", len(rdf.Ebook.Credits))
