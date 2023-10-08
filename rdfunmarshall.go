@@ -15,19 +15,21 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 	}
 
 	ebook := &Ebook{
-		ID:                rdf.Ebook.Id(),
-		Titles:            titles(rdf.Ebook.Title),
-		OtherTitles:       otherTitles(rdf.Ebook.Alternative),
-		Publisher:         rdf.Ebook.Publisher,
-		ReleaseDate:       rdf.Ebook.Issued.Value,
-		Series:            rdf.Ebook.Series,
-		PublishedYear:     rdf.Ebook.PublishedYear,
-		Copyright:         rdf.Ebook.Rights,
-		Note:              rdf.Ebook.Description,
-		BookCoverFilename: bookCoverFilename(rdf.Ebook.BookCover),
-		Downloads:         rdf.Ebook.Downloads.Value,
-		Comment:           rdf.Work.Comment,
-		CCLicense:         rdf.Work.License.Resource,
+		ID:            rdf.Ebook.Id(),
+		Titles:        titles(rdf.Ebook.Title),
+		OtherTitles:   otherTitles(rdf.Ebook.Alternative),
+		Publisher:     rdf.Ebook.Publisher,
+		ReleaseDate:   rdf.Ebook.Issued.Value,
+		Series:        rdf.Ebook.Series,
+		PublishedYear: rdf.Ebook.PublishedYear,
+		Copyright:     rdf.Ebook.Rights,
+		Note:          rdf.Ebook.Description,
+		Downloads:     rdf.Ebook.Downloads.Value,
+		Comment:       rdf.Work.Comment,
+		CCLicense:     rdf.Work.License.Resource,
+	}
+	if len(rdf.Ebook.BookCovers) >= 1 {
+		ebook.BookCoverFilename = bookCoverFilename(rdf.Ebook.BookCovers[0])
 	}
 	ebook.SetBookType(rdf.Ebook.Type.Description.Value.Data)
 

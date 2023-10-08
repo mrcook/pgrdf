@@ -118,9 +118,12 @@ func TestEbookGeneral(t *testing.T) {
 	} else if e.Series[0] != "Dickens Best Of" {
 		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series[0])
 	}
-	if e.BookCover != "file:///files/999991234/999991234-h/images/cover.jpg" {
-		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCover)
+	if len(e.BookCovers) != 1 {
+		t.Errorf("expected 2 pgterms:marc901 (book covers), got %d", len(e.BookCovers))
+	} else if e.BookCovers[0] != "file:///files/999991234/999991234-h/images/cover.jpg" {
+		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCovers[0])
 	}
+
 	if e.Downloads.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
 		t.Errorf("unexpected pgterms:downloads rdf:datatype, got '%s'", e.Downloads.DataType)
 	}
@@ -508,8 +511,10 @@ func TestMarcCodes(t *testing.T) {
 			t.Errorf("unexpected marc546 language note #2 '%s'", rdf.Ebook.LanguagesNotes[1])
 		}
 	}
-	if rdf.Ebook.BookCover != "file:///files/999991234/999991234-h/images/cover.jpg" {
-		t.Errorf("unexpected marc901 book cover link '%s'", rdf.Ebook.BookCover)
+	if len(rdf.Ebook.BookCovers) != 1 {
+		t.Errorf("expected 1 book cover, got %d", len(rdf.Ebook.BookCovers))
+	} else if rdf.Ebook.BookCovers[0] != "file:///files/999991234/999991234-h/images/cover.jpg" {
+		t.Errorf("unexpected marc901 book cover link '%s'", rdf.Ebook.BookCovers[0])
 	}
 	if rdf.Ebook.TitlePageImage != "https://example.org/ebook1/title.jpg" {
 		t.Errorf("unexpected marc902 title page link '%s'", rdf.Ebook.TitlePageImage)

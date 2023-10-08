@@ -70,7 +70,7 @@ type Ebook struct {
 	PgDpClearance       string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
 	LOC                 string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
 	ISBN                string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
-	BookCover           string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
+	BookCovers          []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
 	TitlePageImage      string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
 	BackCover           string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
 

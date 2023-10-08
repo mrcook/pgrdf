@@ -44,7 +44,7 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 				},
 			},
 			Description: e.Note,
-			BookCover:   e.BookCoverFilename,
+			BookCovers:  []string{e.BookCoverFilename},
 			Creators:    nil,
 			Subjects:    nil,
 			HasFormats:  nil,

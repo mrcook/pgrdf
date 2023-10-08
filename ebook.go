@@ -53,6 +53,7 @@ type Ebook struct {
 	Series []string `json:"series"`
 
 	// Book cover filename (found in the HTML ebook directory).
+	// TODO: multiple filenames should be supported
 	BookCoverFilename string `json:"book_cover"`
 
 	// Download count - from the previous 30 days, so can be more or less than
