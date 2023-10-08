@@ -517,8 +517,10 @@ func TestMarcCodes(t *testing.T) {
 	if rdf.Ebook.BackCover != "https://example.org/ebook1/back.jpg" {
 		t.Errorf("unexpected marc903 back cover link '%s'", rdf.Ebook.BackCover)
 	}
-	if rdf.Ebook.SourceLink != "https://example.com/ebooks/1/something" {
-		t.Errorf("unexpected marc904 source link '%s'", rdf.Ebook.SourceLink)
+	if len(rdf.Ebook.SourceLinks) != 1 {
+		t.Errorf("expected 1 source link, got %d", len(rdf.Ebook.SourceLinks))
+	} else if rdf.Ebook.SourceLinks[0] != "https://example.com/ebooks/1/something" {
+		t.Errorf("unexpected marc904 source link '%s'", rdf.Ebook.SourceLinks[0])
 	}
 	if rdf.Ebook.PgDpClearance != "19991231235959randomthing" {
 		t.Errorf("unexpected marc905 PGDP clearance code '%s'", rdf.Ebook.PgDpClearance)

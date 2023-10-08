@@ -64,15 +64,15 @@ type Ebook struct {
 	License             License
 	Rights              string `xml:"http://purl.org/dc/terms/ rights"`
 	Type                Type
-	Description         string `xml:"http://purl.org/dc/terms/ description"`
-	SourceDescription   string `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
-	SourceLink          string `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
-	PgDpClearance       string `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
-	LOC                 string `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
-	ISBN                string `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
-	BookCover           string `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
-	TitlePageImage      string `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
-	BackCover           string `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
+	Description         string   `xml:"http://purl.org/dc/terms/ description"`
+	SourceDescription   string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
+	SourceLinks         []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
+	PgDpClearance       string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
+	LOC                 string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
+	ISBN                string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
+	BookCover           string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
+	TitlePageImage      string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
+	BackCover           string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
 
 	// NOTE: at least one RDF uses `Various` for marc906 instead of a year number, so this
 	// must be parsed as a string, and then manually converted once the unmarshal is complete.

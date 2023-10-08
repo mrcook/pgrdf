@@ -51,7 +51,7 @@ type Ebook struct {
 	Type                Type       `xml:"dcterms:type,omitempty"`
 	Description         string     `xml:"dcterms:description,omitempty"`
 	SourceDescription   string     `xml:"pgterms:marc300,omitempty"`
-	SourceLink          string     `xml:"pgterms:marc904,omitempty"`
+	SourceLinks         []string   `xml:"pgterms:marc904,omitempty"`
 	LOC                 string     `xml:"pgterms:marc010,omitempty"`
 	ISBN                string     `xml:"pgterms:marc020,omitempty"`
 	BookCover           string     `xml:"pgterms:marc901,omitempty"`
@@ -309,7 +309,7 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 			BookCover:           in.Ebook.BookCover,
 			TitlePageImage:      in.Ebook.TitlePageImage,
 			BackCover:           in.Ebook.BackCover,
-			SourceLink:          in.Ebook.SourceLink,
+			SourceLinks:         in.Ebook.SourceLinks,
 			PgDpClearance:       in.Ebook.PgDpClearance,
 			LanguageDialect:     in.Ebook.LanguageDialect,
 
