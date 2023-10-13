@@ -5,6 +5,7 @@
     <dcterms:alternative>Alternate Title&#13;
 With a newline separation</dcterms:alternative>
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
+    <pgterms:marc906>1861</pgterms:marc906>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>
     <pgterms:marc520>A fun version of A Christmas Carol.</pgterms:marc520>
     <pgterms:marc440>Dickens Best Of</pgterms:marc440>
@@ -22,7 +23,6 @@ With a newline separation</dcterms:alternative>
     <pgterms:marc907>GB</pgterms:marc907>
     <pgterms:marc546>Uses 19th century spelling.</pgterms:marc546>
     <pgterms:marc546>This ebook uses a beginning of the 20th century spelling.</pgterms:marc546>
-    <pgterms:marc906>1861</pgterms:marc906>
     <pgterms:marc260>United Kingdom: J. Johnson, 1794.</pgterms:marc260>
     <pgterms:marc250>The Charles Dickens Edition</pgterms:marc250>
     <pgterms:marc508>Updated: 2022-07-14</pgterms:marc508>

@@ -23,8 +23,8 @@ func TestNamespaces(t *testing.T) {
 	if r.NsRdf != "http://www.w3.org/1999/02/22-rdf-syntax-ns#" {
 		t.Errorf("unexpected xmlns:rdf, got '%s'", r.NsRdf)
 	}
-	if r.NsDcam != "http://purl.org/dc/dcam/" {
-		t.Errorf("unexpected xmlns:dcam, got '%s'", r.NsDcam)
+	if r.NsDcDcam != "http://purl.org/dc/dcam/" {
+		t.Errorf("unexpected xmlns:dcam, got '%s'", r.NsDcDcam)
 	}
 	if r.NsRdfs != "http://www.w3.org/2000/01/rdf-schema#" {
 		t.Errorf("unexpected xmlns:rdfs, got '%s'", r.NsRdfs)
@@ -501,14 +501,14 @@ func TestMarcCodes(t *testing.T) {
 	if rdf.Ebook.LanguageDialect != "GB" {
 		t.Errorf("unexpected marc907 summary '%s'", rdf.Ebook.LanguageDialect)
 	}
-	if len(rdf.Ebook.LanguagesNotes) != 2 {
-		t.Errorf("expected 1 language note, got %d", len(rdf.Ebook.LanguagesNotes))
+	if len(rdf.Ebook.LanguageNotes) != 2 {
+		t.Errorf("expected 1 language note, got %d", len(rdf.Ebook.LanguageNotes))
 	} else {
-		if rdf.Ebook.LanguagesNotes[0] != "Uses 19th century spelling." {
-			t.Errorf("unexpected marc546 language note #1 '%s'", rdf.Ebook.LanguagesNotes[0])
+		if rdf.Ebook.LanguageNotes[0] != "Uses 19th century spelling." {
+			t.Errorf("unexpected marc546 language note #1 '%s'", rdf.Ebook.LanguageNotes[0])
 		}
-		if rdf.Ebook.LanguagesNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
-			t.Errorf("unexpected marc546 language note #2 '%s'", rdf.Ebook.LanguagesNotes[1])
+		if rdf.Ebook.LanguageNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
+			t.Errorf("unexpected marc546 language note #2 '%s'", rdf.Ebook.LanguageNotes[1])
 		}
 	}
 	if len(rdf.Ebook.BookCovers) != 1 {

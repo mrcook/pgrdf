@@ -36,7 +36,7 @@ func rdfUnmarshall(r io.Reader) (*Ebook, error) {
 	for i, lang := range rdf.Ebook.Languages {
 		l := Language{
 			Code:  lang.Description.Value.Data,
-			Notes: rdf.Ebook.LanguagesNotes,
+			Notes: rdf.Ebook.LanguageNotes,
 		}
 		if i == 0 {
 			l.Dialect = rdf.Ebook.LanguageDialect // apply only to first language

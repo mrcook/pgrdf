@@ -18,7 +18,7 @@ func rdfMarshall(e *Ebook) *marshaller.RDF {
 		NsRdf:     "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		NsRdfs:    "http://www.w3.org/2000/01/rdf-schema#",
 		NsCC:      "http://web.resource.org/cc/",
-		NsDCam:    "http://purl.org/dc/dcam/",
+		NsDcDcam:  "http://purl.org/dc/dcam/",
 		NsMarcRel: "http://id.loc.gov/vocabulary/relators/",
 
 		Ebook: marshaller.Ebook{

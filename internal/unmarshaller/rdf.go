@@ -24,7 +24,7 @@ func New(r io.Reader) (*RDF, error) {
 		return nil, err
 	}
 
-	// NOTE: convert the string year to an int
+	// convert the year string to an int after unmarshalling
 	rdf.Ebook.PublishedYear, _ = strconv.Atoi(rdf.Ebook.PublishedYearString)
 
 	return rdf, nil
@@ -39,47 +39,46 @@ type RDF struct {
 	NsRdfs    string   `xml:"xmlns rdfs,attr"`
 	NsCC      string   `xml:"xmlns cc,attr"`
 	NsMarcRel string   `xml:"xmlns marcrel,attr"`
-	NsDcam    string   `xml:"xmlns dcam,attr"`
+	NsDcDcam  string   `xml:"xmlns dcam,attr"`
 
-	Ebook        Ebook
+	Ebook        Ebook         `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
 	Descriptions []Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
-	Work         Work
+	Work         Work          `xml:"http://web.resource.org/cc/ Work"`
 }
 
 type Ebook struct {
-	XMLName             xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ ebook"`
-	About               string   `xml:"about,attr"`
-	Title               string   `xml:"http://purl.org/dc/terms/ title"`
-	Alternative         []string `xml:"http://purl.org/dc/terms/ alternative"`
-	Publisher           string   `xml:"http://purl.org/dc/terms/ publisher"`
-	Issued              Issued
-	Summary             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
-	Series              []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
-	Languages           []Language `xml:"http://purl.org/dc/terms/ language"`
-	LanguageDialect     string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
-	LanguagesNotes      []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
-	OriginalPublication string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
-	Edition             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
-	Credits             []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
-	License             License
-	Rights              string `xml:"http://purl.org/dc/terms/ rights"`
-	Type                Type
-	Description         string   `xml:"http://purl.org/dc/terms/ description"`
-	SourceDescription   string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
-	SourceLinks         []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
-	PgDpClearance       string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
-	LOC                 string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
-	ISBN                string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
-	BookCovers          []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
-	TitlePageImage      string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
-	BackCover           string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
+	About       string   `xml:"about,attr"`
+	Title       string   `xml:"http://purl.org/dc/terms/ title"`
+	Alternative []string `xml:"http://purl.org/dc/terms/ alternative"`
+	Publisher   string   `xml:"http://purl.org/dc/terms/ publisher"`
 
 	// NOTE: at least one RDF uses `Various` for marc906 instead of a year number, so this
 	// must be parsed as a string, and then manually converted once the unmarshal is complete.
 	PublishedYear       int
 	PublishedYearString string `xml:"http://www.gutenberg.org/2009/pgterms/ marc906"`
 
-	Creators []Creator `xml:"http://purl.org/dc/terms/ creator"`
+	Issued              Issued     `xml:"http://purl.org/dc/terms/ issued"`
+	Summary             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc520"`
+	Series              []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc440"`
+	Languages           []Language `xml:"http://purl.org/dc/terms/ language"`
+	LanguageDialect     string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc907"`
+	LanguageNotes       []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
+	OriginalPublication string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
+	Edition             string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
+	Credits             []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
+	License             License    `xml:"http://purl.org/dc/terms/ license"`
+	Rights              string     `xml:"http://purl.org/dc/terms/ rights"`
+	PgDpClearance       string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc905"`
+	Type                Type       `xml:"http://purl.org/dc/terms/ type"`
+	Description         string     `xml:"http://purl.org/dc/terms/ description"`
+	SourceDescription   string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
+	SourceLinks         []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
+	LOC                 string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
+	ISBN                string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`
+	BookCovers          []string   `xml:"http://www.gutenberg.org/2009/pgterms/ marc901"`
+	TitlePageImage      string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc902"`
+	BackCover           string     `xml:"http://www.gutenberg.org/2009/pgterms/ marc903"`
+	Creators            []Creator  `xml:"http://purl.org/dc/terms/ creator"`
 
 	// TODO: can these be unmarshalled programmatically?
 	RelAdapters      []MarcRelator `xml:"http://id.loc.gov/vocabulary/relators/ adp"`
@@ -110,8 +109,7 @@ type Ebook struct {
 	Subjects    []Subject   `xml:"http://purl.org/dc/terms/ subject"`
 	HasFormats  []HasFormat `xml:"http://purl.org/dc/terms/ hasFormat"`
 	Bookshelves []Bookshelf `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
-
-	Downloads Downloads
+	Downloads   Downloads   `xml:"http://www.gutenberg.org/2009/pgterms/ downloads"`
 }
 
 // Id taken from the about attribute.
@@ -120,34 +118,29 @@ func (e *Ebook) Id() int {
 }
 
 type Type struct {
-	XMLName     xml.Name `xml:"http://purl.org/dc/terms/ type"`
-	Description Description
+	Description Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 }
 
 type Issued struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ issued"`
-	DataType string   `xml:"datatype,attr"`
-	Value    string   `xml:",chardata"`
+	DataType string `xml:"datatype,attr"`
+	Value    string `xml:",chardata"`
 }
 
 type Language struct {
-	XMLName     xml.Name `xml:"http://purl.org/dc/terms/ language"`
-	Description Description
+	Description Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 }
 
 type License struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ license"`
-	Resource string   `xml:"resource,attr"`
+	Resource string `xml:"resource,attr"`
 }
 
 type Agent struct {
-	XMLName   xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ agent"`
 	About     string   `xml:"about,attr"`
 	Name      string   `xml:"name"`
 	Aliases   []string `xml:"alias"`
 	BirthYear Year     `xml:"birthdate"`
 	DeathYear Year     `xml:"deathdate"`
-	Webpage   Webpage
+	Webpage   Webpage  `xml:"http://www.gutenberg.org/2009/pgterms/ webpage"`
 }
 
 // Id taken from the about attribute.
@@ -161,19 +154,17 @@ type Year struct {
 }
 
 type Webpage struct {
-	XMLName  xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ webpage"`
-	Resource string   `xml:"resource,attr"`
+	Resource string `xml:"resource,attr"`
 }
 
 type Creator struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ creator"`
-	Resource string   `xml:"resource,attr"`
-	Agent    Agent
+	Resource string `xml:"resource,attr"`
+	Agent    Agent  `xml:"http://www.gutenberg.org/2009/pgterms/ agent"`
 }
 
 type MarcRelator struct {
 	Resource string `xml:"resource,attr"`
-	Agent    Agent
+	Agent    Agent  `xml:"http://www.gutenberg.org/2009/pgterms/ agent"`
 }
 
 func (m MarcRelator) AgentId() int {
@@ -184,92 +175,78 @@ func (m MarcRelator) AgentId() int {
 }
 
 type HasFormat struct {
-	XMLName xml.Name `xml:"http://purl.org/dc/terms/ hasFormat"`
-	File    File
+	File File `xml:"http://www.gutenberg.org/2009/pgterms/ file"`
 }
 
 type File struct {
-	XMLName    xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ file"`
-	About      string   `xml:"about,attr"`
-	Extent     Extent
-	Modified   Modified
-	IsFormatOf IsFormatOf
-	Formats    []Format `xml:"http://purl.org/dc/terms/ format"`
+	About      string     `xml:"about,attr"`
+	Extent     Extent     `xml:"http://purl.org/dc/terms/ extent"`
+	Modified   Modified   `xml:"http://purl.org/dc/terms/ modified"`
+	IsFormatOf IsFormatOf `xml:"http://purl.org/dc/terms/ isFormatOf"`
+	Formats    []Format   `xml:"http://purl.org/dc/terms/ format"`
 }
 
 type Extent struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ extent"`
-	DataType string   `xml:"datatype,attr"`
-	Value    int      `xml:",chardata"`
+	DataType string `xml:"datatype,attr"`
+	Value    int    `xml:",chardata"`
 }
 
 type Modified struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ modified"`
-	DataType string   `xml:"datatype,attr"`
-	Value    string   `xml:",chardata"`
+	DataType string `xml:"datatype,attr"`
+	Value    string `xml:",chardata"`
 }
 
 type IsFormatOf struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/terms/ isFormatOf"`
-	Resource string   `xml:"resource,attr"`
+	Resource string `xml:"resource,attr"`
 }
 
 type Format struct {
-	XMLName     xml.Name `xml:"http://purl.org/dc/terms/ format"`
-	Description Description
+	Description Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 }
 
 type Bookshelf struct {
-	XMLName     xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ bookshelf"`
-	Description Description
+	Description Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 }
 
 type Subject struct {
-	XMLName     xml.Name `xml:"http://purl.org/dc/terms/ subject"`
-	Description Description
+	Description Description `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 }
 
 type Downloads struct {
-	XMLName  xml.Name `xml:"http://www.gutenberg.org/2009/pgterms/ downloads"`
-	DataType string   `xml:"datatype,attr"`
-	Value    int      `xml:",chardata"`
+	DataType string `xml:"datatype,attr"`
+	Value    int    `xml:",chardata"`
 }
 
 type Work struct {
-	XMLName xml.Name `xml:"http://web.resource.org/cc/ Work"`
-	About   string   `xml:"about,attr"`
-	Comment string   `xml:"http://www.w3.org/2000/01/rdf-schema# comment"`
-	License CCLicense
+	About   string    `xml:"about,attr"`
+	Comment string    `xml:"http://www.w3.org/2000/01/rdf-schema# comment"`
+	License CCLicense `xml:"http://web.resource.org/cc/ license"`
 }
 
 type CCLicense struct {
-	XMLName  xml.Name `xml:"http://web.resource.org/cc/ license"`
-	Resource string   `xml:"resource,attr"`
+	Resource string `xml:"resource,attr"`
 }
 
 type Description struct {
-	XMLName     xml.Name `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# Description"`
 	About       string   `xml:"about,attr"`
 	NodeID      string   `xml:"nodeID,attr"`
-	Value       Value
-	MemberOf    MemberOf
-	Description string `xml:"http://purl.org/dc/terms/ description"`
+	Value       Value    `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# value"`
+	MemberOf    MemberOf `xml:"http://purl.org/dc/dcam/ memberOf"`
+	Description string   `xml:"http://purl.org/dc/terms/ description"`
 }
 
 type Value struct {
-	XMLName  xml.Name `xml:"http://www.w3.org/1999/02/22-rdf-syntax-ns# value"`
-	DataType string   `xml:"datatype,attr"`
-	Data     string   `xml:",chardata"`
+	DataType string `xml:"datatype,attr"`
+	Data     string `xml:",chardata"`
 }
 
 type MemberOf struct {
-	XMLName  xml.Name `xml:"http://purl.org/dc/dcam/ memberOf"`
-	Resource string   `xml:"resource,attr"`
+	Resource string `xml:"resource,attr"`
 }
 
 // Extracts the ID from an attribute, e.g. the string `2009/agents/7`
-func extractIdFromAttr(about string) int {
-	parts := strings.Split(about, "/")
+func extractIdFromAttr(attr string) int {
+	parts := strings.Split(attr, "/")
 	idString := parts[len(parts)-1]
 	id, _ := strconv.Atoi(idString)
 	return id

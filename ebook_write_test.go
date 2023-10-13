@@ -95,6 +95,7 @@ var rdfMarshallExpected = `<?xml version="1.0" encoding="UTF-8"?>
     <dcterms:title>Alice&#39;s Adventures in Wonderland</dcterms:title>
     <dcterms:alternative>Alice in Wonderland</dcterms:alternative>
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
+    <pgterms:marc906>1909</pgterms:marc906>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2008-06-27</dcterms:issued>
     <pgterms:marc440>Best of Fantasy</pgterms:marc440>
     <dcterms:language>
@@ -104,7 +105,6 @@ var rdfMarshallExpected = `<?xml version="1.0" encoding="UTF-8"?>
     </dcterms:language>
     <pgterms:marc907>GB</pgterms:marc907>
     <pgterms:marc546>Uses 19th century spelling.</pgterms:marc546>
-    <pgterms:marc906>1909</pgterms:marc906>
     <dcterms:license rdf:resource="license"/>
     <dcterms:rights>Public domain in the USA.</dcterms:rights>
     <dcterms:type>

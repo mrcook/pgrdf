@@ -22,7 +22,7 @@ type RDF struct {
 	NsRdfs    string   `xml:"xmlns:rdfs,attr,omitempty"`
 	NsCC      string   `xml:"xmlns:cc,attr,omitempty"`
 	NsMarcRel string   `xml:"xmlns:marcrel,attr,omitempty"`
-	NsDCam    string   `xml:"xmlns:dcam,attr,omitempty"`
+	NsDcDcam  string   `xml:"xmlns:dcam,attr,omitempty"`
 
 	Ebook        Ebook         `xml:"pgterms:ebook,omitempty"`
 	Descriptions []Description `xml:"rdf:Description,omitempty"`
@@ -35,13 +35,13 @@ type Ebook struct {
 	Title               string     `xml:"dcterms:title,omitempty"`
 	Alternative         []string   `xml:"dcterms:alternative,omitempty"`
 	Publisher           string     `xml:"dcterms:publisher,omitempty"`
+	PublishedYear       int        `xml:"pgterms:marc906,omitempty"`
 	Issued              *Issued    `xml:"dcterms:issued,omitempty"`
 	Summary             string     `xml:"pgterms:marc520,omitempty"`
 	Series              []string   `xml:"pgterms:marc440,omitempty"`
 	Languages           []Language `xml:"dcterms:language,omitempty"`
 	LanguageDialect     string     `xml:"pgterms:marc907,omitempty"`
 	LanguageNotes       []string   `xml:"pgterms:marc546,omitempty"`
-	PublishedYear       int        `xml:"pgterms:marc906,omitempty"`
 	OriginalPublication string     `xml:"pgterms:marc260,omitempty"`
 	Edition             string     `xml:"pgterms:marc250,omitempty"`
 	Credits             []string   `xml:"pgterms:marc508,omitempty"`
@@ -57,8 +57,7 @@ type Ebook struct {
 	BookCovers          []string   `xml:"pgterms:marc901,omitempty"`
 	TitlePageImage      string     `xml:"pgterms:marc902,omitempty"`
 	BackCover           string     `xml:"pgterms:marc903,omitempty"`
-
-	Creators []Creator `xml:"dcterms:creator,omitempty"`
+	Creators            []Creator  `xml:"dcterms:creator,omitempty"`
 
 	// TODO: can these be marshalled programmatically?
 	RelAdapters      []MarcRelator `xml:"marcrel:adp,omitempty"`
@@ -89,13 +88,12 @@ type Ebook struct {
 	Subjects    []Subject   `xml:"dcterms:subject,omitempty"`
 	HasFormats  []HasFormat `xml:"dcterms:hasFormat,omitempty"`
 	Bookshelves []Bookshelf `xml:"pgterms:bookshelf,omitempty"`
-
-	Downloads *Downloads `xml:"pgterms:downloads,omitempty"`
+	Downloads   *Downloads  `xml:"pgterms:downloads,omitempty"`
 }
 
 // Type <dcterms:type /> the media type of this work: text, audio, etc.
 type Type struct {
-	Description Description
+	Description Description `xml:"rdf:Description"`
 }
 
 // Issued <dcterms:issued /> the date this eText was added to the Gutenberg collection.
@@ -106,7 +104,7 @@ type Issued struct {
 
 // Language <dcterms:language /> the language this work was written in.
 type Language struct {
-	Description Description
+	Description Description `xml:"rdf:Description"`
 }
 
 // License <dcterms:license />
@@ -149,13 +147,11 @@ type MarcRelator struct {
 
 // HasFormat <dcterms:hasFormat /> represents a file resource.
 type HasFormat struct {
-	XMLName xml.Name `xml:"dcterms:hasFormat"`
-	File    File
+	File File `xml:"pgterms:file"`
 }
 
 // File <pgterms:file /> is a file resource.
 type File struct {
-	XMLName    xml.Name   `xml:"pgterms:file"`
 	About      string     `xml:"rdf:about,attr,omitempty"`
 	Extent     Extent     `xml:"dcterms:extent,omitempty"`
 	Modified   Modified   `xml:"dcterms:modified,omitempty"`
@@ -182,18 +178,18 @@ type IsFormatOf struct {
 
 // Format <dcterms:format /> contains file type information.
 type Format struct {
-	Description Description
+	Description Description `xml:"rdf:Description"`
 }
 
 // Bookshelf <pgterms:bookshelf /> is a link to a Project Gutenberg bookshelf.
 // that this work is part of.
 type Bookshelf struct {
-	Description Description
+	Description Description `xml:"rdf:Description"`
 }
 
 // Subject <dcterms:subject /> and object representing a subject/genre.
 type Subject struct {
-	Description Description
+	Description Description `xml:"rdf:Description"`
 }
 
 // Downloads <pgterms:downloads /> contains the number of times this work has
@@ -218,7 +214,6 @@ type CCLicense struct {
 // Description <rdf:Description /> is a generic struct for describing the
 // node it is included in.
 type Description struct {
-	XMLName     xml.Name  `xml:"rdf:Description"`
 	About       string    `xml:"rdf:about,attr,omitempty"`
 	NodeID      string    `xml:"rdf:nodeID,attr,omitempty"`
 	Value       *Value    `xml:"rdf:value,omitempty"`
@@ -228,15 +223,13 @@ type Description struct {
 
 // Value <rdf:value /> for a Description object.
 type Value struct {
-	XMLName  xml.Name `xml:"rdf:value"`
-	DataType string   `xml:"rdf:datatype,attr,omitempty"`
-	Data     string   `xml:",chardata"`
+	DataType string `xml:"rdf:datatype,attr,omitempty"`
+	Data     string `xml:",chardata"`
 }
 
 // MemberOf <dcam:memberOf /> the schema for a given subject/genre.
 type MemberOf struct {
-	XMLName  xml.Name `xml:"dcam:memberOf"`
-	Resource string   `xml:"rdf:resource,attr,omitempty"`
+	Resource string `xml:"rdf:resource,attr,omitempty"`
 }
 
 // FromUnmarshaller is a helper function for mapping an unmarshaller.RDF to
@@ -253,69 +246,33 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		NsRdfs:    in.NsRdfs,
 		NsCC:      in.NsCC,
 		NsMarcRel: in.NsMarcRel,
-		NsDCam:    in.NsDcam,
+		NsDcDcam:  in.NsDcDcam,
 		Ebook: Ebook{
-			About:         in.Ebook.About,
-			Description:   in.Ebook.Description,
-			Type:          Type{Description: description(&in.Ebook.Type.Description)},
-			Issued:        nil,
-			Languages:     nil,
-			Publisher:     in.Ebook.Publisher,
-			PublishedYear: in.Ebook.PublishedYear,
-			License:       License{Resource: in.Ebook.License.Resource},
-			Rights:        in.Ebook.Rights,
-			Title:         in.Ebook.Title,
-			Alternative:   in.Ebook.Alternative,
-			Creators:      nil,
-
-			RelAdapters:      nil,
-			RelAfterwords:    nil,
-			RelAnnotators:    nil,
-			RelArrangers:     nil,
-			RelArtists:       nil,
-			RelIntroductions: nil,
-			RelCommentators:  nil,
-			RelComposers:     nil,
-			RelConductors:    nil,
-			RelCompilers:     nil,
-			RelContributors:  nil,
-			RelDubious:       nil,
-			RelEditors:       nil,
-			RelEngravers:     nil,
-			RelIllustrators:  nil,
-			RelLibrettists:   nil,
-			RelOther:         nil,
-			RelPublishers:    nil,
-			RelPhotographers: nil,
-			RelPerformers:    nil,
-			RelPrinters:      nil,
-			RelResearchers:   nil,
-			RelTranscribers:  nil,
-			RelTranslators:   nil,
-
-			Subjects:    nil,
-			HasFormats:  nil,
-			Bookshelves: nil,
-
+			About:               in.Ebook.About,
+			Title:               in.Ebook.Title,
+			Alternative:         in.Ebook.Alternative,
+			Publisher:           in.Ebook.Publisher,
+			PublishedYear:       in.Ebook.PublishedYear,
+			Summary:             in.Ebook.Summary,
+			Series:              in.Ebook.Series,
+			LanguageDialect:     in.Ebook.LanguageDialect,
+			LanguageNotes:       in.Ebook.LanguageNotes,
+			OriginalPublication: in.Ebook.OriginalPublication,
+			Edition:             in.Ebook.Edition,
+			Credits:             in.Ebook.Credits,
+			License:             License{Resource: in.Ebook.License.Resource},
+			Rights:              in.Ebook.Rights,
+			PgDpClearance:       in.Ebook.PgDpClearance,
+			Type:                Type{Description: description(&in.Ebook.Type.Description)},
+			Description:         in.Ebook.Description,
+			SourceDescription:   in.Ebook.SourceDescription,
+			SourceLinks:         in.Ebook.SourceLinks,
 			LOC:                 in.Ebook.LOC,
 			ISBN:                in.Ebook.ISBN,
-			Edition:             in.Ebook.Edition,
-			OriginalPublication: in.Ebook.OriginalPublication,
-			SourceDescription:   in.Ebook.SourceDescription,
-			Series:              in.Ebook.Series,
-			Credits:             in.Ebook.Credits,
-			Summary:             in.Ebook.Summary,
-			LanguageNotes:       in.Ebook.LanguagesNotes,
 			BookCovers:          in.Ebook.BookCovers,
 			TitlePageImage:      in.Ebook.TitlePageImage,
 			BackCover:           in.Ebook.BackCover,
-			SourceLinks:         in.Ebook.SourceLinks,
-			PgDpClearance:       in.Ebook.PgDpClearance,
-			LanguageDialect:     in.Ebook.LanguageDialect,
-
-			Downloads: nil,
 		},
-		Descriptions: nil,
 		Work: Work{
 			About:   in.Work.About,
 			Comment: in.Work.Comment,
@@ -334,24 +291,6 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		out.Ebook.Languages = append(out.Ebook.Languages, Language{Description: description(&lang.Description)})
 	}
 
-	if len(in.Ebook.Downloads.DataType) > 0 || in.Ebook.Downloads.Value > 0 {
-		out.Ebook.Downloads = &Downloads{
-			DataType: in.Ebook.Downloads.DataType,
-			Value:    in.Ebook.Downloads.Value,
-		}
-	}
-
-	for _, s := range in.Descriptions {
-		out.Descriptions = append(out.Descriptions, description(&s))
-	}
-
-	for _, s := range in.Ebook.Bookshelves {
-		shelf := Bookshelf{
-			Description: description(&s.Description),
-		}
-		out.Ebook.Bookshelves = append(out.Ebook.Bookshelves, shelf)
-	}
-
 	for _, c := range in.Ebook.Creators {
 		creator := Creator{
 			Resource: c.Resource,
@@ -360,9 +299,6 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		out.Ebook.Creators = append(out.Ebook.Creators, creator)
 	}
 
-	//
-	// Now we add all the MARC relators!
-	//
 	for _, c := range in.Ebook.RelAdapters {
 		out.Ebook.RelAdapters = append(out.Ebook.RelAdapters, generateMarcRelator(&c))
 	}
@@ -472,6 +408,24 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		out.Ebook.HasFormats = append(out.Ebook.HasFormats, format)
 	}
 
+	for _, s := range in.Ebook.Bookshelves {
+		shelf := Bookshelf{
+			Description: description(&s.Description),
+		}
+		out.Ebook.Bookshelves = append(out.Ebook.Bookshelves, shelf)
+	}
+
+	if len(in.Ebook.Downloads.DataType) > 0 || in.Ebook.Downloads.Value > 0 {
+		out.Ebook.Downloads = &Downloads{
+			DataType: in.Ebook.Downloads.DataType,
+			Value:    in.Ebook.Downloads.Value,
+		}
+	}
+
+	for _, s := range in.Descriptions {
+		out.Descriptions = append(out.Descriptions, description(&s))
+	}
+
 	return out
 }
 
@@ -480,35 +434,27 @@ func description(d *unmarshaller.Description) Description {
 	desc := Description{
 		About:       d.About,
 		NodeID:      d.NodeID,
-		MemberOf:    nil,
-		Value:       nil,
 		Description: d.Description,
 	}
-
 	if len(d.Value.DataType) > 0 || len(d.Value.Data) > 0 {
 		desc.Value = &Value{
 			DataType: d.Value.DataType,
 			Data:     d.Value.Data,
 		}
 	}
-
 	if len(d.MemberOf.Resource) > 0 {
 		desc.MemberOf = &MemberOf{
 			Resource: d.MemberOf.Resource,
 		}
 	}
-
 	return desc
 }
 
 func createAgent(in *unmarshaller.Agent) *Agent {
 	out := Agent{
-		About:     in.About,
-		Name:      in.Name,
-		Aliases:   in.Aliases,
-		BirthYear: nil, // added below
-		DeathYear: nil, // added below
-		Webpage:   nil, // added below
+		About:   in.About,
+		Name:    in.Name,
+		Aliases: in.Aliases,
 	}
 	if in.BirthYear.Value != 0 {
 		out.BirthYear = &Year{
