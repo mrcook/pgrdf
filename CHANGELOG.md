@@ -5,9 +5,9 @@
 
 ## v1.7.0 (2023-10-15)
 
-Many of the previously added `marcrel` tags have now been made available in
-the `Ebook` struct, for example, MARC 546 (language notes), MARC 440 (series),
-MARC 250 (edition), and MARC 904 (source links).
+Many of the previously added `marc` tags have now been made available in
+the `Ebook` struct, for example, MARC 546 (language notes), MARC 250 (edition),
+and MARC 904 (source links).
 
 ### BREAKING CHANGES
 
