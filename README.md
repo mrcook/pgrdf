@@ -27,7 +27,7 @@ The following is a (truncated) JSON example:
     ],
     "born_year": 1812,
     "died_year": 1870,
-    "webpage": "https://en.wikipedia.org/wiki/Charles_Dickens"
+    "webpages": ["https://en.wikipedia.org/wiki/Charles_Dickens"]
   }]
 }
 ```
