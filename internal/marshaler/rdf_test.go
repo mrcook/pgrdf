@@ -1,4 +1,4 @@
-package marshaller_test
+package marshaler_test
 
 import (
 	"bytes"
@@ -8,18 +8,18 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/mrcook/pgrdf/internal/marshaller"
-	"github.com/mrcook/pgrdf/internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/marshaler"
+	"github.com/mrcook/pgrdf/internal/unmarshaler"
 )
 
 // NOTE: there have been various manual changes to the test RDF (pg999991234.rdf):
 //   - The order of tags in a Gutenberg RDF file is not fixed, but the output
-//     of the XML marshall is, so the source file has been changed to match.
+//     of the XML marshal is, so the source file has been changed to match.
 //   - Various characters are convert to HTML entities by the xml package
 //     e.g. `'` -> `&#39;`, so these have been changed in the test file.
 //   - Currently the xml package will not emit self-closing tags (`<tag />`)
 //     so this test removes them before comparing the strings.
-func TestRDF_FromUnmarshaller(t *testing.T) {
+func TestRDF_FromUnmarshaler(t *testing.T) {
 	file := openFile(t)
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
@@ -27,12 +27,12 @@ func TestRDF_FromUnmarshaller(t *testing.T) {
 	}
 
 	file = openFile(t)
-	unmarshalledRdf := unmarshalRDF(t, file)
-	rdf := marshaller.FromUnmarshaller(unmarshalledRdf)
+	unmarshaledRdf := unmarshalRDF(t, file)
+	rdf := marshaler.FromUnmarshaler(unmarshaledRdf)
 
 	data, err := xml.MarshalIndent(rdf, "", "  ")
 	if err != nil {
-		t.Fatalf("error marshalling RDF %s", err)
+		t.Fatalf("error marshaling RDF %s", err)
 	}
 
 	// replace empty tags with self-closing tags
@@ -57,7 +57,7 @@ func TestRDF_FromUnmarshaller(t *testing.T) {
 		if len(dataXML) > index {
 			endIndex += 1
 		}
-		t.Errorf("unexpected marshalled output at position %d\n%s\n", index, dataXML[0:endIndex])
+		t.Errorf("unexpected marshaled output at position %d\n%s\n", index, dataXML[0:endIndex])
 	}
 }
 
@@ -69,10 +69,10 @@ func openFile(t *testing.T) *os.File {
 	return file
 }
 
-func unmarshalRDF(t *testing.T, reader io.Reader) *unmarshaller.RDF {
+func unmarshalRDF(t *testing.T, reader io.Reader) *unmarshaler.RDF {
 	t.Helper()
 
-	rdf, err := unmarshaller.New(reader)
+	rdf, err := unmarshaler.New(reader)
 	if err != nil {
 		t.Fatalf("unable to read RDF document: %s", err)
 	}

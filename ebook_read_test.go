@@ -14,14 +14,11 @@ func TestReadRDF(t *testing.T) {
 	if ebook.ID != 999991234 {
 		t.Errorf("unexpected ebook ID, got %d", ebook.ID)
 	}
-	if ebook.Note != "A description for this RDF" {
-		t.Errorf("unexpected ebook description, got '%s'", ebook.Note)
+	if len(ebook.Titles) != 2 {
+		t.Errorf("expected 2 ebook title, got %d\n", len(ebook.Titles))
 	}
-	if ebook.BookType != pgrdf.BookTypeText {
-		t.Errorf("unexpected ebook book type, got '%s'", ebook.BookType)
-	}
-	if ebook.ReleaseDate != "1998-07-01" {
-		t.Errorf("unexpected ebook book type, got '%s'", ebook.ReleaseDate)
+	if len(ebook.AlternateTitles) != 2 {
+		t.Errorf("expected 2 other titles, got %d\n", len(ebook.AlternateTitles))
 	}
 	if ebook.Publisher != "Project Gutenberg" {
 		t.Errorf("unexpected ebook publisher, got '%s'", ebook.Publisher)
@@ -29,44 +26,99 @@ func TestReadRDF(t *testing.T) {
 	if ebook.PublishedYear != 1861 {
 		t.Errorf("unexpected ebook published date, got '%d'", ebook.PublishedYear)
 	}
-	if ebook.Copyright != "Public domain in the USA." {
-		t.Errorf("unexpected ebook copyright, got '%s'", ebook.Copyright)
+	if ebook.ReleaseDate != "1998-07-01" {
+		t.Errorf("unexpected ebook book type, got '%s'", ebook.ReleaseDate)
+	}
+	if ebook.Summary != "A fun version of A Christmas Carol." {
+		t.Errorf("unexpected ebook summary, got '%s'", ebook.Summary)
 	}
 	if len(ebook.Series) != 2 {
 		t.Errorf("expected 2 series, got %d", len(ebook.Series))
-	} else if ebook.Series[0] != "Dickens Best Of" {
-		t.Errorf("unexpected series, got '%s'", ebook.Series[0])
+	} else {
+		if ebook.Series[0] != "Dickens Best Of" {
+			t.Errorf("unexpected series, got '%s'", ebook.Series[0])
+		}
+		if ebook.Series[1] != "Best of British" {
+			t.Errorf("unexpected series, got '%s'", ebook.Series[1])
+		}
 	}
-	if ebook.BookCoverFilename != "images/cover.jpg" {
-		t.Errorf("unexpected book cover filename, got '%s'", ebook.BookCoverFilename)
+	if len(ebook.Languages) != 2 {
+		t.Errorf("expected 2 languages, got %d", len(ebook.Languages))
+	} else {
+		if ebook.Languages[0] != "en" {
+			t.Errorf("unexpected language #1, got '%s'", ebook.Languages[0])
+		}
+		if ebook.Languages[1] != "de" {
+			t.Errorf("unexpected language #2, got '%s'", ebook.Languages[1])
+		}
 	}
-	if ebook.Downloads != 16579 {
-		t.Errorf("unexpected ebook downloads, got %d", ebook.Downloads)
+	if ebook.LanguageDialect != "GB" {
+		t.Errorf("unexpected language dialect, got '%s'", ebook.LanguageDialect)
 	}
-	if ebook.Comment != "Archives containing the RDF files for *all* our books can be downloaded from our website." {
-		t.Errorf("unexpected work comment, got '%s'", ebook.Comment)
+	if len(ebook.LanguageNotes) != 2 {
+		t.Errorf("expected two language notes, got %d", len(ebook.LanguageNotes))
+	} else {
+		if ebook.LanguageNotes[0] != "Uses 19th century spelling." {
+			t.Errorf("unexpected language #1 notes #1, got '%s'", ebook.LanguageNotes[0])
+		}
+		if ebook.LanguageNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
+			t.Errorf("unexpected language #1 notes #2, got '%s'", ebook.LanguageNotes[1])
+		}
 	}
-	if ebook.CCLicense != "https://creativecommons.org/publicdomain/zero/1.0/" {
-		t.Errorf("unexpected license, got '%s'", ebook.CCLicense)
+	if ebook.SrcPublicationInfo != "United Kingdom: J. Johnson, 1794." {
+		t.Errorf("unexpected ebook source publication info, got '%s'", ebook.SrcPublicationInfo)
 	}
-
-	if len(ebook.AuthorLinks) != 1 {
-		t.Fatalf("expected 1 wikipedia authors, got %d\n", len(ebook.AuthorLinks))
+	if ebook.Edition != "The Charles Dickens Edition" {
+		t.Errorf("unexpected ebook edition, got '%s'", ebook.Edition)
 	}
-	wiki := ebook.AuthorLinks[0]
-
-	if wiki.Description != "en.wikipedia" {
-		t.Errorf("unexpected Wikipedia language, got '%s'", wiki.Description)
+	if len(ebook.Credits) != 2 {
+		t.Errorf("expected 1 credits, got %d", len(ebook.Credits))
+	} else {
+		if ebook.Credits[0] != "Produced by Anon." {
+			t.Errorf("unexpected credits, got '%s'", ebook.Credits[0])
+		}
+		if ebook.Credits[1] != "Updated: 2022-07-14" {
+			t.Errorf("unexpected credits, got '%s'", ebook.Credits[1])
+		}
 	}
-	if wiki.URL != "https://en.wikipedia.org/wiki/Charles_Dickens" {
-		t.Errorf("unexpected author URL, got '%s'", wiki.URL)
+	if ebook.Copyright != "Public domain in the USA." {
+		t.Errorf("unexpected ebook copyright, got '%s'", ebook.Copyright)
 	}
-
-	if len(ebook.Titles) != 1 {
-		t.Errorf("expected 1 ebook title, got %d\n", len(ebook.Titles))
+	if ebook.CopyrightClearanceCode != "19991231235959randomthing" {
+		t.Errorf("unexpected ebook copyright clearance code, got '%s'", ebook.CopyrightClearanceCode)
 	}
-	if len(ebook.OtherTitles) != 2 {
-		t.Errorf("expected 2 other titles, got %d\n", len(ebook.OtherTitles))
+	if ebook.BookType != pgrdf.BookTypeText {
+		t.Errorf("unexpected ebook book type, got '%s'", ebook.BookType)
+	}
+	if len(ebook.Notes) != 1 {
+		t.Errorf("expects 1 ebook note, got %d", len(ebook.Notes))
+	} else if ebook.Notes[0] != "A description for this RDF" {
+		t.Errorf("unexpected ebook description, got '%s'", ebook.Notes[0])
+	}
+	if ebook.SourceDescription != "Musical score" {
+		t.Errorf("unexpected ebook source description, got '%s'", ebook.SourceDescription)
+	}
+	if len(ebook.SourceLinks) != 1 {
+		t.Errorf("expected 1 source link, got %d", len(ebook.SourceLinks))
+	} else if ebook.SourceLinks[0] != "https://example.com/ebooks/1/something" {
+		t.Errorf("unexpected source link, got '%s'", ebook.SourceLinks[0])
+	}
+	if ebook.LOC != "77177891" {
+		t.Errorf("unexpected ebook LOC, got '%s'", ebook.LOC)
+	}
+	if ebook.ISBN != "0-397-00033-2" {
+		t.Errorf("unexpected ebook ISBN, got '%s'", ebook.ISBN)
+	}
+	if len(ebook.BookCovers) != 1 {
+		t.Errorf("expected 1 book cover, got %d", len(ebook.BookCovers))
+	} else if ebook.BookCovers[0] != "images/cover.jpg" {
+		t.Errorf("unexpected book cover filename, got '%s'", ebook.BookCovers[0])
+	}
+	if ebook.TitlePageImage != "https://example.org/ebook1/title.jpg" {
+		t.Errorf("unexpected ebook title page image, got '%s'", ebook.TitlePageImage)
+	}
+	if ebook.BackCover != "https://example.org/ebook1/back.jpg" {
+		t.Errorf("unexpected ebook back cover image, got '%s'", ebook.BackCover)
 	}
 	if len(ebook.Creators) == 0 {
 		t.Error("expected one or more ebook creators, got none")
@@ -80,40 +132,24 @@ func TestReadRDF(t *testing.T) {
 	if len(ebook.Bookshelves) != 1 {
 		t.Errorf("expected 1 ebook bookshelves, got %d\n", len(ebook.Bookshelves))
 	}
-}
-
-func TestEbookReadLanguages(t *testing.T) {
-	ebook := getEbookFromSampleRdf(t)
-
-	if len(ebook.Languages) != 2 {
-		t.Fatalf("expected 2 languages, got %d", len(ebook.Languages))
+	if ebook.Downloads != 16579 {
+		t.Errorf("unexpected ebook downloads, got %d", ebook.Downloads)
 	}
-
-	if ebook.Languages[0].Code != "en" {
-		t.Errorf("unexpected language #1, got '%s'", ebook.Languages[0].Code)
-	}
-	if ebook.Languages[0].Dialect != "GB" {
-		t.Errorf("unexpected language #1 dielect, got '%s'", ebook.Languages[0].Dialect)
-	}
-	if len(ebook.Languages[0].Notes) != 2 {
-		t.Errorf("expected two language notes, got %d", len(ebook.Languages[0].Notes))
+	if len(ebook.AuthorLinks) != 1 {
+		t.Fatalf("expected 1 wikipedia authors, got %d\n", len(ebook.AuthorLinks))
 	} else {
-		if ebook.Languages[0].Notes[0] != "Uses 19th century spelling." {
-			t.Errorf("unexpected language #1 notes #1, got '%s'", ebook.Languages[0].Notes[0])
+		if ebook.AuthorLinks[0].Description != "en.wikipedia" {
+			t.Errorf("unexpected Wikipedia language, got '%s'", ebook.AuthorLinks[0].Description)
 		}
-		if ebook.Languages[0].Notes[1] != "This ebook uses a beginning of the 20th century spelling." {
-			t.Errorf("unexpected language #1 notes #2, got '%s'", ebook.Languages[0].Notes[1])
+		if ebook.AuthorLinks[0].URL != "https://en.wikipedia.org/wiki/Charles_Dickens" {
+			t.Errorf("unexpected author URL, got '%s'", ebook.AuthorLinks[0].URL)
 		}
 	}
-
-	if ebook.Languages[1].Code != "de" {
-		t.Errorf("unexpected language #2, got '%s'", ebook.Languages[1].Code)
+	if ebook.CCLicense != "https://creativecommons.org/publicdomain/zero/1.0/" {
+		t.Errorf("unexpected license, got '%s'", ebook.CCLicense)
 	}
-	if ebook.Languages[1].Dialect != "" {
-		t.Errorf("expected language #2 dielect to be blank, got '%s'", ebook.Languages[1].Dialect)
-	}
-	if len(ebook.Languages[1].Notes) != 2 {
-		t.Errorf("expected 2 notes for language #2, got %d", len(ebook.Languages[1].Notes))
+	if ebook.CCComment != "Archives containing the RDF files for *all* our books can be downloaded from our website." {
+		t.Errorf("unexpected work comment, got '%s'", ebook.CCComment)
 	}
 }
 
@@ -147,8 +183,10 @@ func TestEbookReadAuthor(t *testing.T) {
 		} else if a.Aliases[1] != "Boz" {
 			t.Errorf("unexpected author name, got '%s'", a.Aliases[1])
 		}
-		if a.WebPage != "https://en.wikipedia.org/wiki/Charles_Dickens" {
-			t.Errorf("unexpected author webpage, got '%s'", a.WebPage)
+		if len(a.WebPages) != 1 {
+			t.Errorf("expected 1 ebook author webpage, got %d\n", len(a.WebPages))
+		} else if a.WebPages[0] != "https://en.wikipedia.org/wiki/Charles_Dickens" {
+			t.Errorf("unexpected author webpage, got '%s'", a.WebPages[0])
 		}
 	})
 }

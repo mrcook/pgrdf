@@ -3,6 +3,28 @@
 ## HEAD
 
 
+## v1.7.0 (2023-10-15)
+
+Many of the previously added `marcrel` tags have now been made available in
+the `Ebook` struct, for example, MARC 546 (language notes), MARC 440 (series),
+MARC 250 (edition), and MARC 904 (source links).
+
+### BREAKING CHANGES
+
+Various tags in the RDFs may have multiple entries but they were previously
+handled as single tags. The un/marshalers have been updated to handle these
+and the `Ebook` struct updated to support slices where needed. Some fields
+have also been renamed.
+
+* `OtherTitles` has been renamed to `AlternateTitles`.
+* `Language` is now a slice named `Languages` and includes only an alpha 2 or
+  alpha 3 language code string, meaning the dialect and language notes have
+  been moved to their own struct fields.
+* `BookCoverFilename` is now a slice named `BookCovers`.
+* `Note` is now a slice named `Notes`.
+* `WebPage` in `Creator` is now a slice named `WebPages`.
+
+
 ## v1.6.1 (2023-09-30)
 
 * Handle the case when an RDF uses `Various` in `marc906` instead of a year number.

@@ -1,11 +1,11 @@
-package unmarshaller_test
+package unmarshaler_test
 
 import (
 	"io"
 	"os"
 	"testing"
 
-	"github.com/mrcook/pgrdf/internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaler"
 )
 
 func TestNamespaces(t *testing.T) {
@@ -58,7 +58,6 @@ func TestDescriptionNodes(t *testing.T) {
 		t.Fatalf("expected 1 description, got %d", len(r.Descriptions))
 	}
 	d := r.Descriptions[0]
-
 	if d.About != "https://en.wikipedia.org/wiki/Charles_Dickens" {
 		t.Errorf("unexpected rdf:about, got '%s'", d.About)
 	}
@@ -69,14 +68,84 @@ func TestDescriptionNodes(t *testing.T) {
 
 func TestEbookGeneral(t *testing.T) {
 	r := openRDF(t)
-
 	e := r.Ebook
 
 	if e.About != "ebooks/999991234" {
 		t.Errorf("unexpected rdf:about, got '%s'", e.About)
 	}
-	if e.Description != "A description for this RDF" {
-		t.Errorf("unexpected dcterms:description, got '%s'", e.Description)
+	if len(e.Titles) != 2 {
+		t.Errorf("expected 2 ebook titles, got %d", len(e.Titles))
+	} else {
+		if e.Titles[0] != "Great Expectations" {
+			t.Errorf("unexpected dcterms:title, got '%s'", e.Titles[0])
+		}
+		if e.Titles[1] != "And a subtitle" {
+			t.Errorf("unexpected dcterms:title, got '%s'", e.Titles[1])
+		}
+	}
+	if len(e.Alternatives) != 1 {
+		t.Errorf("expected 2 dcterms:alternative, got %d", len(e.Alternatives))
+	} else if e.Alternatives[0] != "Alternate Title\r\nWith a newline separation" {
+		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternatives[0])
+	}
+	if e.Publisher != "Project Gutenberg" {
+		t.Errorf("unexpected dcterms:publisher, got '%s'", e.Publisher)
+	}
+	if e.PublishedYear != 1861 {
+		t.Errorf("unexpected marc906 (published year), got '%d'", e.PublishedYear)
+	}
+	if e.Issued.DataType != "http://www.w3.org/2001/XMLSchema#date" {
+		t.Errorf("unexpected dcterms:issued rdf:datatype, got '%s'", e.Issued.DataType)
+	}
+	if e.Issued.Value != "1998-07-01" {
+		t.Errorf("unexpected dcterms:issued, got '%s'", e.Issued.Value)
+	}
+	if e.Summary != "A fun version of A Christmas Carol." {
+		t.Errorf("unexpected marc520 summary '%s'", e.Summary)
+	}
+	if len(e.Series) != 2 {
+		t.Errorf("expected 2 pgterms:marc440 (series), got %d", len(e.Series))
+	} else if e.Series[0] != "Dickens Best Of" {
+		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series[0])
+	}
+	// Languages tested separately
+	if e.LanguageDialect != "GB" {
+		t.Errorf("unexpected marc907 (language sub-code), got '%s'", e.LanguageDialect)
+	}
+	if len(e.LanguageNotes) != 2 {
+		t.Errorf("expected 1 language note, got %d", len(e.LanguageNotes))
+	} else {
+		if e.LanguageNotes[0] != "Uses 19th century spelling." {
+			t.Errorf("unexpected marc546 language note #1 '%s'", e.LanguageNotes[0])
+		}
+		if e.LanguageNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
+			t.Errorf("unexpected marc546 language note #2 '%s'", e.LanguageNotes[1])
+		}
+	}
+	if e.SrcPublicationInfo != "United Kingdom: J. Johnson, 1794." {
+		t.Errorf("unexpected marc260 original publication '%s'", e.SrcPublicationInfo)
+	}
+	if e.Edition != "The Charles Dickens Edition" {
+		t.Errorf("unexpected marc250 edition '%s'", e.Edition)
+	}
+	if len(e.Credits) != 2 {
+		t.Errorf("expected 2 marc508 credit entries, got %d", len(e.Credits))
+	} else {
+		if e.Credits[0] != "Produced by Anon." {
+			t.Errorf("unexpected marc508 credit[1] '%s'", e.Credits[0])
+		}
+		if e.Credits[1] != "Updated: 2022-07-14" {
+			t.Errorf("unexpected marc508 credit[0] '%s'", e.Credits[1])
+		}
+	}
+	if e.License.Resource != "license" {
+		t.Errorf("unexpected dcterms:license, got '%s'", e.License.Resource)
+	}
+	if e.Rights != "Public domain in the USA." {
+		t.Errorf("unexpected dcterms:rights, got '%s'", e.Rights)
+	}
+	if e.DpClearanceCode != "19991231235959randomthing" {
+		t.Errorf("unexpected marc905 PGDP clearance code '%s'", e.DpClearanceCode)
 	}
 	if e.Type.Description.NodeID != "Nebb73a3dacde414382cc3a31ce400f17" {
 		t.Errorf("unexpected dcterms:type//rdf:nodeID, got '%s'", e.Type.Description.NodeID)
@@ -87,54 +156,40 @@ func TestEbookGeneral(t *testing.T) {
 	if e.Type.Description.Value.Data != "Text" {
 		t.Errorf("unexpected dcterms:type//rdf:value, got '%s'", e.Type.Description.Value.Data)
 	}
-	if e.Issued.DataType != "http://www.w3.org/2001/XMLSchema#date" {
-		t.Errorf("unexpected dcterms:issued rdf:datatype, got '%s'", e.Issued.DataType)
+	if len(e.Descriptions) != 1 {
+		t.Errorf("expected 1 ebook description, got %d", len(e.Descriptions))
+	} else if e.Descriptions[0] != "A description for this RDF" {
+		t.Errorf("unexpected dcterms:description, got '%s'", e.Descriptions[0])
 	}
-	if e.Issued.Value != "1998-07-01" {
-		t.Errorf("unexpected dcterms:issued, got '%s'", e.Issued.Value)
+	if e.SourceDescription != "Musical score" {
+		t.Errorf("unexpected marc300 source description '%s'", e.SourceDescription)
 	}
-	if e.Publisher != "Project Gutenberg" {
-		t.Errorf("unexpected dcterms:publisher, got '%s'", e.Publisher)
+	if len(e.SourceLinks) != 1 {
+		t.Errorf("expected 1 source link, got %d", len(e.SourceLinks))
+	} else if e.SourceLinks[0] != "https://example.com/ebooks/1/something" {
+		t.Errorf("unexpected marc904 source link '%s'", e.SourceLinks[0])
 	}
-	if e.PublishedYear != 1861 {
-		t.Errorf("unexpected marc906 (published year), got '%d'", e.PublishedYear)
+	if e.LOC != "77177891" {
+		t.Errorf("unexpected marc010 LoC Number '%s'", e.LOC)
 	}
-	if e.License.Resource != "license" {
-		t.Errorf("unexpected dcterms:license, got '%s'", e.License.Resource)
+	if e.ISBN != "0-397-00033-2" {
+		t.Errorf("unexpected marc020 ISBN '%s'", e.ISBN)
 	}
-	if e.Rights != "Public domain in the USA." {
-		t.Errorf("unexpected dcterms:rights, got '%s'", e.Rights)
+	if len(e.BookCoverImages) != 1 {
+		t.Errorf("expected 1 pgterms:marc901 (book covers), got %d", len(e.BookCoverImages))
+	} else if e.BookCoverImages[0] != "file:///files/999991234/999991234-h/images/cover.jpg" {
+		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCoverImages[0])
 	}
-	if e.Title != "Great Expectations" {
-		t.Errorf("unexpected dcterms:title, got '%s'", e.Title)
+	if e.TitlePageImage != "https://example.org/ebook1/title.jpg" {
+		t.Errorf("unexpected marc902 title page link '%s'", e.TitlePageImage)
 	}
-	if len(e.Alternative) != 1 {
-		t.Errorf("expected 2 dcterms:alternative, got %d", len(e.Alternative))
-	} else if e.Alternative[0] != "Alternate Title\r\nWith a newline separation" {
-		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternative[0])
+	if e.BackCoverImage != "https://example.org/ebook1/back.jpg" {
+		t.Errorf("unexpected marc903 back cover link '%s'", e.BackCoverImage)
 	}
-	if len(e.Series) != 2 {
-		t.Errorf("expected 2 pgterms:marc440 (series), got %d", len(e.Series))
-	} else if e.Series[0] != "Dickens Best Of" {
-		t.Errorf("unexpected pgterms:marc440 (series), got '%s'", e.Series[0])
-	}
-	if len(e.BookCovers) != 1 {
-		t.Errorf("expected 2 pgterms:marc901 (book covers), got %d", len(e.BookCovers))
-	} else if e.BookCovers[0] != "file:///files/999991234/999991234-h/images/cover.jpg" {
-		t.Errorf("unexpected pgterms:marc901 bookcover tag, got '%s'", e.BookCovers[0])
-	}
-
-	if e.Downloads.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
-		t.Errorf("unexpected pgterms:downloads rdf:datatype, got '%s'", e.Downloads.DataType)
-	}
-	if e.Downloads.Value != 16579 {
-		t.Errorf("unexpected pgterms:downloads count, got %d", e.Downloads.Value)
-	}
-
-	// Basic checking only. The contents of each slice are tested separately.
 	if len(e.Creators) != 1 {
 		t.Errorf("expected 1 dcterms:creator, got %d", len(e.Creators))
 	}
+	// Rel* codes
 	if len(e.Subjects) != 9 {
 		t.Errorf("expected 9 dcterms:subject, got %d", len(e.Subjects))
 	}
@@ -143,6 +198,12 @@ func TestEbookGeneral(t *testing.T) {
 	}
 	if len(e.Bookshelves) != 1 {
 		t.Errorf("expected 1 pgterms:bookshelf, got %d", len(e.Bookshelves))
+	}
+	if e.Downloads.DataType != "http://www.w3.org/2001/XMLSchema#integer" {
+		t.Errorf("unexpected pgterms:downloads rdf:datatype, got '%s'", e.Downloads.DataType)
+	}
+	if e.Downloads.Value != 16579 {
+		t.Errorf("unexpected pgterms:downloads count, got %d", e.Downloads.Value)
 	}
 }
 
@@ -153,7 +214,6 @@ func TestLanguage(t *testing.T) {
 	if len(e.Languages) != 2 {
 		t.Fatalf("expected 2 languages, got %d", len(e.Languages))
 	}
-
 	if e.Languages[0].Description.NodeID != "N73e956e8e5d049ac943dfe482ddd5802" {
 		t.Errorf("unexpected dcterms:language//rdf:nodeID, got '%s'", e.Languages[0].Description.NodeID)
 	}
@@ -162,9 +222,6 @@ func TestLanguage(t *testing.T) {
 	}
 	if e.Languages[0].Description.Value.Data != "en" {
 		t.Errorf("unexpected dcterms:language//rdf:value, got '%s'", e.Languages[0].Description.Value.Data)
-	}
-	if e.LanguageDialect != "GB" {
-		t.Errorf("unexpected marc907 (language sub-code), got '%s'", e.LanguageDialect)
 	}
 
 	if e.Languages[1].Description.NodeID != "N9bd0e8afb25241038817304e8e0ff2a9" {
@@ -182,7 +239,6 @@ func TestCreators(t *testing.T) {
 		t.Fatalf("expected 1 dcterms:creator, got %d", len(r.Ebook.Creators))
 	}
 	a := r.Ebook.Creators[0].Agent
-
 	if a.About != "2009/agents/37" {
 		t.Errorf("unexpected dcterms:creator/agent.about, got '%s'", a.About)
 	}
@@ -207,8 +263,10 @@ func TestCreators(t *testing.T) {
 	if a.DeathYear.Value != 1870 {
 		t.Errorf("unexpected dcterms:creator/agent/deathdate, got %d", a.DeathYear.Value)
 	}
-	if a.Webpage.Resource != "https://en.wikipedia.org/wiki/Charles_Dickens" {
-		t.Errorf("unexpected dcterms:creator/agent/webpage, got '%s'", a.Webpage.Resource)
+	if len(a.Webpages) != 1 {
+		t.Errorf("expected 1 agent webpage, got %d", len(a.Webpages))
+	} else if a.Webpages[0].Resource != "https://en.wikipedia.org/wiki/Charles_Dickens" {
+		t.Errorf("unexpected dcterms:creator/agent/webpage, got '%s'", a.Webpages[0].Resource)
 	}
 }
 
@@ -371,7 +429,7 @@ func TestMarcRelators_InvalidMarc906(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error opening test RDF file: %s", err)
 	}
-	r, err := unmarshaller.New(file)
+	r, err := unmarshaler.New(file)
 	if err != nil {
 		t.Fatalf("unexpected RDF read error: %s", err)
 	}
@@ -464,81 +522,7 @@ func TestBookshelves(t *testing.T) {
 	}
 }
 
-func TestMarcCodes(t *testing.T) {
-	rdf := openRDF(t)
-	if rdf.Ebook.LOC != "77177891" {
-		t.Errorf("unexpected marc010 LoC Number '%s'", rdf.Ebook.LOC)
-	}
-	if rdf.Ebook.ISBN != "0-397-00033-2" {
-		t.Errorf("unexpected marc020 ISBN '%s'", rdf.Ebook.ISBN)
-	}
-	if rdf.Ebook.Edition != "The Charles Dickens Edition" {
-		t.Errorf("unexpected marc250 edition '%s'", rdf.Ebook.Edition)
-	}
-	if rdf.Ebook.OriginalPublication != "United Kingdom: J. Johnson, 1794." {
-		t.Errorf("unexpected marc260 original publication '%s'", rdf.Ebook.OriginalPublication)
-	}
-	if rdf.Ebook.SourceDescription != "Musical score" {
-		t.Errorf("unexpected marc300 source description '%s'", rdf.Ebook.SourceDescription)
-	}
-	if len(rdf.Ebook.Series) != 2 {
-		t.Errorf("expected 2 marc440 series, got %d", len(rdf.Ebook.Series))
-	} else if rdf.Ebook.Series[0] != "Dickens Best Of" {
-		t.Errorf("unexpected marc440 series, got '%s'", rdf.Ebook.Series[0])
-	}
-	if len(rdf.Ebook.Credits) != 2 {
-		t.Errorf("expected 2 marc508 credit entries, got %d", len(rdf.Ebook.Credits))
-	}
-	if rdf.Ebook.Credits[0] != "Updated: 2022-07-14" {
-		t.Errorf("unexpected marc508 credit[0] '%s'", rdf.Ebook.Credits[0])
-	}
-	if rdf.Ebook.Credits[1] != "Produced by Anon." {
-		t.Errorf("unexpected marc508 credit[1] '%s'", rdf.Ebook.Credits[1])
-	}
-	if rdf.Ebook.Summary != "A fun version of A Christmas Carol." {
-		t.Errorf("unexpected marc520 summary '%s'", rdf.Ebook.Summary)
-	}
-	if rdf.Ebook.LanguageDialect != "GB" {
-		t.Errorf("unexpected marc907 summary '%s'", rdf.Ebook.LanguageDialect)
-	}
-	if len(rdf.Ebook.LanguageNotes) != 2 {
-		t.Errorf("expected 1 language note, got %d", len(rdf.Ebook.LanguageNotes))
-	} else {
-		if rdf.Ebook.LanguageNotes[0] != "Uses 19th century spelling." {
-			t.Errorf("unexpected marc546 language note #1 '%s'", rdf.Ebook.LanguageNotes[0])
-		}
-		if rdf.Ebook.LanguageNotes[1] != "This ebook uses a beginning of the 20th century spelling." {
-			t.Errorf("unexpected marc546 language note #2 '%s'", rdf.Ebook.LanguageNotes[1])
-		}
-	}
-	if len(rdf.Ebook.BookCovers) != 1 {
-		t.Errorf("expected 1 book cover, got %d", len(rdf.Ebook.BookCovers))
-	} else if rdf.Ebook.BookCovers[0] != "file:///files/999991234/999991234-h/images/cover.jpg" {
-		t.Errorf("unexpected marc901 book cover link '%s'", rdf.Ebook.BookCovers[0])
-	}
-	if rdf.Ebook.TitlePageImage != "https://example.org/ebook1/title.jpg" {
-		t.Errorf("unexpected marc902 title page link '%s'", rdf.Ebook.TitlePageImage)
-	}
-	if rdf.Ebook.BackCover != "https://example.org/ebook1/back.jpg" {
-		t.Errorf("unexpected marc903 back cover link '%s'", rdf.Ebook.BackCover)
-	}
-	if len(rdf.Ebook.SourceLinks) != 1 {
-		t.Errorf("expected 1 source link, got %d", len(rdf.Ebook.SourceLinks))
-	} else if rdf.Ebook.SourceLinks[0] != "https://example.com/ebooks/1/something" {
-		t.Errorf("unexpected marc904 source link '%s'", rdf.Ebook.SourceLinks[0])
-	}
-	if rdf.Ebook.PgDpClearance != "19991231235959randomthing" {
-		t.Errorf("unexpected marc905 PGDP clearance code '%s'", rdf.Ebook.PgDpClearance)
-	}
-	if rdf.Ebook.PublishedYear != 1861 {
-		t.Errorf("unexpected marc906 published year '%d'", rdf.Ebook.PublishedYear)
-	}
-	if rdf.Ebook.LanguageDialect != "GB" {
-		t.Errorf("expected marc907 language dielect code '%s'", rdf.Ebook.LanguageDialect)
-	}
-}
-
-func openRDF(t *testing.T) *unmarshaller.RDF {
+func openRDF(t *testing.T) *unmarshaler.RDF {
 	t.Helper()
 
 	file, err := os.Open("../../samples/cache/epub/999991234/pg999991234.rdf")
@@ -548,10 +532,10 @@ func openRDF(t *testing.T) *unmarshaller.RDF {
 	return unmarshalRDF(t, file)
 }
 
-func unmarshalRDF(t *testing.T, reader io.Reader) *unmarshaller.RDF {
+func unmarshalRDF(t *testing.T, reader io.Reader) *unmarshaler.RDF {
 	t.Helper()
 
-	rdf, err := unmarshaller.New(reader)
+	rdf, err := unmarshaler.New(reader)
 	if err != nil {
 		t.Fatalf("unable to read RDF document: %s", err)
 	}

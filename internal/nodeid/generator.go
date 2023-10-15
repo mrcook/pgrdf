@@ -8,6 +8,7 @@ import "math/rand"
 var generatedNodeIDs []string
 
 // Generate a unique RDF `nodeID` value.
+// TODO: use a UUID with the hyphens stripped instead
 func Generate() string {
 	const letters = "abcdef0123456789"
 

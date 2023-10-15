@@ -1,15 +1,15 @@
-// Package marshaller contains a set of structs for generating a Project
+// Package marshaler contains a set of structs for generating a Project
 // Gutenberg RDF XML document.
 //
 // NOTE: due to limitations in the Go xml package and the namespace complexity
-// of the RDF documents, a separate set of marshaller and unmarshaller structs
+// of the RDF documents, a separate set of marshaler and unmarshaler structs
 // are required.
-package marshaller
+package marshaler
 
 import (
 	"encoding/xml"
 
-	"github.com/mrcook/pgrdf/internal/unmarshaller"
+	"github.com/mrcook/pgrdf/internal/unmarshaler"
 )
 
 // RDF <rdf:RDF /> is the main document struct
@@ -31,35 +31,35 @@ type RDF struct {
 
 // Ebook <pgterms:ebook /> holds the core metadata for this work.
 type Ebook struct {
-	About               string     `xml:"rdf:about,attr,omitempty"`
-	Title               string     `xml:"dcterms:title,omitempty"`
-	Alternative         []string   `xml:"dcterms:alternative,omitempty"`
-	Publisher           string     `xml:"dcterms:publisher,omitempty"`
-	PublishedYear       int        `xml:"pgterms:marc906,omitempty"`
-	Issued              *Issued    `xml:"dcterms:issued,omitempty"`
-	Summary             string     `xml:"pgterms:marc520,omitempty"`
-	Series              []string   `xml:"pgterms:marc440,omitempty"`
-	Languages           []Language `xml:"dcterms:language,omitempty"`
-	LanguageDialect     string     `xml:"pgterms:marc907,omitempty"`
-	LanguageNotes       []string   `xml:"pgterms:marc546,omitempty"`
-	OriginalPublication string     `xml:"pgterms:marc260,omitempty"`
-	Edition             string     `xml:"pgterms:marc250,omitempty"`
-	Credits             []string   `xml:"pgterms:marc508,omitempty"`
-	License             License    `xml:"dcterms:license,omitempty"`
-	Rights              string     `xml:"dcterms:rights,omitempty"`
-	PgDpClearance       string     `xml:"pgterms:marc905,omitempty"`
-	Type                Type       `xml:"dcterms:type,omitempty"`
-	Description         string     `xml:"dcterms:description,omitempty"`
-	SourceDescription   string     `xml:"pgterms:marc300,omitempty"`
-	SourceLinks         []string   `xml:"pgterms:marc904,omitempty"`
-	LOC                 string     `xml:"pgterms:marc010,omitempty"`
-	ISBN                string     `xml:"pgterms:marc020,omitempty"`
-	BookCovers          []string   `xml:"pgterms:marc901,omitempty"`
-	TitlePageImage      string     `xml:"pgterms:marc902,omitempty"`
-	BackCover           string     `xml:"pgterms:marc903,omitempty"`
-	Creators            []Creator  `xml:"dcterms:creator,omitempty"`
+	About              string     `xml:"rdf:about,attr,omitempty"`
+	Titles             []string   `xml:"dcterms:title,omitempty"`
+	Alternatives       []string   `xml:"dcterms:alternative,omitempty"`
+	Publisher          string     `xml:"dcterms:publisher,omitempty"`
+	PublishedYear      int        `xml:"pgterms:marc906,omitempty"`
+	Issued             *Issued    `xml:"dcterms:issued,omitempty"`
+	Summary            string     `xml:"pgterms:marc520,omitempty"`
+	Series             []string   `xml:"pgterms:marc440,omitempty"`
+	Languages          []Language `xml:"dcterms:language,omitempty"`
+	LanguageDialect    string     `xml:"pgterms:marc907,omitempty"`
+	LanguageNotes      []string   `xml:"pgterms:marc546,omitempty"`
+	SrcPublicationInfo string     `xml:"pgterms:marc260,omitempty"`
+	Edition            string     `xml:"pgterms:marc250,omitempty"`
+	Credits            []string   `xml:"pgterms:marc508,omitempty"`
+	License            License    `xml:"dcterms:license,omitempty"`
+	Rights             string     `xml:"dcterms:rights,omitempty"`
+	DpClearanceCode    string     `xml:"pgterms:marc905,omitempty"`
+	Type               Type       `xml:"dcterms:type,omitempty"`
+	Descriptions       []string   `xml:"dcterms:description,omitempty"`
+	SourceDescription  string     `xml:"pgterms:marc300,omitempty"`
+	SourceLinks        []string   `xml:"pgterms:marc904,omitempty"`
+	LOC                string     `xml:"pgterms:marc010,omitempty"`
+	ISBN               string     `xml:"pgterms:marc020,omitempty"`
+	BookCoverImages    []string   `xml:"pgterms:marc901,omitempty"`
+	TitlePageImage     string     `xml:"pgterms:marc902,omitempty"`
+	BackCoverImage     string     `xml:"pgterms:marc903,omitempty"`
+	Creators           []Creator  `xml:"dcterms:creator,omitempty"`
 
-	// TODO: can these be marshalled programmatically?
+	// TODO: can these be marshaled programmatically?
 	RelAdapters      []MarcRelator `xml:"marcrel:adp,omitempty"`
 	RelAfterwords    []MarcRelator `xml:"marcrel:aft,omitempty"`
 	RelAnnotators    []MarcRelator `xml:"marcrel:ann,omitempty"`
@@ -84,6 +84,9 @@ type Ebook struct {
 	RelResearchers   []MarcRelator `xml:"marcrel:res,omitempty"`
 	RelTranscribers  []MarcRelator `xml:"marcrel:trc,omitempty"`
 	RelTranslators   []MarcRelator `xml:"marcrel:trl,omitempty"`
+
+	RelCollaborators []MarcRelator `xml:"marcrel:clb,omitempty"`
+	RelUnknown       []MarcRelator `xml:"marcrel:unk,omitempty"`
 
 	Subjects    []Subject   `xml:"dcterms:subject,omitempty"`
 	HasFormats  []HasFormat `xml:"dcterms:hasFormat,omitempty"`
@@ -114,12 +117,12 @@ type License struct {
 
 // Agent <pgterms:agent /> represents a contributor to this work; author, illustrator, etc.
 type Agent struct {
-	About     string   `xml:"rdf:about,attr,omitempty"`
-	Name      string   `xml:"pgterms:name,omitempty"`
-	Aliases   []string `xml:"pgterms:alias,omitempty"`
-	BirthYear *Year    `xml:"pgterms:birthdate,omitempty"`
-	DeathYear *Year    `xml:"pgterms:deathdate,omitempty"`
-	Webpage   *Webpage `xml:"pgterms:webpage,omitempty"`
+	About     string    `xml:"rdf:about,attr,omitempty"`
+	Name      string    `xml:"pgterms:name,omitempty"`
+	Aliases   []string  `xml:"pgterms:alias,omitempty"`
+	BirthYear *Year     `xml:"pgterms:birthdate,omitempty"`
+	DeathYear *Year     `xml:"pgterms:deathdate,omitempty"`
+	Webpages  []Webpage `xml:"pgterms:webpage,omitempty"`
 }
 
 // Year is used for representing an `rdf:datatype` attribute for an Agent
@@ -214,8 +217,10 @@ type CCLicense struct {
 // Description <rdf:Description /> is a generic struct for describing the
 // node it is included in.
 type Description struct {
-	About       string    `xml:"rdf:about,attr,omitempty"`
-	NodeID      string    `xml:"rdf:nodeID,attr,omitempty"`
+	About  string `xml:"rdf:about,attr,omitempty"`
+	NodeID string `xml:"rdf:nodeID,attr,omitempty"`
+
+	// depending on context only one of these is included
 	Value       *Value    `xml:"rdf:value,omitempty"`
 	MemberOf    *MemberOf `xml:"dcam:memberOf,omitempty"`
 	Description string    `xml:"dcterms:description,omitempty"`
@@ -232,12 +237,12 @@ type MemberOf struct {
 	Resource string `xml:"rdf:resource,attr,omitempty"`
 }
 
-// FromUnmarshaller is a helper function for mapping an unmarshaller.RDF to
-// this marshaller.RDF object so that we have both marshall and unmarshall
+// FromUnmarshaler is a helper function for mapping an unmarshaler.RDF to
+// this marshaler.RDF object so that we have both marshal and unmarshal
 // functionality for an RDF XML document.
 // This is required due to the Go xml package limitations, as described at the
 // top of this file.
-func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
+func FromUnmarshaler(in *unmarshaler.RDF) *RDF {
 	out := &RDF{
 		NsBase:    in.NsBase,
 		NsDcTerms: in.NsDcTerms,
@@ -248,30 +253,30 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		NsMarcRel: in.NsMarcRel,
 		NsDcDcam:  in.NsDcDcam,
 		Ebook: Ebook{
-			About:               in.Ebook.About,
-			Title:               in.Ebook.Title,
-			Alternative:         in.Ebook.Alternative,
-			Publisher:           in.Ebook.Publisher,
-			PublishedYear:       in.Ebook.PublishedYear,
-			Summary:             in.Ebook.Summary,
-			Series:              in.Ebook.Series,
-			LanguageDialect:     in.Ebook.LanguageDialect,
-			LanguageNotes:       in.Ebook.LanguageNotes,
-			OriginalPublication: in.Ebook.OriginalPublication,
-			Edition:             in.Ebook.Edition,
-			Credits:             in.Ebook.Credits,
-			License:             License{Resource: in.Ebook.License.Resource},
-			Rights:              in.Ebook.Rights,
-			PgDpClearance:       in.Ebook.PgDpClearance,
-			Type:                Type{Description: description(&in.Ebook.Type.Description)},
-			Description:         in.Ebook.Description,
-			SourceDescription:   in.Ebook.SourceDescription,
-			SourceLinks:         in.Ebook.SourceLinks,
-			LOC:                 in.Ebook.LOC,
-			ISBN:                in.Ebook.ISBN,
-			BookCovers:          in.Ebook.BookCovers,
-			TitlePageImage:      in.Ebook.TitlePageImage,
-			BackCover:           in.Ebook.BackCover,
+			About:              in.Ebook.About,
+			Titles:             in.Ebook.Titles,
+			Alternatives:       in.Ebook.Alternatives,
+			Publisher:          in.Ebook.Publisher,
+			PublishedYear:      in.Ebook.PublishedYear,
+			Summary:            in.Ebook.Summary,
+			Series:             in.Ebook.Series,
+			LanguageDialect:    in.Ebook.LanguageDialect,
+			LanguageNotes:      in.Ebook.LanguageNotes,
+			SrcPublicationInfo: in.Ebook.SrcPublicationInfo,
+			Edition:            in.Ebook.Edition,
+			Credits:            in.Ebook.Credits,
+			License:            License{Resource: in.Ebook.License.Resource},
+			Rights:             in.Ebook.Rights,
+			DpClearanceCode:    in.Ebook.DpClearanceCode,
+			Type:               Type{Description: description(&in.Ebook.Type.Description)},
+			Descriptions:       in.Ebook.Descriptions,
+			SourceDescription:  in.Ebook.SourceDescription,
+			SourceLinks:        in.Ebook.SourceLinks,
+			LOC:                in.Ebook.LOC,
+			ISBN:               in.Ebook.ISBN,
+			BookCoverImages:    in.Ebook.BookCoverImages,
+			TitlePageImage:     in.Ebook.TitlePageImage,
+			BackCoverImage:     in.Ebook.BackCoverImage,
 		},
 		Work: Work{
 			About:   in.Work.About,
@@ -280,7 +285,7 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 		},
 	}
 
-	if len(in.Ebook.Issued.DataType) > 0 || len(in.Ebook.Issued.Value) > 0 {
+	if in.Ebook.Issued != nil {
 		out.Ebook.Issued = &Issued{
 			DataType: in.Ebook.Issued.DataType,
 			Value:    in.Ebook.Issued.Value,
@@ -294,7 +299,7 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 	for _, c := range in.Ebook.Creators {
 		creator := Creator{
 			Resource: c.Resource,
-			Agent:    *createAgent(&c.Agent),
+			Agent:    createAgent(&c.Agent),
 		}
 		out.Ebook.Creators = append(out.Ebook.Creators, creator)
 	}
@@ -429,20 +434,20 @@ func FromUnmarshaller(in *unmarshaller.RDF) *RDF {
 	return out
 }
 
-// maps the unmarshaller description
-func description(d *unmarshaller.Description) Description {
+// maps the unmarshaler description
+func description(d *unmarshaler.Description) Description {
 	desc := Description{
 		About:       d.About,
 		NodeID:      d.NodeID,
 		Description: d.Description,
 	}
-	if len(d.Value.DataType) > 0 || len(d.Value.Data) > 0 {
+	if d.Value != nil {
 		desc.Value = &Value{
 			DataType: d.Value.DataType,
 			Data:     d.Value.Data,
 		}
 	}
-	if len(d.MemberOf.Resource) > 0 {
+	if d.MemberOf != nil {
 		desc.MemberOf = &MemberOf{
 			Resource: d.MemberOf.Resource,
 		}
@@ -450,37 +455,42 @@ func description(d *unmarshaller.Description) Description {
 	return desc
 }
 
-func createAgent(in *unmarshaller.Agent) *Agent {
+func createAgent(in *unmarshaler.Agent) Agent {
+	if in == nil {
+		return Agent{}
+	}
+
 	out := Agent{
 		About:   in.About,
 		Name:    in.Name,
 		Aliases: in.Aliases,
 	}
-	if in.BirthYear.Value != 0 {
+	if in.BirthYear != nil {
 		out.BirthYear = &Year{
 			DataType: in.BirthYear.DataType,
 			Value:    in.BirthYear.Value,
 		}
 	}
-	if in.DeathYear.Value != 0 {
+	if in.DeathYear != nil {
 		out.DeathYear = &Year{
 			DataType: in.DeathYear.DataType,
 			Value:    in.DeathYear.Value,
 		}
 	}
-	if len(in.Webpage.Resource) > 0 {
-		out.Webpage = &Webpage{
-			Resource: in.Webpage.Resource,
+	for _, webpage := range in.Webpages {
+		if len(webpage.Resource) > 0 {
+			out.Webpages = append(out.Webpages, Webpage{Resource: webpage.Resource})
 		}
 	}
-	return &out
+	return out
 }
 
 // NOTE: the assumption here is that a Resource will only ever exist on a
 // MarcRelator when there is no Agent info!
-func generateMarcRelator(c *unmarshaller.MarcRelator) MarcRelator {
-	if len(c.Agent.About) == 0 {
+func generateMarcRelator(c *unmarshaler.MarcRelator) MarcRelator {
+	if c.Agent == nil {
 		return MarcRelator{Resource: c.Resource}
 	}
-	return MarcRelator{Agent: createAgent(&c.Agent)}
+	agent := createAgent(c.Agent)
+	return MarcRelator{Agent: &agent}
 }

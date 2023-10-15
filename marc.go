@@ -8,7 +8,7 @@ type MarcRelator string
 // https://www.loc.gov/marc/relators/relaterm.html
 const (
 	// RoleAut is not found in any current RDF, but is used to distinguish authors
-	// in the pgrdf.Ebook, and for marshalling to an RDF as a `dcterms:creator`.
+	// in the pgrdf.Ebook, and for marshaling to an RDF as a `dcterms:creator`.
 	RoleAut MarcRelator = "aut" // Author
 
 	RoleAbr MarcRelator = "abr" // Abridger
@@ -288,9 +288,7 @@ const (
 	RoleGrt MarcRelator = "grt" // Graphic technician (discontinued)
 	RoleVoc MarcRelator = "voc" // Vocalist (discontinued)
 
-	/*
-	 * "unk" is found in at least 10 Project Gutenberg RDF documents,
-	 * but is not listed in the official list.
-	 */
+	// RoleUnk (`unk`) is only found in a few Project Gutenberg RDF documents,
+	// but is not listed in the official MARC relators.
 	RoleUnk MarcRelator = "unk"
 )

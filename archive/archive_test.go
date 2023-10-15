@@ -13,11 +13,14 @@ func TestDirectoryLookup(t *testing.T) {
 		t.Fatalf("unpexcted error reading RDF file: %s", err)
 	}
 
-	if len(rdf.Titles) != 1 {
-		t.Fatalf("expected 1 title, got %d", len(rdf.Titles))
+	if len(rdf.Titles) != 2 {
+		t.Fatalf("expected 2 title, got %d", len(rdf.Titles))
 	}
 	if rdf.Titles[0] != "Great Expectations" {
-		t.Errorf("unexpected title found, got '%s'", rdf.Titles[0])
+		t.Errorf("unexpected title #1 found, got '%s'", rdf.Titles[0])
+	}
+	if rdf.Titles[1] != "And a subtitle" {
+		t.Errorf("unexpected title #2 found, got '%s'", rdf.Titles[1])
 	}
 }
 

@@ -2,14 +2,14 @@
 
 A library written in the Go language for reading and writing Project Gutenberg
 RDF documents using a simpler set of intermediary data types, which can also be
-marshalled to JSON for a more compact representation of the metadata.
+marshaled to JSON for a more compact representation of the metadata.
 
 Helper functions are provided for reading RDF files directly from their `tar`
 archive. See the usage section below for more information.
 
 The `Ebook` struct is used as an intermediary representation of the metadata,
 which provides a much easier set of data types than needing to handle RDF
-directly, and can also be marshalled to JSON.
+directly, and can also be marshaled to JSON.
 
 The following is a (truncated) JSON example:
 
@@ -87,7 +87,7 @@ func main() {
 	w := bytes.NewBuffer([]byte{}) // create an io.Writer
 	_ = ebook.WriteRDF(w)          // write the RDF data
 
-	data, _ := json.Marshal(ebook) // marshall to JSON
+	data, _ := json.Marshal(ebook) // marshal to JSON
 	fmt.Println(string(data))
 }
 ```
