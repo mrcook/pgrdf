@@ -45,31 +45,32 @@ func TestEbook_WriteRDF(t *testing.T) {
 
 func generateEbook() *pgrdf.Ebook {
 	return &pgrdf.Ebook{
-		ID:                     11,
-		Titles:                 []string{"Alice's Adventures in Wonderland"},
-		AlternateTitles:        []string{"Alice in Wonderland"},
-		Publisher:              "Project Gutenberg",
-		PublishedYear:          1909,
-		ReleaseDate:            "2008-06-27",
-		Summary:                "A short story about short summaries.",
-		Series:                 []string{"Best of Fantasy"},
-		Languages:              []string{"en"},
-		LanguageDialect:        "GB",
-		LanguageNotes:          []string{"Uses 19th century spelling."},
-		SrcPublicationInfo:     "United Kingdom: J. Johnson, 1794.",
-		Edition:                "2nd Edition",
-		Credits:                []string{"D. Smith", "Updated: 2022-07-14"},
-		Copyright:              "Public domain in the USA.",
-		CopyrightClearanceCode: "20001231235959randomthing",
-		BookType:               pgrdf.BookTypeText,
-		Notes:                  []string{"An improved version is available at #28885."},
-		SourceDescription:      "5 pages : illustrations, map, portraits.",
-		SourceLinks:            []string{"https://example.com/ebooks/11/something"},
-		LOC:                    "77177892",
-		ISBN:                   "978-0-919366-14-5",
-		BookCovers:             []string{"https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg"},
-		TitlePageImage:         "https://example.org/ebook11/title.jpg",
-		BackCover:              "https://example.org/ebook11/back.jpg",
+		ID:                      11,
+		Titles:                  []string{"Alice's Adventures in Wonderland"},
+		AlternateTitles:         []string{"Alice in Wonderland"},
+		TableOfContents:         "Prefatory Note -- Chapter 1 -- Chapter 2 -- Chapter 3 -- Conclusion",
+		Publisher:               "Project Gutenberg",
+		PublishedYear:           1909,
+		ReleaseDate:             "2008-06-27",
+		Summary:                 "A short story about short summaries.",
+		Series:                  []string{"Best of Fantasy"},
+		Languages:               []string{"en"},
+		LanguageDialect:         "GB",
+		LanguageNotes:           []string{"Uses 19th century spelling."},
+		PublicationNote:         "United Kingdom: J. Johnson, 1794.",
+		EditionNote:             "2nd Edition",
+		ProductionNotes:         []string{"D. Smith", "Updated: 2022-07-14"},
+		Copyright:               "Public domain in the USA.",
+		CopyrightClearanceCode:  "20001231235959randomthing",
+		BookType:                pgrdf.BookTypeText,
+		Notes:                   []string{"An improved version is available at #28885."},
+		PhysicalDescriptionNote: "5 pages : illustrations, map, portraits.",
+		SourceLinks:             []string{"https://example.com/ebooks/11/something"},
+		LCCN:                    "77177892",
+		ISBN:                    "978-0-919366-14-5",
+		BookCovers:              []string{"https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg"},
+		TitlePageImage:          "https://example.org/ebook11/title.jpg",
+		BackCover:               "https://example.org/ebook11/back.jpg",
 		Creators: []pgrdf.Creator{{
 			ID:       7,
 			Name:     "Carroll, Lewis",
@@ -107,6 +108,7 @@ var rdfMarshalExpected = `<?xml version="1.0" encoding="UTF-8"?>
   <pgterms:ebook rdf:about="ebooks/11">
     <dcterms:title>Alice&#39;s Adventures in Wonderland</dcterms:title>
     <dcterms:alternative>Alice in Wonderland</dcterms:alternative>
+    <dcterms:tableOfContents>Prefatory Note -- Chapter 1 -- Chapter 2 -- Chapter 3 -- Conclusion</dcterms:tableOfContents>
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <pgterms:marc906>1909</pgterms:marc906>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2008-06-27</dcterms:issued>

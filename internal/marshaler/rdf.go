@@ -31,33 +31,34 @@ type RDF struct {
 
 // Ebook <pgterms:ebook /> holds the core metadata for this work.
 type Ebook struct {
-	About              string     `xml:"rdf:about,attr,omitempty"`
-	Titles             []string   `xml:"dcterms:title,omitempty"`
-	Alternatives       []string   `xml:"dcterms:alternative,omitempty"`
-	Publisher          string     `xml:"dcterms:publisher,omitempty"`
-	PublishedYear      int        `xml:"pgterms:marc906,omitempty"`
-	Issued             *Issued    `xml:"dcterms:issued,omitempty"`
-	Summary            string     `xml:"pgterms:marc520,omitempty"`
-	Series             []string   `xml:"pgterms:marc440,omitempty"`
-	Languages          []Language `xml:"dcterms:language,omitempty"`
-	LanguageDialect    string     `xml:"pgterms:marc907,omitempty"`
-	LanguageNotes      []string   `xml:"pgterms:marc546,omitempty"`
-	SrcPublicationInfo string     `xml:"pgterms:marc260,omitempty"`
-	Edition            string     `xml:"pgterms:marc250,omitempty"`
-	Credits            []string   `xml:"pgterms:marc508,omitempty"`
-	License            License    `xml:"dcterms:license,omitempty"`
-	Rights             string     `xml:"dcterms:rights,omitempty"`
-	DpClearanceCode    string     `xml:"pgterms:marc905,omitempty"`
-	Type               Type       `xml:"dcterms:type,omitempty"`
-	Descriptions       []string   `xml:"dcterms:description,omitempty"`
-	SourceDescription  string     `xml:"pgterms:marc300,omitempty"`
-	SourceLinks        []string   `xml:"pgterms:marc904,omitempty"`
-	LOC                string     `xml:"pgterms:marc010,omitempty"`
-	ISBN               string     `xml:"pgterms:marc020,omitempty"`
-	BookCoverImages    []string   `xml:"pgterms:marc901,omitempty"`
-	TitlePageImage     string     `xml:"pgterms:marc902,omitempty"`
-	BackCoverImage     string     `xml:"pgterms:marc903,omitempty"`
-	Creators           []Creator  `xml:"dcterms:creator,omitempty"`
+	About                   string     `xml:"rdf:about,attr,omitempty"`
+	Titles                  []string   `xml:"dcterms:title,omitempty"`
+	Alternatives            []string   `xml:"dcterms:alternative,omitempty"`
+	TableOfContents         string     `xml:"dcterms:tableOfContents,omitempty"`
+	Publisher               string     `xml:"dcterms:publisher,omitempty"`
+	PublishedYear           int        `xml:"pgterms:marc906,omitempty"`
+	Issued                  *Issued    `xml:"dcterms:issued,omitempty"`
+	Summary                 string     `xml:"pgterms:marc520,omitempty"`
+	Series                  []string   `xml:"pgterms:marc440,omitempty"`
+	Languages               []Language `xml:"dcterms:language,omitempty"`
+	LanguageDialect         string     `xml:"pgterms:marc907,omitempty"`
+	LanguageNotes           []string   `xml:"pgterms:marc546,omitempty"`
+	PublicationNote         string     `xml:"pgterms:marc260,omitempty"`
+	EditionNote             string     `xml:"pgterms:marc250,omitempty"`
+	ProductionNotes         []string   `xml:"pgterms:marc508,omitempty"`
+	License                 License    `xml:"dcterms:license,omitempty"`
+	Rights                  string     `xml:"dcterms:rights,omitempty"`
+	DpClearanceCode         string     `xml:"pgterms:marc905,omitempty"`
+	Type                    Type       `xml:"dcterms:type,omitempty"`
+	Descriptions            []string   `xml:"dcterms:description,omitempty"`
+	PhysicalDescriptionNote string     `xml:"pgterms:marc300,omitempty"`
+	SourceLinks             []string   `xml:"pgterms:marc904,omitempty"`
+	LCCN                    string     `xml:"pgterms:marc010,omitempty"`
+	ISBN                    string     `xml:"pgterms:marc020,omitempty"`
+	BookCoverImages         []string   `xml:"pgterms:marc901,omitempty"`
+	TitlePageImage          string     `xml:"pgterms:marc902,omitempty"`
+	BackCoverImage          string     `xml:"pgterms:marc903,omitempty"`
+	Creators                []Creator  `xml:"dcterms:creator,omitempty"`
 
 	// TODO: can these be marshaled programmatically?
 	RelAdapters      []MarcRelator `xml:"marcrel:adp,omitempty"`
@@ -253,30 +254,31 @@ func FromUnmarshaler(in *unmarshaler.RDF) *RDF {
 		NsMarcRel: in.NsMarcRel,
 		NsDcDcam:  in.NsDcDcam,
 		Ebook: Ebook{
-			About:              in.Ebook.About,
-			Titles:             in.Ebook.Titles,
-			Alternatives:       in.Ebook.Alternatives,
-			Publisher:          in.Ebook.Publisher,
-			PublishedYear:      in.Ebook.PublishedYear,
-			Summary:            in.Ebook.Summary,
-			Series:             in.Ebook.Series,
-			LanguageDialect:    in.Ebook.LanguageDialect,
-			LanguageNotes:      in.Ebook.LanguageNotes,
-			SrcPublicationInfo: in.Ebook.SrcPublicationInfo,
-			Edition:            in.Ebook.Edition,
-			Credits:            in.Ebook.Credits,
-			License:            License{Resource: in.Ebook.License.Resource},
-			Rights:             in.Ebook.Rights,
-			DpClearanceCode:    in.Ebook.DpClearanceCode,
-			Type:               Type{Description: description(&in.Ebook.Type.Description)},
-			Descriptions:       in.Ebook.Descriptions,
-			SourceDescription:  in.Ebook.SourceDescription,
-			SourceLinks:        in.Ebook.SourceLinks,
-			LOC:                in.Ebook.LOC,
-			ISBN:               in.Ebook.ISBN,
-			BookCoverImages:    in.Ebook.BookCoverImages,
-			TitlePageImage:     in.Ebook.TitlePageImage,
-			BackCoverImage:     in.Ebook.BackCoverImage,
+			About:                   in.Ebook.About,
+			Titles:                  in.Ebook.Titles,
+			Alternatives:            in.Ebook.Alternatives,
+			TableOfContents:         in.Ebook.TableOfContents,
+			Publisher:               in.Ebook.Publisher,
+			PublishedYear:           in.Ebook.PublishedYear,
+			Summary:                 in.Ebook.Summary,
+			Series:                  in.Ebook.Series,
+			LanguageDialect:         in.Ebook.LanguageDialect,
+			LanguageNotes:           in.Ebook.LanguageNotes,
+			PublicationNote:         in.Ebook.PublicationNote,
+			EditionNote:             in.Ebook.EditionNote,
+			ProductionNotes:         in.Ebook.ProductionNotes,
+			License:                 License{Resource: in.Ebook.License.Resource},
+			Rights:                  in.Ebook.Rights,
+			DpClearanceCode:         in.Ebook.DpClearanceCode,
+			Type:                    Type{Description: description(&in.Ebook.Type.Description)},
+			Descriptions:            in.Ebook.Descriptions,
+			PhysicalDescriptionNote: in.Ebook.PhysicalDescriptionNote,
+			SourceLinks:             in.Ebook.SourceLinks,
+			LCCN:                    in.Ebook.LCCN,
+			ISBN:                    in.Ebook.ISBN,
+			BookCoverImages:         in.Ebook.BookCoverImages,
+			TitlePageImage:          in.Ebook.TitlePageImage,
+			BackCoverImage:          in.Ebook.BackCoverImage,
 		},
 		Work: Work{
 			About:   in.Work.About,

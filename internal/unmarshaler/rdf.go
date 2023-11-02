@@ -63,6 +63,9 @@ type Ebook struct {
 	// An alternate set of titles for the work.
 	Alternatives []string `xml:"http://purl.org/dc/terms/ alternative"`
 
+	// The table of contents for a books.
+	TableOfContents string `xml:"http://purl.org/dc/terms/ tableOfContents"`
+
 	// Publisher of this work, which is always "Project Gutenberg".
 	Publisher string `xml:"http://purl.org/dc/terms/ publisher"`
 
@@ -92,15 +95,15 @@ type Ebook struct {
 	// Notes on the language used in the work, e.g. "Uses 19th Century spelling".
 	LanguageNotes []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc546"`
 
-	// Publication information of the source material, e.g. publisher, city, and year.
-	SrcPublicationInfo string `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
+	// Publication note of the source material, e.g. publisher, city, and year.
+	PublicationNote string `xml:"http://www.gutenberg.org/2009/pgterms/ marc260"`
 
-	// Edition of this work, e.g. "2nd Edition".
-	Edition string `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
+	// Edition note for this work, e.g. "2nd Edition".
+	EditionNote string `xml:"http://www.gutenberg.org/2009/pgterms/ marc250"`
 
-	// Credits for this release. Can also include "updated" dates, either as
-	// a separate entry, or as part of the credit info.
-	Credits []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
+	// ProductionNotes for this release. Can also include "updated" dates,
+	// either as a separate entry, or as part of the credit info.
+	ProductionNotes []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc508"`
 
 	// License: tag is always empty and `resource` attr is always "license".
 	License License `xml:"http://purl.org/dc/terms/ license"`
@@ -117,14 +120,15 @@ type Ebook struct {
 	// A general description of the work.
 	Descriptions []string `xml:"http://purl.org/dc/terms/ description"`
 
-	// Misc information about the source of this work, e.g. "5 pages : illustrations, map, portraits.". Currently very few RDFs provide this.
-	SourceDescription string `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
+	// A description of the physical attributes of the source of this work,
+	// e.g. "5 pages : illustrations, map, portraits.". Currently very few RDFs provide this.
+	PhysicalDescriptionNote string `xml:"http://www.gutenberg.org/2009/pgterms/ marc300"`
 
 	// Links to information about the source of this work.
 	SourceLinks []string `xml:"http://www.gutenberg.org/2009/pgterms/ marc904"`
 
-	// Library of Congress code.
-	LOC string `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
+	// Library of Congress Control Number.
+	LCCN string `xml:"http://www.gutenberg.org/2009/pgterms/ marc010"`
 
 	// Original ISBN of this work. Currently only one RDF includes this.
 	ISBN string `xml:"http://www.gutenberg.org/2009/pgterms/ marc020"`

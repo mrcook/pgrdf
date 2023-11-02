@@ -20,6 +20,9 @@ func TestReadRDF(t *testing.T) {
 	if len(ebook.AlternateTitles) != 2 {
 		t.Errorf("expected 2 other titles, got %d\n", len(ebook.AlternateTitles))
 	}
+	if ebook.TableOfContents != "Prefatory Note -- Chapter 1 -- Chapter 2 -- Chapter 3 -- Conclusion" {
+		t.Errorf("unexpected ebook publisher, got '%s'", ebook.TableOfContents)
+	}
 	if ebook.Publisher != "Project Gutenberg" {
 		t.Errorf("unexpected ebook publisher, got '%s'", ebook.Publisher)
 	}
@@ -65,20 +68,20 @@ func TestReadRDF(t *testing.T) {
 			t.Errorf("unexpected language #1 notes #2, got '%s'", ebook.LanguageNotes[1])
 		}
 	}
-	if ebook.SrcPublicationInfo != "United Kingdom: J. Johnson, 1794." {
-		t.Errorf("unexpected ebook source publication info, got '%s'", ebook.SrcPublicationInfo)
+	if ebook.PublicationNote != "United Kingdom: J. Johnson, 1794." {
+		t.Errorf("unexpected ebook source publication info, got '%s'", ebook.PublicationNote)
 	}
-	if ebook.Edition != "The Charles Dickens Edition" {
-		t.Errorf("unexpected ebook edition, got '%s'", ebook.Edition)
+	if ebook.EditionNote != "The Charles Dickens Edition" {
+		t.Errorf("unexpected ebook edition, got '%s'", ebook.EditionNote)
 	}
-	if len(ebook.Credits) != 2 {
-		t.Errorf("expected 1 credits, got %d", len(ebook.Credits))
+	if len(ebook.ProductionNotes) != 2 {
+		t.Errorf("expected 1 credits, got %d", len(ebook.ProductionNotes))
 	} else {
-		if ebook.Credits[0] != "Produced by Anon." {
-			t.Errorf("unexpected credits, got '%s'", ebook.Credits[0])
+		if ebook.ProductionNotes[0] != "Produced by Anon." {
+			t.Errorf("unexpected credits, got '%s'", ebook.ProductionNotes[0])
 		}
-		if ebook.Credits[1] != "Updated: 2022-07-14" {
-			t.Errorf("unexpected credits, got '%s'", ebook.Credits[1])
+		if ebook.ProductionNotes[1] != "Updated: 2022-07-14" {
+			t.Errorf("unexpected credits, got '%s'", ebook.ProductionNotes[1])
 		}
 	}
 	if ebook.Copyright != "Public domain in the USA." {
@@ -95,16 +98,16 @@ func TestReadRDF(t *testing.T) {
 	} else if ebook.Notes[0] != "A description for this RDF" {
 		t.Errorf("unexpected ebook description, got '%s'", ebook.Notes[0])
 	}
-	if ebook.SourceDescription != "Musical score" {
-		t.Errorf("unexpected ebook source description, got '%s'", ebook.SourceDescription)
+	if ebook.PhysicalDescriptionNote != "Musical score" {
+		t.Errorf("unexpected ebook source description, got '%s'", ebook.PhysicalDescriptionNote)
 	}
 	if len(ebook.SourceLinks) != 1 {
 		t.Errorf("expected 1 source link, got %d", len(ebook.SourceLinks))
 	} else if ebook.SourceLinks[0] != "https://example.com/ebooks/1/something" {
 		t.Errorf("unexpected source link, got '%s'", ebook.SourceLinks[0])
 	}
-	if ebook.LOC != "77177891" {
-		t.Errorf("unexpected ebook LOC, got '%s'", ebook.LOC)
+	if ebook.LCCN != "77177891" {
+		t.Errorf("unexpected ebook LCCN, got '%s'", ebook.LCCN)
 	}
 	if ebook.ISBN != "0-397-00033-2" {
 		t.Errorf("unexpected ebook ISBN, got '%s'", ebook.ISBN)

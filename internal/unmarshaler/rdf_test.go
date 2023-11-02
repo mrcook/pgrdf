@@ -88,6 +88,9 @@ func TestEbookGeneral(t *testing.T) {
 	} else if e.Alternatives[0] != "Alternate Title\r\nWith a newline separation" {
 		t.Errorf("unexpected dcterms:alternative, got '%s'", e.Alternatives[0])
 	}
+	if e.TableOfContents != "Prefatory Note -- Chapter 1 -- Chapter 2 -- Chapter 3 -- Conclusion" {
+		t.Errorf("unexpected dcterms:tableOfContents, got '%s'", e.TableOfContents)
+	}
 	if e.Publisher != "Project Gutenberg" {
 		t.Errorf("unexpected dcterms:publisher, got '%s'", e.Publisher)
 	}
@@ -122,20 +125,20 @@ func TestEbookGeneral(t *testing.T) {
 			t.Errorf("unexpected marc546 language note #2 '%s'", e.LanguageNotes[1])
 		}
 	}
-	if e.SrcPublicationInfo != "United Kingdom: J. Johnson, 1794." {
-		t.Errorf("unexpected marc260 original publication '%s'", e.SrcPublicationInfo)
+	if e.PublicationNote != "United Kingdom: J. Johnson, 1794." {
+		t.Errorf("unexpected marc260 original publication '%s'", e.PublicationNote)
 	}
-	if e.Edition != "The Charles Dickens Edition" {
-		t.Errorf("unexpected marc250 edition '%s'", e.Edition)
+	if e.EditionNote != "The Charles Dickens Edition" {
+		t.Errorf("unexpected marc250 edition '%s'", e.EditionNote)
 	}
-	if len(e.Credits) != 2 {
-		t.Errorf("expected 2 marc508 credit entries, got %d", len(e.Credits))
+	if len(e.ProductionNotes) != 2 {
+		t.Errorf("expected 2 marc508 credit entries, got %d", len(e.ProductionNotes))
 	} else {
-		if e.Credits[0] != "Produced by Anon." {
-			t.Errorf("unexpected marc508 credit[1] '%s'", e.Credits[0])
+		if e.ProductionNotes[0] != "Produced by Anon." {
+			t.Errorf("unexpected marc508 credit[1] '%s'", e.ProductionNotes[0])
 		}
-		if e.Credits[1] != "Updated: 2022-07-14" {
-			t.Errorf("unexpected marc508 credit[0] '%s'", e.Credits[1])
+		if e.ProductionNotes[1] != "Updated: 2022-07-14" {
+			t.Errorf("unexpected marc508 credit[0] '%s'", e.ProductionNotes[1])
 		}
 	}
 	if e.License.Resource != "license" {
@@ -161,16 +164,16 @@ func TestEbookGeneral(t *testing.T) {
 	} else if e.Descriptions[0] != "A description for this RDF" {
 		t.Errorf("unexpected dcterms:description, got '%s'", e.Descriptions[0])
 	}
-	if e.SourceDescription != "Musical score" {
-		t.Errorf("unexpected marc300 source description '%s'", e.SourceDescription)
+	if e.PhysicalDescriptionNote != "Musical score" {
+		t.Errorf("unexpected marc300 source description '%s'", e.PhysicalDescriptionNote)
 	}
 	if len(e.SourceLinks) != 1 {
 		t.Errorf("expected 1 source link, got %d", len(e.SourceLinks))
 	} else if e.SourceLinks[0] != "https://example.com/ebooks/1/something" {
 		t.Errorf("unexpected marc904 source link '%s'", e.SourceLinks[0])
 	}
-	if e.LOC != "77177891" {
-		t.Errorf("unexpected marc010 LoC Number '%s'", e.LOC)
+	if e.LCCN != "77177891" {
+		t.Errorf("unexpected marc010 LoC Number '%s'", e.LCCN)
 	}
 	if e.ISBN != "0-397-00033-2" {
 		t.Errorf("unexpected marc020 ISBN '%s'", e.ISBN)

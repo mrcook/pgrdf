@@ -5,6 +5,7 @@
     <dcterms:title>And a subtitle</dcterms:title>
     <dcterms:alternative>Alternate Title&#13;
 With a newline separation</dcterms:alternative>
+    <dcterms:tableOfContents>Prefatory Note -- Chapter 1 -- Chapter 2 -- Chapter 3 -- Conclusion</dcterms:tableOfContents>
     <dcterms:publisher>Project Gutenberg</dcterms:publisher>
     <pgterms:marc906>1861</pgterms:marc906>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1998-07-01</dcterms:issued>

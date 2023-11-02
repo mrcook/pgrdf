@@ -22,13 +22,17 @@ type Ebook struct {
 	// `<dcterms:alternative>`
 	AlternateTitles []string `json:"alternate_titles,omitempty"`
 
+	// // The table of contents for a book, with chapters separated by ` -- `.
+	// `<dcterms:tableOfContents>`
+	TableOfContents string `json:"toc"`
+
 	// Publisher of this work; always "Project Gutenberg".
 	// `<dcterms:publisher>`
 	Publisher string `json:"publisher"`
 
 	// Year this work was published in.
 	// `<pgterms:marc906>`
-	PublishedYear int `json:"published"`
+	PublishedYear int `json:"published_year"`
 
 	// PG release/issued date in ISO 8601 format. Example: 2006-01-02.
 	// `<dcterms:issued>`
@@ -54,18 +58,18 @@ type Ebook struct {
 	// `<pgterms:marc546>`
 	LanguageNotes []string `json:"language_notes,omitempty"`
 
-	// Source publication information: publisher, city, year, etc.
+	// Publication note of the source material: publisher, city, year, etc.
 	// `<pgterms:marc260>`
-	SrcPublicationInfo string `json:"src_publication_info,omitempty"`
+	PublicationNote string `json:"publication_note,omitempty"`
 
-	// Edition of this work, e.g. "2nd Edition", "A new edition with eleven new poems.", etc.
+	// Edition note for this work, e.g. "2nd Edition", "A new edition with eleven new poems.", etc.
 	// `<pgterms:marc250>:`
-	Edition string `json:"edition,omitempty"`
+	EditionNote string `json:"edition_note,omitempty"`
 
-	// Credits for this ebook. This can also include "updated" dates, either as a
+	// ProductionNotes for this ebook. This can also include "updated" dates, either as a
 	// separate entry or as part of the credit, e.g. "J. Smith\nUpdated: 2022-07-14".
 	// `<pgterms:marc508>`
-	Credits []string `json:"credits,omitempty"`
+	ProductionNotes []string `json:"production_notes,omitempty"`
 
 	// Rights for this work. Most are "Public domain in the USA."
 	// `<dcterms:rights>`
@@ -84,17 +88,17 @@ type Ebook struct {
 	// `<dcterms:description>`
 	Notes []string `json:"note"`
 
-	// Misc information about the source of this work, e.g. "5 pages : illustrations, map, portraits.".
+	// A description of the physical attributes of the source of this work, e.g. "5 pages : illustrations, map, portraits".
 	// `<pgterms:marc300>`
-	SourceDescription string `json:"source_description"`
+	PhysicalDescriptionNote string `json:"physical_description_note"`
 
 	// URLs to information about the source of this work, e.g. image scans on Internet Archive website.
 	// `<pgterms:marc904>`
 	SourceLinks []string `json:"source_link"`
 
-	// LOC (Library of Congress) code.
+	// Library of Congress Control Number
 	// `<pgterms:marc010>`
-	LOC string `json:"loc"`
+	LCCN string `json:"lccn"`
 
 	// ISBN of this work - possibly of the work used for the OCR.
 	// `<pgterms:marc020>`
