@@ -71,7 +71,7 @@ func rdfUnmarshal(r io.Reader) (*Ebook, error) {
 
 	for _, c := range rdf.Ebook.Creators {
 		creator := Creator{
-			ID:      c.Agent.Id(),
+			ID:      c.AgentId(),
 			Name:    c.Agent.Name,
 			Aliases: c.Agent.Aliases,
 			Role:    RoleAut,

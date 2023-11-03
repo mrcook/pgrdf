@@ -218,7 +218,7 @@ type License struct {
 
 // Agent metadata used in creator and marcrel tags.
 type Agent struct {
-	// About hold the PG agent ID, e.g. `2009/agents/10`.
+	// About holds the PG agent ID, e.g. `2009/agents/10`.
 	About string `xml:"about,attr"`
 
 	// Primary name of the author/agent.
@@ -254,6 +254,16 @@ type Webpage struct {
 type Creator struct {
 	Resource string `xml:"resource,attr"`
 	Agent    Agent  `xml:"http://www.gutenberg.org/2009/pgterms/ agent"`
+}
+
+// AgentId is the Gutenberg ID for this agent. Usually this is taken from the
+// Agent `About` field, however, in rare situations when this is blank, the
+// Creator `Resource` needs to be used.
+func (c Creator) AgentId() int {
+	if len(c.Agent.About) > 0 {
+		return c.Agent.Id()
+	}
+	return extractIdFromAttr(c.Resource)
 }
 
 type MarcRelator struct {
