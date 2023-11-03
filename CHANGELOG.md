@@ -3,6 +3,31 @@
 ## HEAD
 
 
+## v1.8.0 (2023-11-03)
+
+Adds support for `dcterms:tableOfContents`.
+
+### BUGFIX
+
+In rare situations a `dcterms:creator` contains no `pgterms:agent`, resulting
+in a `0` value for Agent IDs. The issue is with a few RDFs where author data
+is instead added to an associated `marcrel` node.
+
+When this happens, the Agent ID for a `creator` can be extracted from its
+`rdf:resource` attribute.
+
+### BREAKING CHANGES
+
+Rename various `RDF` and `Ebook` struct fields to align with the naming
+used in the official Project Gutenberg gitenberg Python tooling:
+
+* `SrcPublicationInfo` -> `PublicationNote`
+* `Edition` -> `EditionNote`
+* `Credits` -> `ProductionNotes`
+* `SourceDescription` -> `PhysicalDescriptionNote`
+* `LOC` -> `LCCN`
+
+
 ## v1.7.0 (2023-10-15)
 
 Many of the previously added `marc` tags have now been made available in
